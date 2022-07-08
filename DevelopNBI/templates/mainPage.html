@@ -1,0 +1,303 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="content-type" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT"/>
+
+    <title>[NBI - Online]</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/mainPage.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/header.css' %}">
+    
+    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}"/>
+
+    <script language="JavaScript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script language="JavaScript" src="{% static 'js/mainPageFunction.js' %}"></script>
+    <script language="JavaScript" src="{% static 'js/generalFunction.js' %}"></script>
+    <script language="JavaScript" src="{% static 'js/alert.js' %}"></script>
+</head>
+<body onload="mainPageInitProcess();accountStatusCheck();">
+    <!-- header -->
+    <div id="mainPageHeader">
+        <div id="iconContainer">
+            <img src="{%static 'img/webicon.jpg' %}" style="height: 80%; align-self: center; border-radius: 8%">
+        </div>
+        <div id="nameContainer">
+            <div style="width: 100%; text-align: left; height: 45%; display: inline-flex">
+                <p style="font-size: 120%;font-style: italic;line-height: 90%;vertical-align: center;font-weight: bolder">
+                     NBI
+                </p>
+                <p style="font-size: 120%;font-style: normal;line-height: 90%;vertical-align: center;font-weight: bolder;margin-left: 30px">
+                     Image
+                 </p>
+                <p style="font-size: 120%;font-style: normal;line-height: 90%;vertical-align: center;font-weight: bolder;margin-left: 30px">
+                     Transformer
+                 </p>
+            </div>
+            <div style="width: 100%; text-align: left; height: 25%; display: inline-flex;cursor: pointer" onclick="jumpToIDMG()">
+                <p style="font-size: 86%;margin-top: 4%;font-style: normal;line-height: 90%;vertical-align: center;">
+                     BUPT
+                </p>
+                <p style="font-size: 86%;margin-top: 4%;font-style: normal;line-height: 90%;vertical-align: center;margin-left: 5px">
+                     -
+                </p>
+                <p style="font-size: 86%;margin-top: 4%;font-style: normal;line-height: 90%;vertical-align: center;margin-left: 5px">
+                     IDMG
+                </p>
+            </div>
+        </div>
+        <div id="hiddenPart">
+            <p id="isLogin">0</p>
+            <p id="resultImageDownloadUrl"></p>
+            <p id="firstTimeShowSendInfo">1</p>
+            <p id="firstTimeShowDownloadInfo">1</p>
+            <p id="isUpload">0</p>
+        </div>
+        <div id="headerSwitchContainer">
+            <div id="accountStatusContainer" onclick="jumpToLogin()">
+                <p id="accountInfo"></p>
+                <p id="accountStatus"></p>
+            </div>
+            <div class="headerButton" id="singleImageProcess" onclick="jumpToMainPage()"><p>快捷处理</p></div>
+            <div class="headerButton" id="batchImageProcess" onclick="jumpToBatchProcess()"><p>批量处理</p></div>
+            <div class="headerButton" id="userCenter" onclick="jumpToUserCenter()"><p>用户中心</p></div>
+        </div>
+    </div>
+
+    <!-- img processing part -->
+    <div id="imgPart">
+        <div class="subTitle">
+            <p style="line-height:20px;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">图片上传：</p>
+            <div id="uploadBtnContainer" onclick="uploadNewImage()">
+                <div id="uploadBtn">
+                    <p>开始上传</p>
+                </div>
+                <div style="width: 12%; height: 80%; display: flex; justify-content: center; align-items: center;font-family: Arial, Helvetica, sans-serif;">
+                    <p>状态:</p>
+                </div>
+                <div id="uploadStatus">
+                    <p>等待上传</p>
+                </div>
+            </div>
+            <div id="chooseLastImageBtn" onclick="ChooseLastImage()">
+                <p>选择上次上传图片&emsp;>>></p>
+            </div>
+        </div>
+        <div class="imgPart_inner">
+            <div class="innerTitle">
+                <p style="line-height:20px;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">图片信息</p>
+                <p style="margin-left: 5%;color: red;">*必须</p>
+            </div>
+            <div id="imgSendContainer">
+                <div id="imgSendPart_blue">
+                    <div style="width: 100%; height:96%; display: flex;justify-content: center" id="blueImageShowFeild">
+                        <img src="{%static 'img/uploadicon.png' %}" id="icon_blue" class="uploadIcon">
+                    </div>
+                    <div style="width: 100%; height: 18%; margin-top: 0%">
+                        <div class="uploadButton" id="blueImageBotton_Show" onclick="uploadBlueImage()">选择蓝色光源图片(415nm)</div>
+                        {#这个提交按钮太丑了，隐藏#}
+                        <input type="file" id="blueImageBotton" style="margin-top: 400px" onchange="blueImageShowChange()">
+                    </div>
+                </div>
+                <div id="imgSendPart_green">
+                    <div style="width: 100%; height:96%; display: flex;justify-content: center">
+                        <img src="{% static 'img/uploadicon.png' %}" id="icon_green" class="uploadIcon">
+                    </div>
+                    <div style="width: 100%; height: 18%; margin-top: 0%">
+                        <div class="uploadButton" id="greenImageBotton_Show" onclick="uploadGreenImage()" style="background-color: rgba(49,143,63,0.4)">选择绿色光源图片(540nm)</div>
+                        <input type="file" id="greenImageBotton" style="margin-top: 400px" onchange="greenImageShowChange()">
+                    </div>
+                </div>
+                <div id="imgSendPart_white">
+                    <div style="width: 100%; height:96%; display: flex;justify-content: center">
+                        <img src="{% static 'img/uploadicon.png' %}" id="icon_white" class="uploadIcon">
+                    </div>
+                    <div style="width: 100%; height: 18%; margin-top: 0%">
+                        <div class="uploadButton" id="whiteImageBotton_Show" onclick="uploadWhiteImage()" style="background-color: rgba(255, 255, 255, 0.4); color: black;border: 2px solid #323232;">选择白色光源图片(非必须)</div>
+                        <input type="file" id="whiteImageBotton" style="margin-top: 400px" onchange="whiteImageShowChange()">
+                    </div>
+                </div>
+            </div>
+            <div class="innerTitle">
+                <p style="line-height:20px;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">附加信息</p>
+                <p style="margin-left: 5%;color: rgb(19, 124, 0);">*非必须</p>
+            </div>
+            <div id="imgSend_addInfoContainer">
+                <div style="width: 40%; margin-left: 5%;height: 100%; display: block;justify-content: left;">
+                    <div class="addInfo">
+                        <p class="addInfo_formLabel">标本名称：</p>
+                        <input class="addInfo_formInput" id="addInfo_sampleName" AUTOCOMPLETE="off" type="text" placeholder="&emsp;输入标本名称"/>
+                        <p style="color: red;width: 5%;text-align: center;">*</p>
+                    </div>
+                    <div id="addInfo_bodyPart_Container" style="display: flex;flex-direction: column;">
+                        <div class="addInfo">
+                            <p class="addInfo_formLabel">&emsp;&emsp;部位：</p>
+                            <select class="addInfo_choose" id="addInfo_bodyPart" onchange="addInfoPartChange()">
+                                <option>&emsp;食管</option>
+                                <option>&emsp;胃</option>
+                                <option>&emsp;小肠</option>
+                                <option>&emsp;大肠</option>
+                                <option>&emsp;其他</option>
+                            </select>
+                            <p style="color: red;width: 5%;text-align: center;"></p>
+                        </div>
+                        <!-- <div class="addInfo" id="addInfo_bodyPart_other_Container">
+                            <p class="addInfo_formLabel"></p>
+                            <input class="addInfo_formInput" id="addInfo_bodyPart_other" AUTOCOMPLETE="off" type="text" placeholder="&emsp;输入其他标本部位名称"/>
+                        </div> -->
+                    </div>
+                    <div class="addInfo">
+                        <p class="addInfo_formLabel">&emsp;&emsp;备注：</p>
+                        <div style="width: 60%;height: 100px;display: flex;justify-content: center;align-items: center;overflow: hidden;">
+                            <textarea maxlength="100" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;height: 92%; width: 100%;resize: none;" id="addInfo_remarK" AUTOCOMPLETE="off" placeholder="&emsp;备注"></textarea>
+                        </div>
+                        <p style="color: red;width: 5%;text-align: center;"></p>
+                    </div>
+                </div>
+                <div style="width: 50%; height: 100%; display: flex;flex-direction: column;">
+                    <div id="addInfo_diagnoseBefore_Container" style="display: flex;flex-direction: column;">
+                        <div class="addInfo">
+                            <p class="addInfo_formLabel">术前诊断：<br>(可按住shift多选)</p>
+                            <select multiple="multiple" style="width: 60%;height: 200px;" id="addInfo_diagnoseBefore" onchange="addInfodiagnoseBeforeChange()">
+                                <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">&emsp;早癌</option>
+                                <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">&emsp;LGIN</option>
+                                <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">&emsp;腺瘤</option>
+                                <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">&emsp;SMT</option>
+                                <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">&emsp;炎症</option>
+                                <option id="addInfo_diagnoseBefore_other_option" name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">&emsp;其他</option>
+                            </select>
+                        </div>
+                        <!-- <div class="addInfo" id="addInfo_diagnoseBefore_other_Container">
+                            <p class="addInfo_formLabel"></p>
+                            <input class="addInfo_formInput" id="addInfo_diagnoseBefore_other" AUTOCOMPLETE="off" type="text" placeholder="&emsp;输入其他早期诊断结论"/>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 图片查看 -->
+    <div id="imgShowPart">
+        <div class="subTitle">
+            <p style="line-height:20px;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">生成结果:</p>
+        </div>
+        <div class="imgPart_inner" style="height: 560px;">
+            <div style="width: 100%;height:100%;display:flex;justify-content: left;align-items: center;">
+                <div id="imgBackPart">
+                    <p id="outImageDefault">/*生成图片后查看结果*/</p>
+                </div>
+                <div id="mainControlPart">
+                    <div id="mainControlBtn">
+                        <div style="height:50%;width:75%; display:flex;flex-direction:column;justify-content: center;align-items: center;">
+                            <button id="getResultImage" onclick="getResultImage()">生成图片</button>
+                            <button id="saveImage" onclick="downloadResult()">保存结果</button>
+                        </div>
+                        <div style="font-family: Arial, Helvetica, sans-serif;padding-left: 10px;width:75%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+                            <p>自动调整通道</p>
+                            <input type="checkbox" id="isAutoChannel">
+                        </div>
+                        <div style="font-family: Arial, Helvetica, sans-serif;padding-left: 10px;width:75%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+                            <p>自动调整亮度</p>
+                            <input type="checkbox" id="isAutoBrightness">
+                        </div>
+                    </div>
+                    <div id="mainControlRange">
+                        <div id="cannelWeightControlContainer">
+                            <div style="width: 20%; height: 100%;display: flex;justify-content: center;align-items: center;">
+                                <p style="font-family: STHeiti">通道偏移控制：</p>
+                            </div>
+                            <div style="width:80%; height: 100%;display: flex;flex-direction: column;">
+                                <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                                    <p style="width: 50%;text-align: left;color: rgb(255, 33, 33);font-family: Arial, Helvetica, sans-serif;">红色增强</p>
+                                    <p style="width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">青色增强</p>
+                                </div>
+                                <div style="width:100%; height: 70%;display: flex;flex-direction: row;">
+                                    <input type="range" id="channelAdjustRange" class="checke" min="-30" max="30" onchange="channelValueChange()">
+                                    <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 30px;height: 100%;overflow: hidden;" id="channelOffsetValue">0</p>  
+                                </div>
+                            </div>
+                        </div>
+                        <div id="BrightnessControlContainer">
+                            <div style="width: 20%; height: 100%;display: flex;justify-content: center;align-items: center;">
+                                <p style="font-family: STHeiti">亮度偏移控制：</p>
+                            </div>
+                            <div style="width:80%; height: 100%;display: flex;flex-direction: column;">
+                                <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                                    <p style="width: 50%;text-align: left;font-family: Arial, Helvetica, sans-serif;">降低亮度</p>
+                                    <p style="width: 50%;text-align: right;font-family: Arial, Helvetica, sans-serif;">提高亮度</p>
+                                </div>
+                                <div style="width:100%; height: 70%;display: flex;flex-direction: row;">
+                                    <input type="range" id="brightnessAdjustRange" class="checke" min="-80" max="80" onchange="brightnessValueChange()">
+                                    <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 30px;height: 100%;overflow: hidden;" id="brightnessValue">0</p>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 控制面板 -->
+    <div id="controlPanelPart">
+        <div class="subTitle">
+            <p style="line-height:20px;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">高级功能:</p>
+            <div id="openFunctionContainer">
+                <p style="padding-left: 3%;padding-right: 5px;">开启高级功能</p>
+                <input type="checkbox" id="openFunction">
+            </div>
+        </div>
+            <div id="moreFunctionControlRange">
+                <div id="contrastContainer">
+                    <div style="width: 20%; height: 100%;display: flex;justify-content: center;align-items: center;">
+                        <p style="font-family: STHeiti">&emsp;&emsp;对比度：</p>
+                    </div>
+                    <div style="width:65%; height: 100%;display: flex;flex-direction: column;">
+                        <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                            <p style="width: 50%;display: flex;justify-content: left;color: rgb(0, 0, 0);font-family: Arial, Helvetica, sans-serif;">低对比度</p>
+                            <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);font-family: Arial, Helvetica, sans-serif;">高对比度</p>
+                        </div>
+                        <div style="width:100%; height: 70%;display: flex;flex-direction: row;">
+                            <input type="range" id="contrastAdjustRange" min="0" max="200" onchange="contrastValueChange()">
+                            <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 30px;height: 100%;overflow: hidden;" id="contrastOffsetValue">0</p>  
+                        </div>
+                    </div>
+                </div>
+                <div id="contrastContainer">
+                    <div style="width: 20%; height: 100%;display: flex;justify-content: center;align-items: center;">
+                        <p style="font-family: STHeiti">&emsp;&emsp;&emsp;明度：</p>
+                    </div>
+                    <div style="width:65%; height: 100%;display: flex;flex-direction: column;">
+                        <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                            <p style="width: 50%;display: flex;justify-content: left;color: rgb(0, 0, 0);font-family: Arial, Helvetica, sans-serif;">低明度</p>
+                            <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);font-family: Arial, Helvetica, sans-serif;">高明度</p>
+                        </div>
+                        <div style="width:100%; height: 70%;display: flex;flex-direction: row;">
+                            <input type="range" id="numinosityAdjustRange" min="0" max="100" onchange="numinosityValueChange()">
+                            <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 30px;height: 100%;overflow: hidden;" id="numinosityOffsetValue">0</p>  
+                        </div>
+                    </div>
+                </div>
+                <div id="contrastContainer">
+                    <div style="width: 20%; height: 100%;display: flex;justify-content: center;align-items: center;">
+                        <p style="font-family: STHeiti">&emsp;&emsp;饱和度：</p>
+                    </div>
+                    <div style="width:65%; height: 100%;display: flex;flex-direction: column;">
+                        <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                            <p style="width: 50%;display: flex;justify-content: left;color: rgb(0, 0, 0);font-family: Arial, Helvetica, sans-serif;">低饱和度</p>
+                            <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);font-family: Arial, Helvetica, sans-serif;">高饱和度</p>
+                        </div>
+                        <div style="width:100%; height: 70%;display: flex;flex-direction: row;">
+                            <input type="range" id="saturationAdjustRange" min="0" max="200" onchange="saturationValueChange()">
+                            <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 30px;height: 100%;overflow: hidden;" id="saturationOffsetValue">0</p>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
