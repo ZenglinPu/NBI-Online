@@ -1,18 +1,39 @@
-var loc = "http://49.232.229.126:7000";
+// var loc = "http://49.232.229.126:7000";
 
 //主页面
 function jumpToMainPage(){
-    window.location.replace(loc+"/NBI/mainPage/");
+    $.ajax({
+		url:'/NBI/mainPage/',
+		type: 'POST',
+        cache: false,
+        async: true,
+        processData: false,
+        contentType: false,
+		error:function(xhr,type,errorThrown){
+			alert("操作失败,请稍后重试");
+		}
+	});
+    // window.location.replace(loc+"/NBI/mainPage/");
 }
 
 //批处理页面
 function jumpToBatchProcess(){
-
+    alert(2);
 }
 
 //用户管理界面
 function jumpToLogin(){
-    window.location.replace(loc+"/NBI/User/loginPage");
+    $.ajax({
+		url:'/NBI/User/loginPage/',
+		type: 'POST',
+        cache: false,
+        async: true,
+        processData: false,
+        contentType: false,
+		error:function(xhr,type,errorThrown){
+			alert("操作失败,请稍后重试");
+		}
+	});
 }
 
 function jumpToUserCenter(){
