@@ -56,7 +56,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(BASE_DIR, 'templates'),
-                 os.path.join(BASE_DIR, '../frontend/dist')],
+                 os.path.join(BASE_DIR, '../front/dist')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,7 +122,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),# 项目默认会有的路径，如果你部署的不仅是前端打包的静态文件，项目目录static文件下还有其他文件，最好不要删
-    os.path.join(BASE_DIR, "../frontend/dist/static"),# 加上这条
+    os.path.join(BASE_DIR, "../front/dist/static"),# 加上这条
 ]
 
 # Default primary key field type
