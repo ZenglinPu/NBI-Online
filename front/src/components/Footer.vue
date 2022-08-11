@@ -29,6 +29,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  background-color: #07004f;
 }
 .info-container{
   width: 40%;

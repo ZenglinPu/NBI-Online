@@ -206,12 +206,12 @@ export default {
   },
   mounted(){
     const pwd = this.getCookie("NBI_pwd");
-    console.log(pwd);
     if (pwd != null){
       this.loginForm.password = pwd;
       this.loginForm.account = this.getCookie("NBI_UID");
       this.$refs.rememAC.checked = true;
     }
+    this.switchPage(this.$route.query.w);
   },
 }
 </script>
