@@ -8,8 +8,11 @@ NBI-Online 一个在线合成和管理NBI医用图片的免费工具网站
 前端采用vue.js实现，后端采用Django实现
 
 在安装好django,node.js等必要组件后，在frontend文件夹下运行
+
 npm i vue-router@3
+
 npm i element-ui -S
+
 npm install axios
 
 ！注意：pymongo一定不要默认安装最新版本，安装pip install pymongo==3.11.3
