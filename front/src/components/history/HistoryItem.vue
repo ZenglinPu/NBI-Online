@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <tr :style="rowBackground">
       <td>
         <el-image style="width: 20px; height: 20px" :src="url" :preview-src-list="srcList">
@@ -7,8 +7,8 @@
       </td>
       <td>{{ userName }}</td>
       <td>{{ sampleName }}</td>
-      <td>{{partName}}</td>
-      <td>{{diagnosis}}</td>
+      <td>{{ partName }}</td>
+      <td>{{ diagnosis }}</td>
       <td>{{ uploadTime }}</td>
       <td>
         <button @click="checkDetail">查看详情</button>
@@ -29,8 +29,8 @@ export default {
       ],
       userName: 'bob',
       sampleName: 'bob的标本',//标本名称
-      partName:'胃',//部位
-      diagnosis:'炎症',//术前诊断
+      partName: '胃',//部位
+      diagnosis: '炎症',//术前诊断
       uploadTime: '2022-8-11',//
     };
   },
@@ -39,15 +39,15 @@ export default {
     //永久显示绿色，暂时显示橙色，马上要删除显示红色
     //todo
     rowBackground() {
-      return {background:'#f0f9eb'}
+      return { background: '#f0f9eb' }
     }
   },
   methods: {
-    checkDetail(){
+    checkDetail() {
       return
     }
   },
-  name: "App",
+  name: "HistoryItem",
 };
 </script>
 <style>
@@ -72,5 +72,4 @@ tr:nth-child(even) {
 .success-row {
   background: #f0f9eb;
 }
-
 </style>
