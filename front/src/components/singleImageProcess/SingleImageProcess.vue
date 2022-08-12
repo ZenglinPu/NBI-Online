@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import singleImageProcess_imageSendPart from "@/components/singleImageProcess_imageSendPart";
-import singleImageProcess_imageGetPart from "@/components/singleImageProcess_imageGetPart";
-import singleImageProcess_imageAdjust from "@/components/singleImageProcess_imageAdjust";
+import singleImageProcess_imageSendPart from "@/components/singleImageProcess/singleImageProcess_imageSendPart";
+import singleImageProcess_imageGetPart from "@/components/singleImageProcess/singleImageProcess_imageGetPart";
+import singleImageProcess_imageAdjust from "@/components/singleImageProcess/singleImageProcess_imageAdjust";
 export default {
   name: "SingleImageProcess",
   components:{singleImageProcess_imageSendPart, singleImageProcess_imageGetPart,singleImageProcess_imageAdjust}

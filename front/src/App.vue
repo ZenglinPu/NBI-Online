@@ -1,9 +1,9 @@
 <template>
   <div style="width: 100%;height: 100%">
     <div id="header-container">
-       <c_header :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
+       <c_header :singleOrMulti="singleOrMulti" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
-    <div id="mainFunction-container">
+    <div id="mainFunctionContainer">
       <keep-alive>
         <router-view></router-view>
       </keep-alive>
@@ -63,6 +63,18 @@ export default {
       this.$router.push({
         path: functionPage,
       })
+    },
+    singleOrMulti(w){
+      let functionPage = "/ImageProcess";
+      if (w===1){
+        functionPage = "/ImageProcess/SingleImage";
+      }
+      else if (w===2){
+        functionPage = "/ImageProcess/MultiImage";
+      }
+      this.$router.push({
+        path: functionPage,
+      })
     }
   }
 }
@@ -80,12 +92,11 @@ html,body{
   justify-content: center;
   align-items: center;
 }
-#mainFunction-container{
+#mainFunctionContainer{
   width: 100%;
   height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #F8F8FF;
 }
 </style>

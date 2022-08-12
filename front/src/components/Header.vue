@@ -24,15 +24,26 @@
                 </p>
             </div>
         </div>
-<!--        <div id="headerSwitchContainer">-->
-<!--            <div id="accountStatusContainer" @click="switchFunctionPage(4)">-->
-<!--                <p v-show="user.status" id="accountInfo">{{user.name}}</p>-->
-<!--                <p id="accountStatus" :style="userStatusColor">{{user.status === false? "登录 / 注册":"欢迎您"}}</p>-->
-<!--            </div>-->
-<!--            <div class="headerButton" :class="functionPage===1? selectedBtnClass:''"  @click="switchFunctionPage(1)"><p>图片处理</p></div>-->
-<!--            <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>用户中心</p></div>-->
-<!--            <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)"><p>历史数据</p></div>-->
-<!--        </div>-->
+      <div id="switchBtnContainer">
+        <div class="headerButton" :class="functionPage===1? selectedBtnClass:''"  @click="switchFunctionPage(1)">
+          <el-dropdown :hide-on-click="false" style="color: white;font-size: small">
+            <span class="el-dropdown-link">
+              Image Process<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <div style="font-family: STHeiti" @click="singleOrMultiSwitch(1)">Single Image Process</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <div style="font-family: STHeiti" @click="singleOrMultiSwitch(2)">Batch Process</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+
+        <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>User Center</p></div>
+        <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)"><p>History Data</p></div>
+      </div>
         <div id="accountInfoContainer">
           <div v-show="user.status" id="loginStatusContainer">
             <div class="accountName" title="用户中心" @click="switchFunctionPage(2)">{{ user.name }}</div>
@@ -56,9 +67,10 @@ export default {
           status: false, // true表示登录
       },
       selectedBtnClass: "headerButton_selected",
+      defaultPage: 1,
     }
   },
-  props:['accountPage', 'functionPage', 'switchFunctionPage'],
+  props:['accountPage', 'functionPage', 'switchFunctionPage','singleOrMulti'],
   computed:{
     userStatusColor(){
       if (this.user.status){
@@ -81,6 +93,9 @@ export default {
     this.$bus.$off('changeStatus');
   },
   methods:{
+    switchMainPage(key, keyPath){
+      console.log(key, keyPath);
+    },
     // cookie
     getCookie(objname){//获取指定名称的cookie的值
       const arrstr = document.cookie.split("; ");
@@ -146,6 +161,9 @@ export default {
     },
     jumpToIDMG(){
       window.location.href = "https://teacher.bupt.edu.cn/shaoyingxia/zh_CN/";
+    },
+    singleOrMultiSwitch(w){
+      this.singleOrMulti(w);
     }
   }
 }
@@ -191,16 +209,24 @@ export default {
     width: 22%;
     margin-left: 3%;
 }
+#switchBtnContainer{
+  height: 100%;
+  width: 35%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
 #accountInfoContainer{
   height: 100%;
-  width: 65%;
+  width: 30%;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
 }
 #accountStatusContainer{
-    width: 40%;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -209,7 +235,7 @@ export default {
     overflow: hidden;
 }
 #loginStatusContainer{
-    width: 40%;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: flex-end;
@@ -250,5 +276,25 @@ export default {
   border-radius: 5px;
   overflow: hidden;
   cursor: pointer;
+}
+.headerButton{
+    cursor: pointer;
+    font-family: STHeiti;
+    height: 45%;
+    font-size: small;
+    font-weight: bold;
+    width: 28%;
+    transition: 0.3s ease;
+    background: rgba(255, 255, 255, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    margin-left: 2%;
+}
+.headerButton_selected{
+    background: rgba(255, 255, 255, 0.16);
+    color: rgb(245, 225, 225);
+    border-bottom: 1px white solid;
 }
 </style>

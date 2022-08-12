@@ -218,7 +218,7 @@ export default {
 
 <style scoped>
 #mainContainer{
-    width: 40%;
+    width: 34%;
     height: 80%;
     padding-top: 80px;
     overflow: hidden;
@@ -228,12 +228,12 @@ export default {
 }
 
 #mainContainerInner{
-    width: 80%;
+    width: 100%;
     /* 48 - 58 */
     /* height: 48%; */
-    background-color: rgba(0, 123, 255, 0.189);
+    background-color: rgba(18, 124, 238, 0.19);
     transition: 0.2s ease;
-	overflow: hidden;
+    overflow: hidden;
 }
 
 #switchBtnContainer{
@@ -361,7 +361,7 @@ input[type="checkbox"] {
     background-color: #2244CC;
 }
 #slogan{
-	width: 80%;
+	width: 100%;
 	margin-top: 20px;
 	display: flex;
 	justify-content: center;
