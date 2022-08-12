@@ -35,7 +35,7 @@
 <!--        </div>-->
         <div id="accountInfoContainer">
           <div v-show="user.status" id="loginStatusContainer">
-
+            <div class="accountName" title="用户中心" @click="switchFunctionPage(2)">{{ user.name }}</div>
           </div>
           <div v-show="!user.status" id="accountStatusContainer">-->
             <div class="accountBtn" title="登录" @click="accountPage(1)">Sign In</div>
@@ -58,7 +58,7 @@ export default {
       selectedBtnClass: "headerButton_selected",
     }
   },
-  props:['accountPage', 'functionPage'],
+  props:['accountPage', 'functionPage', 'switchFunctionPage'],
   computed:{
     userStatusColor(){
       if (this.user.status){
@@ -116,10 +116,13 @@ export default {
 
       // 本地有token，与uid一起上传
       const uid = this.getUID();
-      this.$axios.post('/NBI/User/checkByToken/', {
-        "uid": uid,
-        "token": token,
-      }).then((response) => {
+      const fd = new FormData();
+      fd.append("uid",uid);
+      fd.append("token",token);
+      let config = {
+         headers: {'Content-Type': 'multipart/form-data'}
+      };
+      this.$axios.post('/NBI/User/checkByToken/', fd, config).then((response) => {
         const checkResult = response.data.check;
         const newToken = response.data.token;
         const uname = response.data.uname;
@@ -128,7 +131,10 @@ export default {
         }
         else if(checkResult === 1){
           this.user.status = false;
-          alert("登录已过期，请重新登录");
+          this.$message({
+            message: '您的登录已过期！',
+            type: 'error',
+          });
           this.clearCookie("NBI_token");
         }
         else if(checkResult === 2){
@@ -199,21 +205,18 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 0.2s ease;
     flex-direction: row;
-    cursor: pointer;
     overflow: hidden;
 }
 #loginStatusContainer{
     width: 40%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    transition: 0.2s ease;
-    flex-direction: column;
-    cursor: pointer;
+    flex-direction: row;
     overflow: hidden;
+    margin-right: 5%;
 }
 .accountBtn{
   width: 30%;
@@ -232,5 +235,20 @@ export default {
   cursor: pointer;
   background-color: #F8F8FF;
   color: #2a2a2a;
+}
+.accountName{
+  width: 50%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff0d5;
+  font-family: STHeiti;
+  font-size: small;
+  border-bottom: rgba(248, 248, 255, 0.3) 2px solid;
+  background-color: rgba(248, 248, 255, 0.15);
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
 }
 </style>

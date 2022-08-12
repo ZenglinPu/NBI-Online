@@ -218,10 +218,10 @@ export default {
         this.downloadImage("/static/Data/NBI/"+this.recordRealResult, "resultNBI.jpg");
     },
     downloadImage(imgSrc, fileName){
-        var alink = document.createElement("a");
-        alink.href = imgSrc;
-        alink.download = fileName; //fileName保存提示中用作预先填写的文件名
-        alink.click();
+      const alink = document.createElement("a");
+      alink.href = imgSrc;
+      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
+      alink.click();
     },
     showResultImage(data){
       console.log(data);

@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;height: 100%">
     <div id="header-container">
-       <c_header :functionPage="functionPage" :accountPage="accountPage"></c_header>
+       <c_header :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
     <div id="mainFunction-container">
       <keep-alive>
