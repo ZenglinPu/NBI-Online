@@ -10,8 +10,9 @@
       <td>{{ partName }}</td>
       <td>{{ diagnosis }}</td>
       <td>{{ uploadTime }}</td>
+      <td><div id="expired-time">{{ expiredTime }}</div></td>
       <td>
-        <button @click="checkDetail">查看详情</button>
+        <el-button type="primary" plain @click="checkDetail">查看详情</el-button>
       </td>
     </tr>
     <span></span>
@@ -32,6 +33,7 @@ export default {
       partName: '胃',//部位
       diagnosis: '炎症',//术前诊断
       uploadTime: '2022-8-11',//
+      expiredTime: '永久保存',//
     };
   },
   computed: {
@@ -39,7 +41,7 @@ export default {
     //永久显示绿色，暂时显示橙色，马上要删除显示红色
     //todo
     rowBackground() {
-      return { background: '#f0f9eb' }
+      return { background: '#fefeff' }
     }
   },
   methods: {
@@ -50,7 +52,7 @@ export default {
   name: "HistoryItem",
 };
 </script>
-<style>
+<style scoped>
 table {
   border-collapse: collapse;
   width: 100%;
@@ -59,6 +61,7 @@ table {
 td {
   text-align: left;
   padding: 8px;
+  width: 8.5%;
 }
 
 tr:nth-child(even) {
@@ -71,5 +74,19 @@ tr:nth-child(even) {
 
 .success-row {
   background: #f0f9eb;
+}
+
+#expired-time {
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff;
+  width: 56px;
+  background: rgb(122, 229, 136);
+  padding: 6px 12px;
+  border-radius: 10px;
+}
+
+.el-button {
+  padding: 8px 20px;
 }
 </style>
