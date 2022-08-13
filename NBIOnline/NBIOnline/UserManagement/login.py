@@ -41,6 +41,7 @@ def checkUserExist(uid):
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table = conn.nbi.UserInfo
     result = table.find({"UID": uid})
+    uname = None
     if result.count() == 0:
         conn.close()
         return False, None
@@ -64,8 +65,7 @@ def checkUserPW(uid, pw):
 
 # 通过token和uid判断是否仍然处于登录状态内
 def checkByToken(request):
-    body = json.loads(request.body.decode('utf-8'))
-    checkResult, newToken = TokenCheckLogin(body["uid"], body["token"])
+    checkResult, newToken = TokenCheckLogin(request.POST.get("uid"), request.POST.get("token"))
     uname = getUnameByUID(request.POST.get("uid"))
     ret = {
         'check': checkResult,

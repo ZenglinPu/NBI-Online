@@ -1,40 +1,58 @@
 <template>
     <div id="mainPageHeader">
         <div id="iconContainer">
-            <img src="@/assets/webicon.jpg" alt="图片加载失败" style="height: 80%; align-self: center; border-radius: 8%">
+            <img src="@/assets/webicon.jpg" alt="图片加载失败" style="height: 82%; align-self: center; border-radius: 50%">
         </div>
         <div id="nameContainer">
-            <div style="width: 100%; text-align: left; height: 45%; display: inline-flex">
-                <p style="font-size: 120%;font-style: italic;line-height: 90%;vertical-align: center;font-weight: bolder">
+            <div style="width: 100%; text-align: left; height: 45%; display: inline-flex;">
+                <p class="headerFont" style="color: #d1ffd3">
                         NBI
                 </p>
-                <p style="font-size: 120%;font-style: normal;line-height: 90%;vertical-align: center;font-weight: bolder;margin-left: 30px">
-                        Image
-                    </p>
-                <p style="font-size: 120%;font-style: normal;line-height: 90%;vertical-align: center;font-weight: bolder;margin-left: 30px">
-                        Transformer
-                    </p>
-            </div>
-            <div style="width: 100%; text-align: left; height: 25%; display: inline-flex;cursor: pointer" onclick="jumpToIDMG()">
-                <p style="font-size: 86%;margin-top: 4%;font-style: normal;line-height: 90%;vertical-align: center;">
-                        BUPT
-                </p>
-                <p style="font-size: 86%;margin-top: 4%;font-style: normal;line-height: 90%;vertical-align: center;margin-left: 5px">
+                <p class="headerFont" style="margin-left: 10px; color: rgba(154,198,255,0.95)">
                         -
                 </p>
-                <p style="font-size: 86%;margin-top: 4%;font-style: normal;line-height: 90%;vertical-align: center;margin-left: 5px">
+                <p class="headerFont" style="margin-left: 10px">
+                        Online
+                </p>
+            </div>
+            <div style="width: 100%; text-align: left; height: 25%; display: inline-flex;cursor: pointer" @click="jumpToIDMG()">
+                <p class="headerFont2">
+                        BUPT
+                </p>
+                <p class="headerFont2" style="margin-left: 10px">
                         IDMG
                 </p>
             </div>
         </div>
-        <div id="headerSwitchContainer">
-            <div id="accountStatusContainer" @click="switchFunctionPage(4)">
-                <p v-show="user.status" id="accountInfo">{{user.name}}</p>
-                <p id="accountStatus" :style="userStatusColor">{{user.status === false? "登录 / 注册":"欢迎您"}}</p>
-            </div>
-            <div class="headerButton" :class="functionPage===1? selectedBtnClass:''"  @click="switchFunctionPage(1)"><p>图片处理</p></div>
-            <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>用户中心</p></div>
-            <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)"><p>历史数据</p></div>
+      <div id="switchBtnContainer">
+        <div class="headerButton" :class="functionPage===1? selectedBtnClass:''"  @click="switchFunctionPage(1)">
+          <el-dropdown :hide-on-click="false" style="color: white;font-size: small">
+            <span class="el-dropdown-link">
+              Image Process<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <div style="font-family: STHeiti" @click="singleOrMultiSwitch(1)">Single Image Process</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <div style="font-family: STHeiti" @click="singleOrMultiSwitch(2)">Batch Process</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+
+        <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>User Center</p></div>
+        <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)"><p>History Data</p></div>
+      </div>
+        <div id="accountInfoContainer">
+          <div v-show="user.status" id="loginStatusContainer">
+            <div class="accountName" title="用户中心" @click="switchFunctionPage(2)">{{ user.name }}</div>
+          </div>
+          <div v-show="!user.status" id="accountStatusContainer">-->
+            <div class="accountBtn" title="登录" @click="accountPage(1)">Sign In</div>
+            <div style="width: 2px; height: 50%;margin-left:10px;margin-right: 10px;background-color: #F8F8FF;"></div>
+            <div class="accountBtn" title="注册" @click="accountPage(2)">Sign Up</div>
+          </div>
         </div>
     </div>
 </template>
@@ -49,9 +67,10 @@ export default {
           status: false, // true表示登录
       },
       selectedBtnClass: "headerButton_selected",
+      defaultPage: 1,
     }
   },
-  props:['switchFunctionPage', 'functionPage'],
+  props:['accountPage', 'functionPage', 'switchFunctionPage','singleOrMulti'],
   computed:{
     userStatusColor(){
       if (this.user.status){
@@ -74,6 +93,9 @@ export default {
     this.$bus.$off('changeStatus');
   },
   methods:{
+    switchMainPage(key, keyPath){
+      console.log(key, keyPath);
+    },
     // cookie
     getCookie(objname){//获取指定名称的cookie的值
       const arrstr = document.cookie.split("; ");
@@ -109,10 +131,13 @@ export default {
 
       // 本地有token，与uid一起上传
       const uid = this.getUID();
-      this.$axios.post('/NBI/User/checkByToken/', {
-        "uid": uid,
-        "token": token,
-      }).then((response) => {
+      const fd = new FormData();
+      fd.append("uid",uid);
+      fd.append("token",token);
+      let config = {
+         headers: {'Content-Type': 'multipart/form-data'}
+      };
+      this.$axios.post('/NBI/User/checkByToken/', fd, config).then((response) => {
         const checkResult = response.data.check;
         const newToken = response.data.token;
         const uname = response.data.uname;
@@ -121,7 +146,10 @@ export default {
         }
         else if(checkResult === 1){
           this.user.status = false;
-          alert("登录已过期，请重新登录");
+          this.$message({
+            message: '您的登录已过期！',
+            type: 'error',
+          });
           this.clearCookie("NBI_token");
         }
         else if(checkResult === 2){
@@ -131,6 +159,12 @@ export default {
         }
       });
     },
+    jumpToIDMG(){
+      window.location.href = "https://teacher.bupt.edu.cn/shaoyingxia/zh_CN/";
+    },
+    singleOrMultiSwitch(w){
+      this.singleOrMulti(w);
+    }
   }
 }
 
@@ -139,20 +173,32 @@ export default {
 <style scoped>
 #mainPageHeader{
     width: 100%;
-    height: 90px;
-    /*background-image: linear-gradient(to right, rgb(220, 244, 255) , rgb(168, 227, 255));*/
-    background-color: rgb(168, 227, 255);
+    height: 70px;
+    background-color: #07004f;
     background-repeat:no-repeat;
     overflow: hidden;
     float: right;
-    display: inline-flex;
+    display: flex;
+    align-items: center;
     z-index: 100;
 }
-
+.headerFont{
+  color: #f0f7ff;
+  line-height: 90%;
+  vertical-align: center;
+  font-family: STHeiti;
+}
+.headerFont2{
+  color: #f0f7ff;
+  font-size: 70%;
+  line-height: 90%;
+  vertical-align: center;
+  font-family: STHeiti;
+}
 #iconContainer{
-    height: 100%;
-    width: 8%;
-    margin-left: 80px;
+    height: 70%;
+    margin-left: 4%;
+    width: 6%;
     display: flex;
     justify-content: center;
     overflow: hidden;
@@ -160,63 +206,95 @@ export default {
 
 #nameContainer{
     height: 100%;
-    width: 25%;
+    width: 22%;
     margin-left: 3%;
 }
-
-#headerSwitchContainer{
+#switchBtnContainer{
+  height: 100%;
+  width: 35%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+#accountInfoContainer{
+  height: 100%;
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+#accountStatusContainer{
+    width: 100%;
     height: 100%;
-    width: 60%;
-    /* margin-left: 6%; */
-    display: inline-flex;
-    justify-content: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
     overflow: hidden;
 }
-
+#loginStatusContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+    overflow: hidden;
+    margin-right: 5%;
+}
+.accountBtn{
+  width: 30%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff0d5;
+  font-family: STHeiti;
+  font-size: small;
+  border-radius: 5px;
+  border: #F8F8FF 2px solid;
+  transition: 0.3s ease;
+}
+.accountBtn:hover{
+  cursor: pointer;
+  background-color: #F8F8FF;
+  color: #2a2a2a;
+}
+.accountName{
+  width: 50%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff0d5;
+  font-family: STHeiti;
+  font-size: small;
+  border-bottom: rgba(248, 248, 255, 0.3) 2px solid;
+  background-color: rgba(248, 248, 255, 0.15);
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+}
 .headerButton{
     cursor: pointer;
     font-family: STHeiti;
-    height: 100%;
-    width: 20%;
-    margin-right: 2%;
+    height: 45%;
+    font-size: small;
+    font-weight: bold;
+    width: 28%;
     transition: 0.3s ease;
     background: rgba(255, 255, 255, 0);
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #ffffff;
+    margin-left: 2%;
 }
-
-.headerButton:hover{
-    background: rgba(255, 255, 255, 0.25);
-    color: #000042;
-}
-
 .headerButton_selected{
-    background: rgba(255, 255, 255, 0.28);
-    color: #000042;
-    border-bottom: white 2px solid;
-}
-
-#accountStatusContainer{
-    width: 40%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 0.2s ease;
-    flex-direction: column;
-    cursor: pointer;
-    overflow: hidden;
-}
-#accountStatus{
-    color: #2e2e2e;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 20%;
-    margin-top: 5px;
-}
-#accountInfo{
-    color: #c91400;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 20%;
+    background: rgba(255, 255, 255, 0.16);
+    color: rgb(245, 225, 225);
+    border-bottom: 1px white solid;
 }
 </style>

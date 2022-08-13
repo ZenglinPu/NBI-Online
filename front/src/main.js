@@ -21,4 +21,4 @@ new Vue({
     Vue.prototype.$bus = this;
   },
   router:router,
-})
+});
