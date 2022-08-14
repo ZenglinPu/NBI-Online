@@ -1,64 +1,63 @@
 <template>
   <div id="imgPart">
     <div class="subTitle">
-        <p style="line-height:20px;width:10%;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">图片上传：</p>
+      <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
+      <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div id="uploadBtnContainer">
-          <el-button type="primary" ref="uploadBtn" @click="uploadNewImage()" style="width: 60%">开始上传</el-button>
-        </div>
-        <div style="width: 12%; height: 80%; display: flex; justify-content: center; align-items: center;font-family: Arial, Helvetica, sans-serif;">
-            <p>状态:</p>
+          <el-button icon="el-icon-upload2" type="primary" ref="uploadBtn" @click="uploadNewImage()" style="width: 90%;border-radius: 5px;font-size: small">开始上传</el-button>
         </div>
         <div id="uploadStatus">
             <p ref="uploadStatus" :class="uploadStatus_class">等待上传</p>
         </div>
         <div id="chooseLastImageBtn" @click="chooseLastImage()">
-            <p>选择上次上传图片&emsp;>>></p>
+            <p>选择上次上传图片>>></p>
         </div>
+      </div>
     </div>
     <div class="imgPart_inner">
       <div class="innerTitle">
-          <p style="line-height:20px;width:10%;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">图片信息</p>
-          <p style="margin-left: 5%;color: red;">*必须</p>
+          <p style="overflow: hidden;width:13%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: flex-start;margin-left: 3%">图片信息</p>
+          <p style="margin-left: 5%;color: red;font-family: 幼圆,serif">*必须</p>
       </div>
       <div id="imgSendContainer">
           <div id="imgSendPart_blue" @click="chooseBlueImage()">
-              <div style="width: 100%; height:96%; display: flex;justify-content: center" id="blueImageShowFeild">
+              <div id="blueImageShowField">
                   <img ref="imageShow_blue" src="@/assets/uploadicon.png" id="icon_blue" class="uploadIcon" alt="图片加载失败">
               </div>
-              <div style="width: 100%; height: 18%; margin-top: 0">
-                  <div ref="blueImageShowBtn" class="uploadButton" id="blueImageButton_Show" @click="chooseBlueImage()">选择蓝色光源图片(415nm)</div>
+              <div style="width: 100%; height: 16%;">
+                  <div ref="blueImageShowBtn" class="uploadButton" @click="chooseBlueImage()">选择蓝色光源图片(415nm)</div>
                   <!--这个提交按钮太丑了，隐藏-->
-                  <input ref="blueImageChooseBtn" id="blueImageButton" type="file" style="margin-top: 400px" @change="blueImageShowChange()">
+                  <input ref="blueImageChooseBtn" type="file" style="margin-top: 400px" @change="blueImageShowChange()">
               </div>
           </div>
           <div id="imgSendPart_green" @click="chooseGreenImage()">
-              <div style="width: 100%; height:96%; display: flex;justify-content: center">
+              <div id="greenImageShowField">
                   <img ref="imageShow_green" src="@/assets/uploadicon.png" id="icon_green" class="uploadIcon" alt="图片加载失败">
               </div>
-              <div style="width: 100%; height: 18%; margin-top: 0">
-                  <div ref="greenImageShowBtn" class="uploadButton" id="greenImageButton_Show" @click="chooseGreenImage()" style="background-color: rgba(49,143,63,0.4)">选择绿色光源图片(540nm)</div>
+              <div style="width: 100%; height: 16%;">
+                  <div ref="greenImageShowBtn" class="uploadButton" id="greenImageButton_Show" @click="chooseGreenImage()" style="color: rgb(49,143,63)">选择绿色光源图片(540nm)</div>
                   <input ref="greenImageChooseBtn" id="greenImageButton" type="file" style="margin-top: 400px" @change="greenImageShowChange()">
               </div>
           </div>
           <div id="imgSendPart_white" @click="chooseWhiteImage()">
-              <div style="width: 100%; height:96%; display: flex;justify-content: center">
+              <div id="whiteImageShowField">
                   <img ref="imageShow_white" src="@/assets/uploadicon.png" id="icon_white" class="uploadIcon" alt="图片加载失败">
               </div>
-              <div style="width: 100%; height: 18%; margin-top: 0">
+              <div style="width: 100%; height: 16%;">
                   <div ref="whiteImageShowBtn" class="uploadButton" id="whiteImageButton_Show" @click="chooseWhiteImage()" style="background-color: rgba(255, 255, 255, 0.4); color: black;border: 2px solid #323232;">选择白色光源图片(非必须)</div>
                   <input ref="whiteImageChooseBtn" id="whiteImageButton" type="file" style="margin-top: 400px" @change="whiteImageShowChange()">
               </div>
           </div>
       </div>
-      <div class="innerTitle">
-          <p style="line-height:20px;width:10%;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">附加信息</p>
-          <p style="margin-left: 5%;color: rgb(19, 124, 0);">*非必须</p>
+      <div class="innerTitle" style="border-top: 1px #d0d0d0 solid; margin-top: 5px">
+          <p style="overflow: hidden;width:13%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: flex-start;margin-left: 3%">附加信息</p>
+          <p style="margin-left: 5%;color: rgb(19, 124, 0);font-family: 幼圆,serif">*非必须</p>
       </div>
       <div id="imgSend_addInfoContainer">
-        <div style="width: 40%; margin-left: 5%;height: 100%; display: block;justify-content: left;">
+        <div style="width: 50%;height: 100%; display: block;justify-content: left;">
             <div class="addInfo">
                 <p class="addInfo_formLabel">标本名称：</p>
-                <input v-model="additionInfo.sampleName" class="addInfo_formInput" id="addInfo_sampleName" AUTOCOMPLETE="off" type="text" placeholder="    输入标本名称"/>
+                <input v-model="additionInfo.sampleName" class="addInfo_formInput" id="addInfo_sampleName" AUTOCOMPLETE="off" type="text" placeholder="输入标本名称"/>
                 <p style="color: red;width: 5%;text-align: center;"></p>
             </div>
             <div id="addInfo_bodyPart_Container" style="display: flex;flex-direction: column;">
@@ -75,14 +74,14 @@
                 </div>
                 <div v-show="part_Other"  class="addInfo" id="addInfo_bodyPart_other_Container">
                   <p class="addInfo_formLabel"></p>
-                  <input v-model="additionInfo.part_other" class="addInfo_formInput" id="addInfo_bodyPart_other" AUTOCOMPLETE="off" type="text" placeholder="    输入其他标本部位名称"/>
+                  <input v-model="additionInfo.part_other" class="addInfo_formInput" id="addInfo_bodyPart_other" AUTOCOMPLETE="off" type="text" placeholder="输入其他标本部位名称"/>
                   <p style="color: red;width: 5%;text-align: center;"></p>
                 </div>
             </div>
             <div class="addInfo">
                 <p class="addInfo_formLabel">        备注：</p>
                 <div style="width: 60%;height: 100px;display: flex;justify-content: center;align-items: center;overflow: hidden;">
-                    <textarea v-model="additionInfo.remark" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;height: 92%; width: 100%;resize: none;" placeholder="    备注"></textarea>
+                    <textarea v-model="additionInfo.remark" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;height: 92%; width: 100%;resize: none;" placeholder="备注"></textarea>
                 </div>
                 <p style="color: red;width: 5%;text-align: center;"></p>
             </div>
@@ -289,7 +288,12 @@ export default {
     },
     getFileName(o){
       const pos = o.lastIndexOf("\\");
-      return o.substring(pos+1);
+      if (o.length < pos+15){
+        return o.substring(pos+1);
+      }
+      else{
+        return o.substring(pos+1,pos+10) + "...";
+      }
     },
     getFileType(o){
       const pos = o.lastIndexOf(".");
@@ -299,11 +303,11 @@ export default {
       const imageShow = this.$refs.imageShow_blue;
       imageShow.className = "uploadIcon";
       const blue_input = this.$refs.blueImageChooseBtn;
-      this.$refs.blueImageShowBtn.innerText = "选择蓝色光源图片(415nm)\n"+this.getFileName(blue_input.value);
+      this.$refs.blueImageShowBtn.innerText = "已选择："+this.getFileName(blue_input.value);
       const fileType = this.getFileType(blue_input.value);
       if (fileType === "jpg" || fileType ==="JPG" || fileType==="jpeg"){
         const file = blue_input.files[0]; // 获取input上传的图片数据;
-        var read = new FileReader(); // 创建FileReader对像;
+        let read = new FileReader(); // 创建FileReader对像;
         read.readAsDataURL(file); // 调用readAsDataURL方法读取文件;
         read.onload = function() {
           // 拿到读取结果;
@@ -318,11 +322,11 @@ export default {
       const imageShow = this.$refs.imageShow_green;
       imageShow.className = "uploadIcon";
       const green_input = this.$refs.greenImageChooseBtn;
-      this.$refs.greenImageShowBtn.innerText = "选择绿色光源图片(540nm)\n"+this.getFileName(green_input.value);
+      this.$refs.greenImageShowBtn.innerText = "已选择："+this.getFileName(green_input.value);
       const fileType = this.getFileType(green_input.value);
       if (fileType === "jpg" || fileType ==="JPG" || fileType==="jpeg"){
         const file = green_input.files[0]; // 获取input上传的图片数据;
-        var read = new FileReader(); // 创建FileReader对像;
+        let read = new FileReader(); // 创建FileReader对像;
         read.readAsDataURL(file); // 调用readAsDataURL方法读取文件;
         read.onload = function() {
           // 拿到读取结果;
@@ -337,11 +341,11 @@ export default {
       const imageShow = this.$refs.imageShow_white;
       imageShow.className = "uploadIcon";
       const white_input = this.$refs.whiteImageChooseBtn;
-      this.$refs.whiteImageShowBtn.innerText = "选择白色光源图片(非必须)\n"+this.getFileName(white_input.value);
+      this.$refs.whiteImageShowBtn.innerText = "已选择："+this.getFileName(white_input.value);
       const fileType = this.getFileType(white_input.value);
       if (fileType === "jpg" || fileType ==="JPG" || fileType==="jpeg"){
         const file = white_input.files[0]; // 获取input上传的图片数据;
-        var read = new FileReader(); // 创建FileReader对像;
+        let read = new FileReader(); // 创建FileReader对像;
         read.readAsDataURL(file); // 调用readAsDataURL方法读取文件;
         read.onload = function() {
           // 拿到读取结果;
@@ -366,32 +370,31 @@ export default {
   align-items: center;
   flex-direction: column;
 }
-
 .subTitle{
-    background-color: rgba(88, 88, 88, 0.4);
     display: flex;
-    align-items: center;
-    flex-direction: row;
+    align-items: flex-start;
+    flex-direction: column;
     justify-content: left;
     width: 100%;
-    height: 60px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    height: 100px;
+    border-bottom: 1px #cbcbcb solid;
+    overflow: hidden;
 }
 #uploadBtnContainer{
-    width: 20%;
-    height: 100%;
+    width: 32%;
+    height: 70%;
     margin-left: 3%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     overflow: hidden;
 }
 #chooseLastImageBtn{
     margin-left: 20%;
-    width: 20%;
-    height: 80%;
+    margin-right: 3%;
+    width: 30%;
+    height: 70%;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -399,28 +402,37 @@ export default {
     font-family: Arial, Helvetica, sans-serif;
     color: rgb(37, 70, 255);
     transition: 0.3s ease;
+    font-size: small;
+    border:rgb(37, 70, 255) 1px solid ;
+    border-radius: 3px;
 }
 
 #chooseLastImageBtn:hover{
     color: rgb(91, 115, 255);
+    border:rgb(91, 115, 255) 1px solid ;
 }
 
 #uploadStatus{
-    margin-left: 0%;
+    margin-left: 0;
     width: 18%;
-    height: 80%;
+    height: 70%;
     display: flex;
     align-items: center;
     justify-content: start;
-    font-family: Arial, Helvetica, sans-serif;
 }
 .uploadStatus_red{
-  color: rgb(166, 0, 0);
+  font-family: 幼圆,serif;
+  font-weight: bold;
+  color: rgb(217, 8, 8);
 }
 .uploadStatus_yellow{
+  font-family: 幼圆,serif;
+  font-weight: bold;
   color: rgb(255, 183, 82);
 }
 .uploadStatus_green{
+  font-family: 幼圆,serif;
+  font-weight: bold;
   color: rgb(34, 255, 0);
 }
 
@@ -429,72 +441,97 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    background-color:  rgba(126, 126, 126, 0.1);
 }
 
 #imgSendContainer{
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 300px;
-    justify-content: center;
+    height: 180px;
+    justify-content: start;
     align-items: center;
 }
 
 #imgSendPart_blue{
     width: 30%;
     height: 90%;
-    background-color: rgba(154, 198, 255, 0.95);
-    /* border-radius: 25px; */
-    border: 2px dashed rgba(170, 170, 170, 0.9);
+    border-radius: 3px;
     align-content: center;
-    transition: 0.3s;
     overflow: hidden;
-    margin-right: 3%;
+    margin-right: 1%;
+    margin-left: 3%;
 }
-#imgSendPart_blue:hover{
+#blueImageShowField{
+  background-color: rgba(154, 198, 255, 0.95);
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  width: 98%;
+  height:80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+#blueImageShowField:hover{
     background-color: rgba(154, 198, 255, 0.5);
 }
 
 #imgSendPart_green{
     width: 30%;
     height: 90%;
-    background-color: rgba(154, 255, 171, 0.95);
-    /* border-radius: 25px; */
-    border: 2px dashed rgba(170, 170, 170, 0.9);
+    border-radius: 3px;
     align-content: center;
-    transition: 0.3s;
     overflow: hidden;
+    margin-right: 1%;
 }
 
-#imgSendPart_green:hover{
+#greenImageShowField{
+  background-color: rgba(154, 255, 171, 0.95);
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  width: 98%;
+  height:80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+#greenImageShowField:hover{
     background-color: rgba(154, 255, 171, 0.5);
 }
 
 #imgSendPart_white{
     width: 30%;
     height: 90%;
-    background-color: rgba(242, 242, 242, 0.05);
-    /* border-radius: 25px; */
-    border: 2px dashed rgba(170, 170, 170, 0.9);
+    border-radius: 3px;
     align-content: center;
     transition: 0.3s;
     overflow: hidden;
-    margin-left: 3%;
 }
 
-#imgSendPart_white:hover{
+#whiteImageShowField{
+  background-color: rgba(154, 255, 171, 0);
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  width: 98%;
+  height:80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  cursor: pointer;
+}
+#whiteImageShowField:hover{
     background-color: rgba(228, 228, 228, 0.15);
 }
 
 .innerTitle{
-    background-color: rgba(5, 63, 0, 0.207);
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: left;
     width: 100%;
     height: 30px;
+    overflow: hidden;
 }
 
 .uploadButton {
@@ -503,19 +540,16 @@ export default {
     justify-content: center;
     align-items: center;
     flex: 1 1 auto;
-    height: 30%;
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: -55px;
-    padding: 20px;
-    border: 2px solid #f7f7f7;
+    height: 95%;
+    border: 2px solid black;
     border-radius: 5px;
     text-align: center;
     position: relative;
     overflow: hidden;
     font-family: STHeiti;
-    color: white;
-    background-color: rgba(0, 112, 221, 0.4);
+    font-size: smaller;
+    color: blue;
+    overflow: hidden;
 }
 .uploadButton:after {
     position: absolute;
@@ -547,7 +581,7 @@ export default {
 #imgSend_addInfoContainer{
     display: flex;
     flex-direction: row;
-    margin-top: 30px;
+    margin-top: 10px;
     width: 100%;
     height: 280px;
     justify-content: center;
@@ -556,23 +590,23 @@ export default {
 .addInfo{
     display: flex;
     flex-direction: row;
-    width: 90%;
+    width: 95%;
     justify-content: center;
     align-items: center;
 }
 .addInfo_formLabel{
-	width: 30%;
-    height: 60px;
-	overflow: hidden;
+    width: 40%;
+    height: 30px;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0px;
+  font-size: small;
 }
 .addInfo_formInput{
-	width: 60%;
-    height: 40px;
-	display: flex;
+    width: 60%;
+    height: 30px;
+    display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;

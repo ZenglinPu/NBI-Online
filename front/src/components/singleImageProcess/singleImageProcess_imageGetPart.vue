@@ -1,14 +1,27 @@
 <template>
   <div id="imgShowPart">
     <div class="subTitle">
-        <p style="line-height:20px;width:10%;font-family: STHeiti;color: #363636;display: flex;justify-content: center;font-weight: bold;margin-left: 6%;">生成结果:</p>
-        <div style="height:100%;width:85%; display:flex;flex-direction:row;justify-content: end;align-items: center;">
+      <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;align-items: center;margin: 0 0 0 2%;">生成结果(Get Result):</p>
+      <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
+        <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">生成图片</button>
-          <button id="saveImage" @click="downloadResult()">保存结果</button>
+<!--          TODO-->
+          <button id="saveImage">保存结果</button>
+          <el-popover
+            placement="top-start"
+            width="100"
+            trigger="hover"
+            content="是否在历史记录中保存此次提交，未保存的数据仅会在历史记录中保存24小时！">
+            <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+          </el-popover>
         </div>
+        <div style="height: 100%;width: 40%;display: flex;justify-content: end;">
+          <el-button id="downloadResult" type="warning" icon="el-icon-download" @click="downloadResult()">下载结果</el-button>
+        </div>
+      </div>
     </div>
-    <div class="imgPart_inner" style="height: 560px;">
+    <div class="imgPart_inner" style="height: 340px;margin-top: 10px;">
         <div style="width: 100%;height:100%;display:flex;justify-content: left;align-items: center;">
             <div id="imgBackPart">
                 <p id="outImageDefault" v-show="!isShowResult">/*生成图片后查看结果*/</p>
@@ -16,16 +29,15 @@
             </div>
             <div id="mainControlPart">
                 <div id="mainControlBtn">
-                  <p class="mainControl_title">自动调整：</p>
                   <div style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
                     <el-popover
                       placement="top-start"
                       width="100"
                       trigger="hover"
                       content="使用后台算法自动调整输入图片强度，避免因为输入图片亮度不统一而造成的色彩偏移问题。">
-                      <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                      <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                     </el-popover>
-                    <p >自动调整通道</p>
+                    <p style="font-family: 幼圆,serif;">自动调整通道</p>
                     <input type="checkbox" ref="isAutoChannel">
                   </div>
                   <div style="margin-top: 25px;font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
@@ -34,17 +46,16 @@
                       width="100"
                       trigger="hover"
                       content="自动调整最终生成图片的亮度，更适合观察">
-                      <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                      <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                     </el-popover>
-                    <p>自动调整亮度</p>
+                    <p style="font-family: 幼圆,serif;">自动调整亮度</p>
                     <input type="checkbox" ref="isAutoBrightness">
                   </div>
                 </div>
                 <div id="mainControlRange">
-                  <p class="mainControl_title">通道偏移控制：</p>
                   <div class="mainControlRange_container">
-                    <div style="width: 85%;display: flex;flex-direction: row;justify-content: start;align-items: center">
-                      <p>通道偏移调整：</p>
+                    <div style="width: 85%;height: 30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
+                      <p style="font-family: 幼圆,serif;">通道偏移调整：</p>
                       <div style="width: 30px;height: 100%;display: flex;justify-content: start;align-items: center">
                         <p style="color: #2244CC">{{channelOffset}}</p>
                       </div>
@@ -53,11 +64,11 @@
                         width="100"
                         trigger="hover"
                         content="通道偏移，手动调整输入图片强度，在自动调整的基础上可以进一步修改。">
-                        <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                        <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                       </el-popover>
                     </div>
-                    <div style="width:85%; height: 100%;display: flex;flex-direction: column;">
-                        <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                    <div style="width:85%; height: 50%;display: flex;flex-direction: column;">
+                        <div style="width:100%; height: 30%;display: flex;flex-direction: row;">
                             <p style="height: 100%;font-size: small;width: 50%;text-align: left;color: rgb(255, 33, 33);font-family: Arial, Helvetica, sans-serif;">红色增强</p>
                             <p style="height: 100%;font-size: small;width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">青色增强</p>
                         </div>
@@ -67,8 +78,8 @@
                     </div>
                   </div>
                   <div class="mainControlRange_container">
-                    <div style="width: 85%;display: flex;flex-direction: row;justify-content: start;align-items: center">
-                      <p>亮度偏移调整：</p>
+                    <div style="width: 85%;height:30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
+                      <p style="font-family: 幼圆,serif;">亮度偏移调整：</p>
                       <div style="width: 30px;height: 100%;display: flex;justify-content: start;align-items: center">
                         <p style="color: #2244CC">{{brightnessOffset}}</p>
                       </div>
@@ -77,11 +88,11 @@
                         width="100"
                         trigger="hover"
                         content="亮度偏移，调整最终生成图片的亮度，在自动调整的基础上可以进一步修改。">
-                        <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                        <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                       </el-popover>
                     </div>
-                    <div style="width:85%; height: 100%;display: flex;flex-direction: column;">
-                        <div style="width:90%; height: 30%;display: flex;flex-direction: row;">
+                    <div style="width:85%; height: 50%;display: flex;flex-direction: column;">
+                        <div style="width:100%; height: 30%;display: flex;flex-direction: row;font-size: small;">
                             <p style="width: 50%;text-align: left;font-family: Arial, Helvetica, sans-serif;">降低亮度</p>
                             <p style="width: 50%;text-align: right;font-family: Arial, Helvetica, sans-serif;">提高亮度</p>
                         </div>
@@ -218,10 +229,10 @@ export default {
         this.downloadImage("/static/Data/NBI/"+this.recordRealResult, "resultNBI.jpg");
     },
     downloadImage(imgSrc, fileName){
-      const alink = document.createElement("a");
-      alink.href = imgSrc;
-      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
-      alink.click();
+        var alink = document.createElement("a");
+        alink.href = imgSrc;
+        alink.download = fileName; //fileName保存提示中用作预先填写的文件名
+        alink.click();
     },
     showResultImage(data){
       console.log(data);
@@ -234,11 +245,6 @@ export default {
 </script>
 
 <style scoped>
-.mainControl_title{
-  font-weight: bolder;
-  margin-left: 20px;
-  font-family: Arial;
-}
 #ShowResult{
   width: 100%;
   object-fit: contain;
@@ -248,64 +254,66 @@ export default {
     border-radius: 10px;
     width: 100%;
     -webkit-appearance: none;
-    height:6px;
+    height:4px;
 }
 #channelAdjustRange{
     background-image: linear-gradient(to right, rgb(183, 0, 0) , rgb(0, 234, 255));;
     border-radius: 10px;
     width: 100%;
     -webkit-appearance: none;
-    height:6px;
+    height:4px;
 }
 #imgShowPart{
     width: 100%;
     /* height: 100%; */
-    padding-top: 5px;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    border-bottom: 1px grey solid;
 }
 .subTitle{
-    background-color: rgba(88, 88, 88, 0.4);
     display: flex;
-    align-items: center;
-    flex-direction: row;
+    align-items: flex-start;
+    flex-direction: column;
     justify-content: left;
     width: 100%;
-    height: 60px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    height: 100px;
+    border-bottom: 1px #cbcbcb solid;
+    overflow: hidden;
 }
-
 #getResultImage{
-    line-height: 100%;
     height: 70%;
-    width: 20%;
+    width: 30%;
+    margin-left: 3%;
     cursor: pointer;
-    border-radius: 5px;
-    background-color: rgba(154, 198, 255, 0.95);
-    color: #000000;
+    border-radius: 3px;
+    background-color: #409eff;
+    color: white;
     transition: 0.3s ease;
     overflow: hidden;
 }
-
 #getResultImage:hover{
     background-color: rgba(56, 56, 56, 0.78);
     color: #edecd6;
 }
-
+#downloadResult{
+  width: 48%;
+  height: 70%;
+  font-size: small;
+  border: 1px grey solid;
+  margin-right: 5%;
+}
 #saveImage{
     line-height: 100%;
     height: 70%;
-    width: 20%;
+    width: 30%;
     margin-left: 2%;
-    margin-right: 2%;
     cursor: pointer;
-    border-radius: 5px;
-    background-color: rgba(204, 255, 204, 0.78);
-    color: #2a2a2a;
+    border-radius: 3px;
+    background-color: rgba(60, 197, 60, 0.78);
+    color: white;
     transition: 0.3s ease;
     overflow: hidden;
 }
@@ -314,7 +322,6 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    background-color:  rgba(126, 126, 126, 0.1);
 }
 #saveImage:hover{
     background-color: rgba(56, 56, 56, 0.78);
@@ -322,11 +329,11 @@ export default {
 }
 #imgBackPart{
     width: 70%;
-    height: 100%;
+    height: 95%;
     background-color: rgba(126, 126, 126, 0.25);
-    border: 3px dashed rgba(170, 170, 170, 0.9);
+    border: 2px solid black;
     /* border-radius: 40px; */
-    font-family: STHeiti;
+    font-family: STHeiti,serif;
     color: #363636;
     display: flex;
     justify-content: center;
@@ -355,15 +362,16 @@ input[type="checkbox"] {
 }
 #mainControlBtn{
     width: 100%;
-    height: 40%;
+    height: 25%;
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px grey solid;
 }
 #mainControlRange{
     width: 100%;
-    height: 60%;
+    height: 75%;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -371,10 +379,10 @@ input[type="checkbox"] {
 }
 .mainControlRange_container{
   width: 100%;
-  height: 35%;
+  height: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
   align-items: center;
 }
 
