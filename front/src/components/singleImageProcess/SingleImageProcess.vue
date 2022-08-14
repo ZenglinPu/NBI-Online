@@ -29,6 +29,7 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 #imageSendPartContainer{
   width: 40%;
