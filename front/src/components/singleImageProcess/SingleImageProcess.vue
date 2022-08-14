@@ -1,8 +1,12 @@
 <template>
  <div id="singleImageProcess-container">
-   <singleImageProcess_imageSendPart></singleImageProcess_imageSendPart>
-   <singleImageProcess_imageGetPart></singleImageProcess_imageGetPart>
-   <singleImageProcess_imageAdjust></singleImageProcess_imageAdjust>
+   <div id="imageSendPartContainer">
+     <singleImageProcess_imageSendPart></singleImageProcess_imageSendPart>
+   </div>
+   <div id="imageShowPartContainer">
+     <singleImageProcess_imageGetPart></singleImageProcess_imageGetPart>
+     <singleImageProcess_imageAdjust></singleImageProcess_imageAdjust>
+   </div>
  </div>
 </template>
 
@@ -12,7 +16,7 @@ import singleImageProcess_imageGetPart from "@/components/singleImageProcess/sin
 import singleImageProcess_imageAdjust from "@/components/singleImageProcess/singleImageProcess_imageAdjust";
 export default {
   name: "SingleImageProcess",
-  components:{singleImageProcess_imageSendPart, singleImageProcess_imageGetPart,singleImageProcess_imageAdjust}
+  components:{singleImageProcess_imageSendPart, singleImageProcess_imageGetPart, singleImageProcess_imageAdjust}
 }
 </script>
 
@@ -21,8 +25,20 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*align-items: center;*/
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+#imageSendPartContainer{
+  width: 40%;
+  height: 100%;
+  border: 1px gray solid;
+  border-right: none;
+}
+#imageShowPartContainer{
+  width: 60%;
+  height: 100%;
+  border: 1px gray solid;
 }
 </style>

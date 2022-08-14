@@ -18,9 +18,15 @@
                 <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item>
-                <input ref="rememAC" type="checkbox" id="rememAC" name="rememAC"/>
-                <label for="rememAC" style="cursor: pointer;margin-right:9rem;color: blue;font-size: 16px;line-height: 30px;">记住我</label>
-                <a class="fontLink" style="margin-left: 10%" @click="switchPage(2)">没有账号？立即注册</a>
+                <div style="width: 100%;display: flex;flex-direction: row;align-items: center;justify-content: center">
+                  <div style="width: 50%;height: 100%">
+                    <input ref="rememAC" type="checkbox" id="rememAC" name="rememAC"/>
+                    <label for="rememAC" style="cursor: pointer;margin-right:9rem;color: blue;font-size: 16px;line-height: 30px;">记住我</label>
+                  </div>
+                  <div style="width: 45%;height: 100%;display: flex;justify-content: end;align-items: center;margin-right: 5%;">
+                    <a class="fontLink" style="margin-left: 10%" @click="switchPage(2)">没有账号？立即注册</a>
+                  </div>
+                </div>
               </el-form-item>
               <input type="button" id="loginBtn" @click="loginCheck()" value="登      录"/>
             </el-form>
