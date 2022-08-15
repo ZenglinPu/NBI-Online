@@ -30,7 +30,13 @@ def getInfobyUID(UID):
 
 
 # 根据_id在图片附加信息库中提取图片附加信息
-
+def getAdditionalInfoBy_id(id):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.PhotoAdditionInfo
+    ret = table.find_one({'gid': id})
+    conn.close()
+    return ret
 
 # 根据打算注册的新UID检查是否已经注册
 def checkUIDRegistered(uid):

@@ -145,7 +145,10 @@ export default {
     },
     loginCheck(){
       if (this.loginForm.account === "" || this.loginForm.password===""){
-        alert("请首先输入账号和密码");
+        this.$message({
+          message: '请首先输入账号和密码',
+          type: 'error'
+        });
         return;
       }
       this.$axios.post('/NBI/User/checkLogin/', {
@@ -154,10 +157,16 @@ export default {
         "token": this.getCookie("NBI_token"),
       }).then((response) => {
         if (response.data === 1){
-          alert("该邮箱未注册！");
+          this.$message({
+            message: '该邮箱未注册！',
+            type: 'error'
+          });
         }
         else if (response.data === 2){
-          alert("密码错误！");
+          this.$message({
+            message: '密码错误！',
+            type: 'error'
+          });
         }
         else{
           // 登录成功
@@ -168,7 +177,10 @@ export default {
             //记录pwd
             this.setCookie("NBI_pwd", this.loginForm.password, 72, "/NBI");
           }
-          alert("登录成功！页面将会自动跳转");
+          this.$message({
+            message: '登录成功！页面将会自动跳转',
+            type: 'success'
+          });
           setTimeout(()=>{
             this.$router.push({path: "/ImageProcess"});
           }, 2000);
@@ -181,15 +193,24 @@ export default {
     },
     registerCheck(){
       if (this.registerForm.checkPass !== this.registerForm.password){
-        alert("两次密码输入不一致");
+        this.$message({
+          message: '两次密码输入不一致',
+          type: 'error'
+        });
         return;
       }
       if (this.registerForm.account === null || this.registerForm.password === null){
-        alert("注册关键信息不能为空");
+        this.$message({
+          message: '注册关键信息不能为空',
+          type: 'error'
+        });
         return;
       }
       if (!this.checkEmail(this.registerForm.account)){
-        alert("请输入符合规范的电子邮箱");
+        this.$message({
+          message: '请输入符合规范的电子邮箱',
+          type: 'error'
+        });
         return;
       }
       this.$axios.post('/NBI/User/register/', {
@@ -197,12 +218,18 @@ export default {
         "pw": this.registerForm.password,
       }).then((response) => {
         if (response.data === 0){
-          alert("注册失败，该邮箱地址已被注册！");
+          this.$message({
+            message: '注册失败，该邮箱地址已被注册！',
+            type: 'error'
+          });
           this.registerForm.account = "";
           this.registerForm.password = "";
         }
         else if (response.data === 1){
-          alert("注册成功！请登录。");
+          this.$message({
+            message: '注册成功！请登录。',
+            type: 'success'
+          });
           setTimeout(()=>{
             this.switchPage(1);
           }, 3000);

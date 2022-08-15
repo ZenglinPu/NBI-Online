@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from ..UserManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
-from ..dataManagement.dbFunction import deleteOneImage, getInfobyUID, getLastImage
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getInfobyUID, getLastImage
 from ..dataManagement.db_ImageData import imageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 
@@ -26,9 +26,18 @@ def chooseLastImage(request):
             # 返回1表示没有之前提交的图片
             return HttpResponse(1)
         else:
+            addtionalInfo = getAdditionalInfoBy_id(result['_id'])
             # 返回0表示可以提交完整的新图片数据
-            print(result)
-            return HttpResponse(result)
+            # print(addtionalInfo)
+            ret = {
+                'imageBlue': result['Image_Blue'],
+                'imageGreen': result['Image_Green'],
+                'imageWhite': result['Image_White'],
+                'sampleName': addtionalInfo['sampleName'],
+                'remark': addtionalInfo['remark'],
+            }
+            ret = json.dumps(ret)
+            return HttpResponse(ret, content_type='application/json')
 
 
 # 处理单张提交图片

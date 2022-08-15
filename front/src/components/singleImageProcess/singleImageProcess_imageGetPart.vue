@@ -169,8 +169,11 @@ export default {
     getResultImage(){
       this.checkUploaded();
       if (!this.isUploaded_fromSend){
-          alert("请先完成图片上传");
-          return;
+        this.$message({
+          message: "请先完成图片上传",
+          type: 'warning'
+        });
+        return;
       }
       this.isGenerating = true;
       this.getAdjustImageInfo();
@@ -202,13 +205,22 @@ export default {
       };
       this.$axios.post("/NBI/Image/getResult/",getResultForm, config).then((response) => {
         if (response.data === 1){
-            alert("登录状态错误！");
+            this.$message({
+              message: '登录状态错误！',
+              type: 'error'
+            });
         }
         else if (response.data === 2){
-            alert("请求方式错误！");
+          this.$message({
+            message: '请求方式错误！',
+            type: 'error'
+          });
         }
         else if (response.data === 3){
-            alert("图片处理错误");
+          this.$message({
+            message: '图片处理错误！',
+            type: 'error'
+          });
         }
         else{
             this.showResultImage(response.data);
@@ -219,8 +231,11 @@ export default {
     downloadResult(){
         // 检查是否存在生成图片
         if (this.recordRealResult === ""){
-            alert("请先点击生成图片！");
-            return -1;
+          this.$message({
+            message: '请先点击生成图片！',
+            type: 'error'
+          });
+          return -1;
         }
         this.$message({
           message: '已开始下载。',
@@ -235,7 +250,6 @@ export default {
         alink.click();
     },
     showResultImage(data){
-      console.log(data);
       this.isShowResult = true;
       this.imageResultSrc = "/static/Data/Temp/"+data.showImage;
       this.recordRealResult = data.resultImage;
@@ -247,6 +261,7 @@ export default {
 <style scoped>
 #ShowResult{
   width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 #brightnessAdjustRange{
@@ -340,7 +355,6 @@ export default {
     align-items: center;
     font-weight: bold;
     transition: 0.3s;
-    overflow: hidden;
 }
 
 #imgBackPart:hover{

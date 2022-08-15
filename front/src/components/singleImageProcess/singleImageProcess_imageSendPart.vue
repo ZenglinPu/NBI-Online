@@ -27,7 +27,7 @@
               <div style="width: 100%; height: 16%;">
                   <div ref="blueImageShowBtn" class="uploadButton" @click="chooseBlueImage()">选择蓝色光源图片(415nm)</div>
                   <!--这个提交按钮太丑了，隐藏-->
-                  <input ref="blueImageChooseBtn" type="file" style="margin-top: 400px" @change="blueImageShowChange()">
+                  <input ref="blueImageChooseBtn" id="blueImageButton" type="file" style="margin-top: 400px" @change="blueImageShowChange()">
               </div>
           </div>
           <div id="imgSendPart_green" @click="chooseGreenImage()">
@@ -252,10 +252,13 @@ export default {
             const imageShow_white = this.$refs.imageShow_white;
             imageShow_white.className = "uploadImageShow";
             imageShow_white.src = "/static/Data/White/"+response.data.imageWhite;
+            this.$refs.whiteImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageWhite.split("~")[0]+'.'+response.data.imageWhite.split(".")[1]);
           }
           this.additionInfo.sampleName = response.data.sampleName;
           this.additionInfo.remark = response.data.remark;
 
+          this.$refs.blueImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageBlue.split("~")[0]+'.'+response.data.imageBlue.split(".")[1]);
+          this.$refs.greenImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageGreen.split("~")[0]+'.'+response.data.imageGreen.split(".")[1]);
           this.isUploaded = true;
         }
       });
@@ -293,6 +296,14 @@ export default {
       }
       else{
         return o.substring(pos+1,pos+10) + "...";
+      }
+    },
+    cutFileName(o){
+      if (o.length < 15){
+        return o;
+      }
+      else{
+        return o.substring(0,15) + "...";
       }
     },
     getFileType(o){

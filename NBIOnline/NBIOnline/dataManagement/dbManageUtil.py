@@ -52,7 +52,7 @@ class NBIManager():
             os.system("mkdir /home/ubuntu/NBI-Online/NBIOnline/static/Data/Temp")
 
 
-manager = NBIManager("PhotoInfo")
+manager = NBIManager("TokenInfo")
 # manager.clearAllImageData()
 # manager.removeAllTableData()
 manager.printAll()
