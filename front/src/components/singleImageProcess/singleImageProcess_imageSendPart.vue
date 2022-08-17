@@ -155,7 +155,10 @@ export default {
     },
     uploadNewImage(){
       if (!this.greenImageChoose || !this.blueImageChoose){
-        alert("必须选择想要上传的原图片");
+        this.$message({
+          message: '必须选择想要上传的原图片',
+          type: 'error'
+        });
         return;
       }
       let uploadForm = new FormData();
@@ -193,17 +196,26 @@ export default {
       this.$refs.uploadBtn.disabled = true;
       this.$axios.post("/NBI/Image/upload/",uploadForm, config).then((response) => {
         if (response.data === 1){
-            alert("登录状态错误！请重新登录。");
+            this.$message({
+              message: '登录状态错误！请重新登录。',
+              type: 'error'
+            });
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
         else if (response.data === 2){
-            alert("您提交的图片为空，请检查！");
+            this.$message({
+              message: '您提交的图片为空，请检查！',
+              type: 'error'
+            });
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
         else if (response.data === 3){
-            alert("图片存储错误，目前仅支持常见图片格式。");
+            this.$message({
+              message: '图片存储错误，目前仅支持常见图片格式。',
+              type: 'error'
+            });
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
@@ -236,10 +248,16 @@ export default {
       };
       this.$axios.post("/NBI/Image/chooseLastImage/",getLastUploadImageForm, config).then((response) => {
         if (response.data === 2){
-            alert("登录状态错误！请重新登录。");
+            this.$message({
+              message: '登录状态错误！请重新登录。',
+              type: 'error'
+            });
         }
         else if (response.data === 1){
-            alert("未发现上次上传的图片");
+            this.$message({
+              message: '未发现上次上传的图片',
+              type: 'warning'
+            });
         }
         else{
           const imageShow_blue = this.$refs.imageShow_blue;

@@ -126,6 +126,7 @@ export default {
 <style scoped>
 #singleImage_adjust-container{
   width: 100%;
+  height: 100%;
 }
 input[type="checkbox"] {
   height: 18px;
@@ -135,7 +136,6 @@ input[type="checkbox"] {
 }
 #moreFunctionControlRange{
     width: 85%;
-    border-left: 1px gray solid;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -172,14 +172,14 @@ input[type="checkbox"] {
     width: 100%;
     height: 100%;
     display: flex;
+    border-right: 1px gray solid;
     justify-content: center;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
 }
 #controlPanelPart{
     width: 100%;
-    height: 180px;
-    /* height: 100%; */
+    height: 100%;
     padding-top: 5px;
     overflow: hidden;
     display: flex;

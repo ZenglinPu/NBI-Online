@@ -24,7 +24,7 @@ export default {
 <style scoped>
 #footer-container{
   width: 100%;
-  height: 120px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

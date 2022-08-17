@@ -4,8 +4,12 @@
      <singleImageProcess_imageSendPart></singleImageProcess_imageSendPart>
    </div>
    <div id="imageShowPartContainer">
-     <singleImageProcess_imageGetPart></singleImageProcess_imageGetPart>
-     <singleImageProcess_imageAdjust></singleImageProcess_imageAdjust>
+     <div style="width: 100%;height: 70%">
+       <singleImageProcess_imageGetPart></singleImageProcess_imageGetPart>
+     </div>
+     <div style="width: 100%;height: 30%">
+       <singleImageProcess_imageAdjust></singleImageProcess_imageAdjust>
+     </div>
    </div>
  </div>
 </template>

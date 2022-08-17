@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%;height: 100%">
-    <div id="header-container">
+    <div id="headerContainer">
        <c_header :singleOrMulti="singleOrMulti" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
     <div id="mainFunctionContainer">
@@ -8,7 +8,7 @@
         <router-view></router-view>
       </keep-alive>
     </div>
-    <div>
+    <div id="footerContainer">
       <c_footer></c_footer>
     </div>
   </div>
@@ -85,9 +85,14 @@ html,body{
   height: 100%;
   margin: 0;
   padding: 0;
+  min-width: 1500px;
+  max-width: 1700px;
+  min-height: 700px;
+  max-height: 800px;
 }
-#header-container{
+#headerContainer{
   width: 100%;
+  height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -95,6 +100,13 @@ html,body{
 #mainFunctionContainer{
   width: 100%;
   height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#footerContainer{
+  width: 100%;
+  height: 16%;
   display: flex;
   justify-content: center;
   align-items: center;

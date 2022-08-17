@@ -173,7 +173,7 @@ export default {
 <style scoped>
 #mainPageHeader{
     width: 100%;
-    height: 70px;
+    height: 100%;
     background-color: #07004f;
     background-repeat:no-repeat;
     overflow: hidden;
