@@ -6,6 +6,8 @@ import HistoryData from '@/components/HistoryData'
 import UserCenter from '@/components/UserCenter'
 import AccountPage from '@/components/AccountPage'
 
+import HistoryItemDetailPage from '@/components/history/HistoryItemDetailPage'
+
 import SingleImage from "@/components/singleImageProcess/SingleImageProcess"
 import MultiImage from "@/components/multiImageProcess/MultiImageProcess"
 
@@ -30,6 +32,12 @@ const router = new vueRouter({
         {
             path:"/HistoryData",
             component:HistoryData,
+        },
+        {
+            name: 'HistoryItemDetailPage',
+            path: "/HistoryItemDetailPage/:GID",
+            component: HistoryItemDetailPage,
+            props:true
         },
         {
             path:"/UserCenter",

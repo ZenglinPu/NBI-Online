@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import HistoryImageAdjust from './HistoryImageAdjust.vue';
-import HistoryImageGetPart from './HistoryImageGetPart.vue';
-import HistoryImageInfo from './HistoryImageInfo.vue';
+import HistoryImageAdjust from './historyItemDetail/HistoryImageAdjust.vue';
+import HistoryImageGetPart from './historyItemDetail/HistoryImageGetPart.vue';
+import HistoryImageInfo from './historyItemDetail/HistoryImageInfo.vue';
 export default {
-    name: "HistoryItemPage",
+    name: "HistoryItemDetailPage",
     components: { HistoryImageAdjust, HistoryImageGetPart, HistoryImageInfo }
 }
 </script>
