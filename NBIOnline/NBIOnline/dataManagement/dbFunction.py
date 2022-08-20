@@ -2,6 +2,8 @@ import pymongo
 import os
 
 # 获取用户修改的上一张图片数据
+
+
 def getLastImage(user):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
@@ -39,6 +41,8 @@ def getAdditionalInfoBy_id(id):
     return ret
 
 # 根据打算注册的新UID检查是否已经注册
+
+
 def checkUIDRegistered(uid):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
@@ -56,4 +60,32 @@ def deleteOneImage(type, name):
     if type not in typeOption:
         print("Can not find image type:{t}".format(t=type))
         return
-    os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" + type + "/" + name)
+    os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" +
+              type + "/" + name)
+
+# 提取HistoryData页面所需的基础信息
+
+
+def getHistory():
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table_PhotoInfo = conn.nbi.PhotoInfo
+    table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
+    ret = {}
+    count = 0
+    for object1 in table_PhotoInfo.find():
+        innerdict = {
+            'Image_Compress': object1['Image_Compress'],
+            'UID': object1['UID'],
+            'lastChangeTime': object1['lastChangeTime'],
+            'expireTime': object1['expireTime']
+        }
+        id = object1['_id']
+        object2 = table_PhotoAdditionInfo.find_one({"gid": id})
+        innerdict['sampleName'] = object2['sampleName']
+        innerdict['part'] = object2['part']
+        innerdict['preDiagnosis'] = object2['preDiagnosis']
+        ret[count] = innerdict
+        count = count + 1
+    conn.close()
+    return ret

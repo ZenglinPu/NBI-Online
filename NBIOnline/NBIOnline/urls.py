@@ -6,6 +6,7 @@ from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo
 from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage
+from .historyManagement.history import historyDisplay
 
 
 urlpatterns = [
@@ -26,4 +27,7 @@ urlpatterns = [
     path(r"NBI/User/getUserInfo/", getUserInfo, name="getUserInfoByToken"),
     path(r"NBI/User/uploadNewUName", updateNewUName),
     path(r"NBI/User/uploadNewAddInfo", updateNewAddInfo),
+
+    # """History Data"""
+    path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
 ]
