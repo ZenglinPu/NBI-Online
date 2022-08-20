@@ -5,6 +5,7 @@ from django.views.generic.base import TemplateView
 from .UserManagement.register import sendValidCodeEmail, registerNewUser
 from .UserManagement.login import loginCheck, checkByToken
 from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage
+from .historyManagement.history import historyDisplay
 
 
 urlpatterns = [
@@ -21,4 +22,8 @@ urlpatterns = [
     path(r"NBI/User/register/", registerNewUser, name="registerNewUser"),
     path(r"NBI/User/checkLogin/", loginCheck, name="loginWithAccount"),
     path(r"NBI/User/checkByToken/", checkByToken, name="checkByToken"),
+
+    # """History Data"""
+    path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
+
 ]
