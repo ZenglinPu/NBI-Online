@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'HistoryImageInfo',
     data() {
@@ -78,9 +80,9 @@ export default {
                     "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
                     'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
                 ],
-                sampleName: 'bob的标本',
-                partName: '胃',//部位 胃、大肠小肠、食管
-                preDiagnosis: ['早癌', '炎症'],//术前诊断
+                sampleName: '',
+                partName: '',//部位 胃、大肠小肠、食管
+                preDiagnosis: [],//术前诊断
                 preDiagnosisOptions: [{
                     value: '早癌', label: '早癌'
                 }, {
@@ -88,7 +90,7 @@ export default {
                 }, {
                     value: '腺癌', label: '腺癌'
                 }],
-                pathologic: ['早癌', '炎症'],//病理诊断
+                pathologic: [],//病理诊断
                 pathologicOptions: [{
                     value: '早癌', label: '早癌'
                 }, {
@@ -96,7 +98,7 @@ export default {
                 }, {
                     value: '腺癌', label: '腺癌'
                 }],
-                differentiation: ['1', '2'],///分化程度Integer分化程度多选：‘0’：不适用 ‘1‘：低分化 ‘2’：中分化 ‘3‘：高分化 多选
+                differentiation: [],///分化程度Integer分化程度多选：‘0’：不适用 ‘1‘：低分化 ‘2’：中分化 ‘3‘：高分化 多选
                 //infiltration: '',（单选，粘膜上皮层，粘膜固有层，粘膜肌层，粘膜下层（文本录入，单位μm），固有肌层）
                 cuttingEdge: true,//水平切缘（单选，阴性，阳性
                 remark: '备注xxxx',//备注
@@ -132,7 +134,36 @@ export default {
                 }
             });
         }
-    }
+    },
+    mounted() {
+        axios.get('NBI/History/Item', {
+            params: {
+                GID: 12345
+            }
+        }).then(function (response) {
+            if (response.data === 2) {
+                this.$message({
+                    message: '登录状态错误！请重新登录。',
+                    type: 'error'
+                });
+            }
+            else if (response.data === 1) {
+                this.$message({
+                    message: '未发现上次上传的图片',
+                    type: 'warning'
+                });
+            }
+            else {
+                this.sampleName = response.data.sampleName;
+                this.partName = response.data.partName;
+                this.preDiagnosis = response.data.preDiagnosis.split('|');
+                this.pathologic = response.data.pathologic.split('|');
+                this.cuttingEdge = response.data.cuttingEdge - '1';
+                this.differentiation = response.data.differentiation.split('|');
+                this.remark = response.data.remark;
+            }
+        })
+    },
 }
 </script>
 <style scoped>

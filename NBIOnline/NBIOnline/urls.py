@@ -4,8 +4,7 @@ from django.urls import path
 from django.views.generic.base import TemplateView
 from .UserManagement.register import sendValidCodeEmail, registerNewUser
 from .UserManagement.login import loginCheck, checkByToken
-from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage
-
+from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, HistoryImgInfo
 
 urlpatterns = [
     path(r'NBI/admin/', admin.site.urls),
@@ -21,4 +20,6 @@ urlpatterns = [
     path(r"NBI/User/register/", registerNewUser, name="registerNewUser"),
     path(r"NBI/User/checkLogin/", loginCheck, name="loginWithAccount"),
     path(r"NBI/User/checkByToken/", checkByToken, name="checkByToken"),
+
+    path('NBI/History/<str:GID>',HistoryImgInfo,name="historyImgInfo")
 ]

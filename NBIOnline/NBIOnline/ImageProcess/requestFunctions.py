@@ -1,5 +1,7 @@
 from datetime import datetime
 import json
+from tkinter import _GridIndex
+from urllib import request
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from ..UserManagement.token import tokenCheck
@@ -192,3 +194,51 @@ def updateInputAndGetNBI(request):
     else:
         # 请求方式错误
         return HttpResponse(2)
+    
+    
+@csrf_exempt
+def HistoryImgInfo(request, GID):
+    if request.method == 'POST':
+        # user = request.POST.get('user')
+        # token = request.POST.get('token')
+        # # 检查登录状态
+        # if not tokenCheck(user, token):
+        #     # 1表示登录状态有问题
+        #     return HttpResponse(1)
+
+        # # 因为uid中存在符号.
+        # # 在进行图片的处理中应当替换掉
+        # user = user.replace('.', '*')
+
+        # channelOffset = int(request.POST.get("channelOffset"))
+        # brightnessOffset = int(request.POST.get("brightnessAdjust"))
+        # isAutoChannel = request.POST.get("isAutoChannel") == "true"
+        # isAutoBrightness = request.POST.get("isAutoBrightness") == "true"
+        pass
+    elif request.method == 'GET':
+        # addtionalInfo = getAdditionalInfoBy_id(GID) 
+        # ret = {
+        #     'sampleName': addtionalInfo['sampleName'],
+        #     'part': addtionalInfo['part'],
+        #     'preDiagnosis': addtionalInfo['preDiagnosis'],
+        #     'pathologic': addtionalInfo['pathologic'],
+        #     'cuttingEdge': addtionalInfo['cuttingEdge'],
+        #     'differentiation': addtionalInfo['differentiation'],
+        #     'remark': addtionalInfo['remark'],
+        # }
+        ret = {
+            'sampleName': 'bob的胃标本',
+            'partName': '胃',
+            'preDiagnosis': '肺癌|炎症',
+            'pathologic': '肺癌|炎症',
+            'cuttingEdge': '1',
+            'differentiation': '1|2',
+            'remark': '备注123',
+        }
+        ret = json.dumps(ret)
+        return HttpResponse(ret, content_type='application/json')
+    else:
+        return HttpResponse(2)
+        
+       
+
