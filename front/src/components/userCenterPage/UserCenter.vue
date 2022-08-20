@@ -30,7 +30,7 @@
         </div>
       </div>
       <div id="userCenterInfo">
-        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 30%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 25%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>注册信息</p>
           </div>
@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 30%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 25%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>附加信息</p>
             <el-button @click="isChangeAdditionInfo = true" v-show="!isChangeAdditionInfo" icon="el-icon-edit" style="font-size: small;height: 20%;width: 20%;margin-left: 10px;display: flex;justify-content: center;align-items: center">修改</el-button>
@@ -77,15 +77,19 @@
             </div>
           </div>
         </div>
-        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 40%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 30%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>NBI相关信息</p>
           </div>
           <div class="infoContent">
             <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               <div style="height: 100%;width: 30%;display: flex;flex-direction: column;justify-content: start;align-items: center">
-                <p>&emsp;&emsp;用户等级:&emsp;{{rank===1?'普通':'超级'}}用户</p>
-                <p style="font-size: small;font-family: 幼圆,serif;color: #0b007e" v-show="rank===2">&emsp;&emsp;过期时间:&emsp;{{expiresTime}}</p>
+                <div style="height: 40%;width: 100%;margin: 0">
+                  <p>&emsp;&emsp;用户等级:&emsp;{{rank===1?'普通':'超级'}}用户</p>
+                </div>
+                <div style="height: 20%;width: 100%;margin: 0">
+                  <p style="height: 20%;font-size: small;font-family: 幼圆,serif;color: #0b007e" v-show="rank===2">&emsp;&emsp;过期时间:&emsp;{{expiresTime}}</p>
+                </div>
               </div>
               <div style="height: 100%;width: 20%;display: flex;justify-content: center;align-items: center">
                 <p class="fontLink">
@@ -106,6 +110,33 @@
               <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;总共生成次数:&emsp;
                 {{totalTimes}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 12%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+          <div class="infoTitle">
+            <p>邀请码</p>
+            <el-popover
+              placement="top-start"
+              width="100"
+              title="邀请码"
+              trigger="hover"
+              content="新用户注册当天内输入对方邀请码即可为对方增加30天超级用户权限！（每人仅限一次赠送机会，但是可以多次接收）">
+              <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+            </el-popover>
+          </div>
+          <div class="infoContent">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+                &emsp;&emsp;
+                <p style="font-family: 幼圆,serif; font-size: medium;color: white;background-color: black">{{inviteCode}}</p>
+              </div>
+              <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+                &emsp;&emsp;输入对方邀请码：
+                <el-tooltip class="item" effect="dark" content="输入后按Enter键确认" placement="top">
+                  <input type="text" ref="othersInviteCode" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #0b007e solid;" @keyup.enter="inputInviteCode()"/>
+                </el-tooltip>
               </div>
             </div>
           </div>
@@ -134,6 +165,7 @@ export default {
       leftTimes: "",
       totalTimes: "",
       expiresTime: "",
+      inviteCode: "",
       isChangeUName: false,
       isChangeAdditionInfo: false,
     }
@@ -173,6 +205,52 @@ export default {
     },
     getUID(){
       return this.getCookie("NBI_UID");
+    },
+    inputInviteCode(){
+      // 可以反复赠送的问题还没有解决
+      let inviteCodeForm = new FormData();
+      inviteCodeForm.append("token", this.getToken());
+      inviteCodeForm.append("uid", this.getUID());
+      inviteCodeForm.append("inviteCode", this.$refs.othersInviteCode.value);
+      this.$axios.post("/NBI/User/inputInviteCode",inviteCodeForm, {
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response)=>{
+        if (response.data === 1){
+          this.$message({
+            showClose: true,
+            message: '邀请码激活成功！已经为对方增加30天超级用户权限！',
+            type: 'success',
+          });
+        }
+        else if (response.data === -1){
+          this.$message({
+            showClose: true,
+            message: '您已注册超过24小时，不能赠送',
+            type: 'error',
+          });
+        }
+        else if (response.data === -2){
+          this.$message({
+            showClose: true,
+            message: '找不到目标用户，请检查您的邀请码是否正确',
+            type: 'error',
+          });
+        }
+        else if (response.data === -3){
+          this.$message({
+            showClose: true,
+            message: '不能给自己赠送哦',
+            type: 'error',
+          });
+        }
+        else if (response.data === -4){
+          this.$message({
+            showClose: true,
+            message: '您已经激活过了，一个账号仅可一次赠送，但可以多次接受赠送',
+            type: 'error',
+          });
+        }
+      });
     },
     uploadNewUName(){
       this.isChangeUName = false;
@@ -255,6 +333,7 @@ export default {
           this.leftTimes = response.data.TIMES_generate;
           this.totalTimes = response.data.SUM_generate;
           this.expiresTime = response.data.expiresTime;
+          this.inviteCode = response.data.inviteCode;
         }
       });
     },

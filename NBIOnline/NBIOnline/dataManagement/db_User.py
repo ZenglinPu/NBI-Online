@@ -19,6 +19,7 @@ import random
 # | department     | String  | 用户工作部门（初始为空）                                                   |
 # | competent      | String  | 用户职称（初始为空）                                                       |
 # | inviteCode     | String  | 邀请码                                                                  |
+# | isSend         | Boolean | 是否已经赠送过邀请码？true表示已经赠送（每人赠送一次，可多次接受）
 # | SUM_generate   | Integer | 记录用户生成的总NBI张数                                                    |
 # | TIMES_generate | Integer | 可生成NBI图片数，-1表示不限量                                               |
 # '''
@@ -49,6 +50,7 @@ class User:
         self.department = department
         self.competent = competent
         self.inviteCode = getInviteCode()
+        self.isSend = False
         self.SUM_generate = 0
         self.TIMES_generate = -1
 
@@ -64,6 +66,7 @@ class User:
         ret['department'] = self.department
         ret['competent'] = self.competent
         ret['inviteCode'] = self.inviteCode
+        ret['isSend'] = self.isSend
         ret['SUM_generate'] = self.SUM_generate
         ret['TIMES_generate'] = self.TIMES_generate
         return ret
@@ -79,8 +82,8 @@ class User:
 
 def getInviteCode():
     #   digits="0123456789"
-    ascii_letters = "0123456789abcdefghigklmnopqrstuvwxyz"
-    str_list = [random.choice(ascii_letters) for i in range(30)]
+    ascii_letters = "0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    str_list = [random.choice(ascii_letters) for i in range(35)]
     random_str = '~' + ''.join(str_list)
     return random_str
 
@@ -151,4 +154,48 @@ def addSumGenerate(uid):
     oldTimes = table.find_one({"UID": uid})['SUM_generate']
     newValue = {"$set": {"SUM_generate": oldTimes + 1}}
     table.update_one({"UID": uid}, newValue)
+    conn.close()
+
+
+# 根据邀请码查询用户信息，满足要求则给予奖励并返回true,失败返回false
+def inviteCodeReward(uid, inviteCode):
+    # 检查用户是否为刚注册第一天内
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.UserInfo
+    isSend = table.find_one({"UID": uid})['isSend']
+    if isSend:
+        return -4  # 表示已经送过了
+    registerTime = table.find_one({"UID": uid})['registerTime']
+    oneDayLater = registerTime + 24*60*60
+    if time.time() >= oneDayLater:
+        return -1  # 表示过时了
+    targetUID = table.find({"inviteCode": inviteCode})
+    if targetUID.count() != 1:
+        return -2  # 表示找不到那个人，可能输错了
+    targetUser = targetUID[0]
+    # 排除自己邀请自己的情况
+    if targetUser['UID'] == uid:
+        return -3
+
+    newValue = {"$set": {"isSend": True}}
+    table.update_one({"UID": uid}, newValue)
+
+    addSuperDay(targetUser, 30)
+    conn.close()
+    return 1
+
+
+def addSuperDay(user, num):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.UserInfo
+    # 先看是否是超级用户，如果是就直接加上时间，不是则在当前的基础上加上时间
+    if user['expiresTime'] >= time.time():
+        # 没过期
+        newExpiresTime = user['expiresTime'] + num * 24 * 60 * 60
+    else:
+        newExpiresTime = time.time() + num * 24 * 60 * 60
+    newValue = {"$set": {"expiresTime": newExpiresTime}}
+    table.update_one({"UID": user["UID"]}, newValue)
     conn.close()

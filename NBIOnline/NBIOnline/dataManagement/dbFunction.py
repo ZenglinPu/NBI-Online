@@ -63,9 +63,8 @@ def deleteOneImage(type, name):
     os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" +
               type + "/" + name)
 
+
 # 提取HistoryData页面所需的基础信息
-
-
 def getHistory():
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))

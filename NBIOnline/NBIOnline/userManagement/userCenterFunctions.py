@@ -4,7 +4,7 @@ import time
 from django.http import HttpResponse
 
 from ..userManagement.token import tokenCheck
-from ..dataManagement.db_User import getUserInfoByUID, updateUname, updateAddInfo
+from ..dataManagement.db_User import getUserInfoByUID, updateUname, updateAddInfo, inviteCodeReward
 
 
 # 修改用户名
@@ -78,3 +78,16 @@ def getUserRank(et):
 def getRegisterTime(et):
     dt: str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(et))
     return dt
+
+
+def checkInviteCode(request):
+    if request.method == 'POST':
+        user = request.POST.get('uid')
+        token = request.POST.get('token')
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        inviteCode = request.POST.get("inviteCode").strip()
+        result = inviteCodeReward(user, inviteCode)
+        return HttpResponse(result)
