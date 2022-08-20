@@ -41,7 +41,7 @@
                       title="明度"
                       trigger="hover"
                       content="按SVD分解像素，高明度提高图片整体暗部。">
-                      <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                      <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                     </el-popover>
                 </div>
                 <div style="width:75%; height: 100%;display: flex;flex-direction: column;justify-content: center;">
@@ -65,7 +65,7 @@
                       title="饱和度"
                       trigger="hover"
                       content="按SVD分解像素，高饱和度色彩更加鲜艳。">
-                      <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                      <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                     </el-popover>
                 </div>
                 <div style="width:75%; height: 100%;display: flex;flex-direction: column;justify-content: center;">
@@ -114,6 +114,7 @@ export default {
     showInfo(){
       if (!this.$refs.isAdjustImage.checked){
         this.$message({
+          showClose: true,
           message: '仅有在勾选开启图片调整功能后该改动才能生效。',
           type: 'warning'
         });

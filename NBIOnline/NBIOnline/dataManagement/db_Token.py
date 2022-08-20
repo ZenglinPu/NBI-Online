@@ -1,5 +1,5 @@
 from datetime import datetime
-from ..UserManagement.token import get_token  # 获取新随机token
+from ..userManagement.token import get_token  # 获取新随机token
 import pymongo
 
 

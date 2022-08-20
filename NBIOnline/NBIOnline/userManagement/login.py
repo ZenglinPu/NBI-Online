@@ -2,11 +2,23 @@ import datetime
 import json
 from django.http import HttpResponse
 import pymongo
-from ..UserManagement.token import TokenCheckLogin
-from ..UserManagement.md5 import transToMD5
+from ..userManagement.token import TokenCheckLogin, tokenCheck, logoutInToken
+from ..userManagement.md5 import transToMD5
 from ..dataManagement.db_Token import UserToken
 from ..dataManagement.db_User import getUnameByUID
 
+
+# 根据uid注销登录，把token改过期即可
+def logoutCheck(request):
+    if request.method == 'POST':
+        user = request.POST.get('uid')
+        token = request.POST.get('token')
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        ret = logoutInToken(user)
+        return HttpResponse(2) # 正常
 
 # 检查登录
 def loginCheck(request):

@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from ..UserManagement.token import tokenCheck
+from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
 from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getInfobyUID, getLastImage
 from ..dataManagement.db_ImageData import imageData

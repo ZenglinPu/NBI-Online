@@ -78,6 +78,7 @@ def tokenCheck(uid, token):
             return False
     return True
 
+
 # 解码token的方法
 # 返回布尔值判断是否匹配
 # def out_token(key, token):
@@ -116,3 +117,13 @@ def tokenCheck(uid, token):
 #         else:
 #             # 返回用户
 #             return token.user_id
+
+# 使得某个uid下的token过期
+def logoutInToken(uid):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.TokenInfo
+    newValue = {"$set": {"expiresTime": datetime.now()}}
+    result = table.update_one({"UID": uid}, newValue)
+    conn.close()
+    return result
