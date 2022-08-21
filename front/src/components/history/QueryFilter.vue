@@ -225,7 +225,7 @@
         </el-col>
 
         <el-col :span="1" class="icon-close font-color">
-          <zn-icon :iconName="'icon-close'" @click="delCurrentRow(index)" />
+          <!-- <icon :iconName="'icon-close'" @click="delCurrentRow(index)" /> -->
         </el-col>
       </el-row>
     </section>
@@ -236,7 +236,7 @@
         size="medium"
         @click="addCurrentRow"
       >
-        <zn-icon :iconName="'icon-add'" />
+        <!-- <icon :iconName="'icon-add'" /> -->
         添加条件
       </el-button>
     </el-col>
@@ -246,7 +246,7 @@
       size="medium"
       slot="reference"
     >
-      <zn-icon :iconName="'icon-filter'" />
+      <!-- <icon :iconName="'icon-filter'" /> -->
       <span>筛选</span>
     </el-button>
   </el-popover>
@@ -293,9 +293,9 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {
-    this.getFilterRules();
-  },
+  // created() {
+  //   this.getFilterRules();
+  // },
   mounted() {},
   methods: {
     // 获取全局定义筛选规则
@@ -363,25 +363,25 @@ export default {
     // },
     // 添加一行筛选条件
     addCurrentRow() {
-      this.form.filters.push({
-        where: "", //when:当，and:并且，or:或者
-        exp: this.judgeList[this.getDefaultType()][0].value, //表达式 筛选规则对应当value
-        field: this.options.fields[0].name, //字段名 表头对应当name
-        type: this.getDefaultType(),
-        options: {
-          valueStr: "", //值为字符串
-          valueArray: "", //值为数组
-          valueType: "", //对应value的类型 例：日期的今日、昨日等
-        },
-      });
-      if (this.form.filters.length == 1) {
-        this.form.filters[0].where = this.conditionList1[0].value;
-      } else if (this.form.filters.length == 2) {
-        this.form.filters[1].where = this.conditionList2[0].value;
-      } else {
-        this.form.filters[2].where = this.form.filters[1].where;
-      }
-      this.submitFilters();
+      // this.form.filters.push({
+      //   where: "", //when:当，and:并且，or:或者
+      //   exp: this.judgeList[this.getDefaultType()][0].value, //表达式 筛选规则对应当value
+      //   field: this.options.fields[0].name, //字段名 表头对应当name
+      //   type: this.getDefaultType(),
+      //   options: {
+      //     valueStr: "", //值为字符串
+      //     valueArray: "", //值为数组
+      //     valueType: "", //对应value的类型 例：日期的今日、昨日等
+      //   },
+      // });
+      // if (this.form.filters.length == 1) {
+      //   this.form.filters[0].where = this.conditionList1[0].value;
+      // } else if (this.form.filters.length == 2) {
+      //   this.form.filters[1].where = this.conditionList2[0].value;
+      // } else {
+      //   this.form.filters[2].where = this.form.filters[1].where;
+      // }
+      // this.submitFilters();
     },
     // 删除当前行筛选条件
     delCurrentRow(index) {

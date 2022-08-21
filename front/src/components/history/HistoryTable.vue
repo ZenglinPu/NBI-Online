@@ -48,6 +48,8 @@ export default {
       return this.getCookie("NBI_UID");
     },
     downloadHistory(currentPage){
+      console.log(this);
+      // console.log(this.$axios);
       let getHistoryForm = new FormData();
       // 身份识别数据
       getHistoryForm.append("uid", this.getUID());
@@ -56,7 +58,7 @@ export default {
       let config = {
          headers: {'Content-Type': 'multipart/form-data'}
       };
-      this.$axios.post("NBI/History/display/",getHistoryForm, config).then((response) => {
+      this.$axios.post("NBI/History/display",getHistoryForm, config).then((response) => {
         if (response.data === 1){
             this.$message({
               showClose: true,
