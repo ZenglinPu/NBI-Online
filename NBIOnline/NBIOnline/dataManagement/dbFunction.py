@@ -64,14 +64,15 @@ def deleteOneImage(type, name):
               type + "/" + name)
 
 
-# 提取HistoryData页面所需的基础信息，无筛选条件
+# 提取HistoryData页面所需的基础信息，无筛选条件，数据按照lastChangeTime逆序返回
 def getHistory(user, currentPage, pageCount):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
     ret = {}
-    allInfo = table_PhotoInfo.find({'UID': user})
+    data = {}
+    allInfo = table_PhotoInfo.find({'UID': user}).sort("lastChangeTime", -1)
     ret['totalPage'] = math.ceil(float(allInfo.count() / pageCount))
     """
     我们当前每一页展示pageCount张图，
@@ -100,9 +101,10 @@ def getHistory(user, currentPage, pageCount):
         innerDict['sampleName'] = object2['sampleName']
         innerDict['part'] = object2['part']
         innerDict['preDiagnosis'] = object2['preDiagnosis']
-        ret[count] = innerDict
+        data[count] = innerDict
         count += 1
         if count > end:
             break
+    ret['info'] = data
     conn.close()
     return ret
