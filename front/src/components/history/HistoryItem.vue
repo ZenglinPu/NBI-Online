@@ -10,9 +10,11 @@
       <td>{{ partName }}</td>
       <td>{{ diagnosis }}</td>
       <td>{{ uploadTime }}</td>
-      <td><div id="expired-time">{{ expiredTime }}</div></td>
       <td>
-        <el-button type="primary" plain @click="checkDetail">查看详情</el-button>
+        <div id="expired-time">{{ expiredTime }}</div>
+      </td>
+      <td>
+        <el-button type="primary" plain @click="checkDetail('g1')">查看详情</el-button>
       </td>
     </tr>
     <span></span>
@@ -45,8 +47,14 @@ export default {
     }
   },
   methods: {
-    checkDetail() {
-      return
+    //传入GID
+    checkDetail(GID) {
+      this.$router.push({
+        name: 'HistoryItemDetailPage',
+        params: {
+          GID: GID
+        }
+      })
     }
   },
   name: "HistoryItem",

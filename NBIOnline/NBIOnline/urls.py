@@ -2,10 +2,11 @@
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
+
 from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
-from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode
-from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage
+from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
+from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, HistoryImgInfo
 from .historyManagement.history import historyDisplay
 
 
@@ -27,8 +28,10 @@ urlpatterns = [
     path(r"NBI/User/getUserInfo/", getUserInfo, name="getUserInfoByToken"),
     path(r"NBI/User/uploadNewUName", updateNewUName),
     path(r"NBI/User/uploadNewAddInfo", updateNewAddInfo),
+    path(r"NBI/User/uploadNewPwd", updateNewPwd),
     path(r"NBI/User/inputInviteCode", checkInviteCode),
 
     # """History Data"""
     path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
+    path(r'NBI/HistoryDetail', HistoryImgInfo, name="HistoryImgInfo")
 ]

@@ -8,8 +8,8 @@
         <div style="width: 25%;height: 70%;display: flex;flex-direction: column;justify-content: center;align-items: start">
           <div style="width: 100%;height: 60%; display: flex;justify-content: start;align-items: center;">
             <p v-show="!isChangeUName" id="headerNameFont">{{uname}}</p>
-            <el-tooltip v-show="isChangeUName" class="item" effect="dark" content="输入后按Enter键确认" placement="top">
-              <input id="newUName" type="text" :value="uname" @blur="isChangeUName = false" @keyup.enter="uploadNewUName()" style="height: 68%;width: 90%;border-radius: 4px;border: 1px #0b007e solid;"/>
+            <el-tooltip v-show="isChangeUName" class="item" effect="dark" content="输入后按Enter键确认，最大长度为10个字符。" placement="top">
+              <input maxlength="10" id="newUName" type="text" :value="uname" @blur="isChangeUName = false" @keyup.enter="uploadNewUName()" style="height: 68%;width: 90%;border-radius: 4px;border: 1px #0b007e solid;"/>
             </el-tooltip>
             <div @click="isChangeUName = true" class="el-icon-edit changeBtn"></div>
           </div>
@@ -26,11 +26,35 @@
           </div>
         </div>
         <div style="width: 60%;height: 70%;display: flex;flex-direction: row;justify-content: end; align-items: center">
+          <div @click="isChangePWD = true" id="changePWDBtn" title="注销"><p>Change Password</p></div>
           <div @click="userLogOut()" id="logOutBtn" title="注销"><p>Sign Out</p></div>
         </div>
+        <el-drawer
+          title="修改密码"
+          :visible.sync="isChangePWD"
+          direction="ltr"
+          >
+          <div style="height: 80%;width: 90%;">
+            <el-form ref="pwdForm" label-width="100px" class="demo-ruleForm">
+              <el-form-item label="原密码" prop="oldPwd">
+                <el-input type="password" v-model="pwdForm.oldPwd" autocomplete="off" show-password></el-input>
+              </el-form-item>
+              <el-form-item label="新密码" prop="newPwd">
+                <el-input type="password" v-model="pwdForm.newPwd" autocomplete="off" show-password></el-input>
+              </el-form-item>
+              <el-form-item label="确认密码" prop="checkPwd">
+                <el-input type="password" v-model="pwdForm.checkPwd" autocomplete="off" show-password></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitForm()">提交</el-button>
+                <el-button @click="resetForm()">重置</el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-drawer>
       </div>
       <div id="userCenterInfo">
-        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 25%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 29%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>注册信息</p>
           </div>
@@ -43,7 +67,7 @@
             </div>
           </div>
         </div>
-        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 25%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 29%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>附加信息</p>
             <el-button @click="isChangeAdditionInfo = true" v-show="!isChangeAdditionInfo" icon="el-icon-edit" style="font-size: small;height: 20%;width: 20%;margin-left: 10px;display: flex;justify-content: center;align-items: center">修改</el-button>
@@ -128,9 +152,9 @@
           </div>
           <div class="infoContent">
             <div style="border: 1px solid gray;border-right: none;width:100%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-              <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="background-color: black;border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;
-                <p style="font-family: 幼圆,serif; font-size: medium;color: white;background-color: black">{{inviteCode}}</p>
+                <p style="font-family: 幼圆,serif; font-size: medium;color: white;">{{inviteCode}}</p>
               </div>
               <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;输入对方邀请码：
@@ -168,6 +192,12 @@ export default {
       inviteCode: "",
       isChangeUName: false,
       isChangeAdditionInfo: false,
+      isChangePWD: false,
+      pwdForm:{
+        oldPwd: "",
+        newPwd: "",
+        checkPwd: "",
+      },
     }
   },
   computed:{
@@ -205,6 +235,63 @@ export default {
     },
     getUID(){
       return this.getCookie("NBI_UID");
+    },
+    submitForm() {
+      if (this.pwdForm.newPwd === "" || this.pwdForm.checkPwd === "" || this.pwdForm.oldPwd === ""){
+        this.$message({
+          showClose: true,
+          message: '您必须输入原密码和新密码',
+          type: 'error',
+        });
+        return;
+      }
+      if (this.pwdForm.newPwd !== this.pwdForm.checkPwd){
+        this.$message({
+          showClose: true,
+          message: '您前后输入的新密码不一致',
+          type: 'error',
+        });
+        return;
+      }
+      let changePwdForm = new FormData();
+      changePwdForm.append("token", this.getToken());
+      changePwdForm.append("uid", this.getUID());
+      changePwdForm.append("oldPwd", this.pwdForm.oldPwd);
+      changePwdForm.append("newPwd", this.pwdForm.newPwd);
+      this.$axios.post("/NBI/User/uploadNewPwd",changePwdForm, {
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response)=>{
+        if (response.data === 1){
+          this.$message({
+            showClose: true,
+            message: '您的账号状态错误！',
+            type: 'error',
+          });
+        }
+        else if(response.data === 2){
+          this.$message({
+            showClose: true,
+            message: '原始密码错误，修改失败！',
+            type: 'error',
+          });
+          this.resetForm();
+        }
+        else if (response.data === 3){
+          this.$message({
+            showClose: true,
+            message: '新密码设置成功',
+            type: 'success',
+          });
+          this.isChangePWD = false;
+          this.resetForm();
+        }
+      });
+    },
+    resetForm() {
+      this.pwdForm.oldPwd = "";
+      this.pwdForm.newPwd = "";
+      this.pwdForm.checkPwd = "";
+      this.$refs.pwdForm.clearValidate();
     },
     inputInviteCode(){
       // 可以反复赠送的问题还没有解决
@@ -274,6 +361,7 @@ export default {
             message: '修改用户名成功！',
             type: 'success',
           });
+          this.$bus.$emit('changeStatus', {status: true, uname: this.uname});
         }
       });
     },
@@ -432,7 +520,8 @@ export default {
   color: #0b007e;
 }
 #logOutBtn{
-  width: 28%;
+  width: 25%;
+  margin-left: 4%;
   height: 40%;
   border: 2px solid #ff4b4b;
   color: #0b007e;
@@ -448,6 +537,25 @@ export default {
 #logOutBtn:hover{
   cursor: pointer;
   background-color: red;
+  color: white;
+}
+#changePWDBtn{
+  width: 25%;
+  margin-left: 2%;
+  height: 40%;
+  border: 2px solid #006c00;
+  color: #0b007e;
+  font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
+  transition: 0.3s ease;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: small;
+}
+#changePWDBtn:hover{
+  cursor: pointer;
+  background-color: #00ce02;
   color: white;
 }
 .changeBtn{

@@ -32,6 +32,8 @@ import random
 # 普通用户与高级用户的判别：
 # rank==2且当前时间没有超过它的高级用户过期时间戳
 # '''
+from ..userManagement.md5 import transToMD5
+
 
 class User:
     def __init__(self, uid, pwd, rank=2, name=None, workPlace=None,
@@ -199,3 +201,18 @@ def addSuperDay(user, num):
     newValue = {"$set": {"expiresTime": newExpiresTime}}
     table.update_one({"UID": user["UID"]}, newValue)
     conn.close()
+
+
+# 输入旧密码，更新为新密码，旧密码不对则返回false,对的则返回true,并且更新
+def changePwd(uid, oldPwd, newPwd):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.UserInfo
+    oldPwdInDatabase = table.find_one({"UID": uid})['pwd']
+    if not transToMD5(oldPwd) == oldPwdInDatabase:
+        return False
+    newValue = {"$set": {"pwd": transToMD5(newPwd)}}
+    table.update_one({"UID": uid}, newValue)
+    conn.close()
+    return True
+
