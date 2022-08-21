@@ -5,7 +5,7 @@
         <el-image style="width: 20px; height: 20px" :src="url" :preview-src-list="srcList">
         </el-image>
       </td>
-      <td>{{ userName }}</td>
+      <!-- <td>{{ userName }}</td> -->
       <td>{{ sampleName }}</td>
       <td>{{ partName }}</td>
       <td>{{ diagnosis }}</td>
@@ -67,7 +67,7 @@ table {
 }
 
 td {
-  text-align: left;
+  text-align: center;
   padding: 8px;
   width: 8.5%;
 }
@@ -92,6 +92,7 @@ tr:nth-child(even) {
   background: rgb(122, 229, 136);
   padding: 6px 12px;
   border-radius: 10px;
+  margin: 0 auto;
 }
 
 .el-button {

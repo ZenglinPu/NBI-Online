@@ -1,14 +1,14 @@
 <template>
   <div class="table-container">
     <div class="table-header">
-      <td>图片</td>
-      <td>上传用户</td>
-      <td>样本名称</td>
-      <td>部位</td>
-      <td>症状</td>
-      <td>上传时间</td>
-      <td>过期时间</td>
-      <td>附加信息</td>
+      <td><span class="table-header-inner">图片</span></td>
+      <!-- <td>上传用户</td> -->
+      <td><span class="table-header-inner">样本名称</span></td>
+      <td><span class="table-header-inner">部位</span></td>
+      <td><span class="table-header-inner">症状</span></td>
+      <td><span class="table-header-inner">上传时间</span></td>
+      <td><span class="table-header-inner">过期时间</span></td>
+      <td><span class="table-header-inner">附加信息</span></td>
     </div>
     <ul>
       <li v-for="count in 10" :key="count"><HistoryItem></HistoryItem></li>
@@ -55,7 +55,9 @@ export default {
       // 身份识别数据
       getHistoryForm.append("uid", this.getUID());
       getHistoryForm.append("token", this.getToken());
+      //当前页面
       getHistoryForm.append("currentPage", currentPage);
+      //显示条数
       getHistoryForm.append("pageCount", pageCount);
       this.$axios.post("/NBI/History/display/",getHistoryForm, {
          headers: {'Content-Type': 'multipart/form-data'}
@@ -79,6 +81,7 @@ export default {
 <style scoped>
 ul {
   margin: 0;
+  padding: 0;
 }
 
 li {
@@ -100,8 +103,14 @@ li {
   padding: 12px 0;
 }
 
+.table-header-inner {
+  width: 100px;
+  display: inline-block;
+  text-align: center;
+}
+
 td {
   text-align: left;
-  padding: 8px 53.5px;
+  padding: 8px 42.5px;
 }
 </style>
