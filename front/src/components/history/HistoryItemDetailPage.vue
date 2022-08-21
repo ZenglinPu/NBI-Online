@@ -1,7 +1,7 @@
 <template>
     <div id="historyItem-container">
         <div id="historyImageInfoContainer">
-            <HistoryImageInfo />
+            <HistoryImageInfo :GID="this.GID" />
         </div>
         <div id="imageShowPartContainer">
             <div style="width: 100%;height: 70%">
@@ -20,6 +20,7 @@ import HistoryImageGetPart from './historyItemDetail/HistoryImageGetPart.vue';
 import HistoryImageInfo from './historyItemDetail/HistoryImageInfo.vue';
 export default {
     name: "HistoryItemDetailPage",
+    props: ['GID'],
     components: { HistoryImageAdjust, HistoryImageGetPart, HistoryImageInfo }
 }
 </script>

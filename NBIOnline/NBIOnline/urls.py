@@ -21,5 +21,5 @@ urlpatterns = [
     path(r"NBI/User/checkLogin/", loginCheck, name="loginWithAccount"),
     path(r"NBI/User/checkByToken/", checkByToken, name="checkByToken"),
 
-    path('NBI/History/<str:GID>',HistoryImgInfo,name="historyImgInfo")
+    path(r'NBI/HistoryDetail',HistoryImgInfo,name="HistoryImgInfo")
 ]
