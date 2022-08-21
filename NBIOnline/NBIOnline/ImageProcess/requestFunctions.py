@@ -4,19 +4,11 @@ import json
 from urllib import request
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from ..UserManagement.token import tokenCheck
-from .ImageProcesser import (
-    compressImage,
-    generateNBIImage_easy,
-    generateNBIImage_full,
-    storeInputImage
-)
-from ..dataManagement.dbFunction import (
-    deleteOneImage,
-    getAdditionalInfoBy_id,
-    getInfobyUID,
-    getLastImage
-)
+
+from ..userManagement.token import tokenCheck
+from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getInfobyUID, getLastImage
+
 from ..dataManagement.db_ImageData import imageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 

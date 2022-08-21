@@ -4,7 +4,7 @@
        <c_header :singleOrMulti="singleOrMulti" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
     <div id="mainFunctionContainer">
-      <keep-alive>
+      <keep-alive include="SingleImageProcess">
         <router-view></router-view>
       </keep-alive>
     </div>
@@ -31,10 +31,10 @@ export default {
   },
   methods:{
     getCookie(objname){//获取指定名称的cookie的值
-      var arrstr = document.cookie.split("; ");
-      for(var i = 0;i < arrstr.length;i ++){
-          var temp = arrstr[i].split("=");
-          if(temp[0] === objname) return temp[1];
+      let arrstr = document.cookie.split("; ");
+      for(let i = 0; i < arrstr.length; i ++){
+        let temp = arrstr[i].split("=");
+        if(temp[0] === objname) return temp[1];
       }
       return null;
     },

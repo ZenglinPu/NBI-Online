@@ -3,7 +3,7 @@
 // npm i vue-router@3
 import vueRouter from 'vue-router'
 import HistoryData from '@/components/HistoryData'
-import UserCenter from '@/components/UserCenter'
+import UserCenter from '@/components/userCenterPage/UserCenter'
 import AccountPage from '@/components/AccountPage'
 
 import HistoryItemDetailPage from '@/components/history/HistoryItemDetailPage'

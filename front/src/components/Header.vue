@@ -71,16 +71,6 @@ export default {
     }
   },
   props:['accountPage', 'functionPage', 'switchFunctionPage','singleOrMulti'],
-  computed:{
-    userStatusColor(){
-      if (this.user.status){
-        return {color: "forestgreen"};
-      }
-      else{
-        return {color: "red"};
-      }
-    }
-  },
   mounted(){
     // 检查账户状态
     this.accountStatusCheck();
@@ -88,14 +78,12 @@ export default {
       this.user.status = data.status;
       this.user.name = data.uname;
     });
+
   },
   beforeDestroy() {
     this.$bus.$off('changeStatus');
   },
   methods:{
-    switchMainPage(key, keyPath){
-      console.log(key, keyPath);
-    },
     // cookie
     getCookie(objname){//获取指定名称的cookie的值
       const arrstr = document.cookie.split("; ");
@@ -147,6 +135,7 @@ export default {
         else if(checkResult === 1){
           this.user.status = false;
           this.$message({
+            showClose: true,
             message: '您的登录已过期！',
             type: 'error',
           });

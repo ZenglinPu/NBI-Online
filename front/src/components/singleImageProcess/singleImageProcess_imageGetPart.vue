@@ -170,6 +170,7 @@ export default {
       this.checkUploaded();
       if (!this.isUploaded_fromSend){
         this.$message({
+          showClose: true,
           message: "请先完成图片上传",
           type: 'warning'
         });
@@ -206,18 +207,21 @@ export default {
       this.$axios.post("/NBI/Image/getResult/",getResultForm, config).then((response) => {
         if (response.data === 1){
             this.$message({
+              showClose: true,
               message: '登录状态错误！',
               type: 'error'
             });
         }
         else if (response.data === 2){
           this.$message({
+            showClose: true,
             message: '请求方式错误！',
             type: 'error'
           });
         }
         else if (response.data === 3){
           this.$message({
+            showClose: true,
             message: '图片处理错误！',
             type: 'error'
           });
@@ -232,12 +236,14 @@ export default {
         // 检查是否存在生成图片
         if (this.recordRealResult === ""){
           this.$message({
+            showClose: true,
             message: '请先点击生成图片！',
             type: 'error'
           });
           return -1;
         }
         this.$message({
+          showClose: true,
           message: '已开始下载。',
           type: 'success',
         });

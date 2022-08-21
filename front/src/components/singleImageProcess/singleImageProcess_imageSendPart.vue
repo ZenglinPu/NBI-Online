@@ -156,6 +156,7 @@ export default {
     uploadNewImage(){
       if (!this.greenImageChoose || !this.blueImageChoose){
         this.$message({
+          showClose: true,
           message: '必须选择想要上传的原图片',
           type: 'error'
         });
@@ -197,6 +198,7 @@ export default {
       this.$axios.post("/NBI/Image/upload/",uploadForm, config).then((response) => {
         if (response.data === 1){
             this.$message({
+              showClose: true,
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
@@ -205,6 +207,7 @@ export default {
         }
         else if (response.data === 2){
             this.$message({
+              showClose: true,
               message: '您提交的图片为空，请检查！',
               type: 'error'
             });
@@ -213,6 +216,7 @@ export default {
         }
         else if (response.data === 3){
             this.$message({
+              showClose: true,
               message: '图片存储错误，目前仅支持常见图片格式。',
               type: 'error'
             });
@@ -249,12 +253,14 @@ export default {
       this.$axios.post("/NBI/Image/chooseLastImage/",getLastUploadImageForm, config).then((response) => {
         if (response.data === 2){
             this.$message({
+              showClose: true,
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
         }
         else if (response.data === 1){
             this.$message({
+              showClose: true,
               message: '未发现上次上传的图片',
               type: 'warning'
             });
@@ -344,7 +350,7 @@ export default {
         }
         imageShow.className = "uploadImageShow";
       }else{
-        imageShow.src = "/static/unknownImageTypeIcon.png";
+        imageShow.src = "/static/img/unknownImageTypeIcon.png";
       }
     },
     greenImageShowChange(){

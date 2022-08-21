@@ -2,9 +2,14 @@
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
-from .UserManagement.register import sendValidCodeEmail, registerNewUser
-from .UserManagement.login import loginCheck, checkByToken
+
+from .userManagement.register import sendValidCodeEmail, registerNewUser
+from .userManagement.login import loginCheck, checkByToken, logoutCheck
+from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode
 from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, HistoryImgInfo
+from .historyManagement.history import historyDisplay
+
+
 
 urlpatterns = [
     path(r'NBI/admin/', admin.site.urls),
@@ -19,7 +24,18 @@ urlpatterns = [
     path(r"NBI/User/register/sendEmail", sendValidCodeEmail, name="validCodeEmail"),
     path(r"NBI/User/register/", registerNewUser, name="registerNewUser"),
     path(r"NBI/User/checkLogin/", loginCheck, name="loginWithAccount"),
+    path(r"NBI/User/logout", logoutCheck, name="logout"),
     path(r"NBI/User/checkByToken/", checkByToken, name="checkByToken"),
 
+
+    
+
+    path(r"NBI/User/getUserInfo/", getUserInfo, name="getUserInfoByToken"),
+    path(r"NBI/User/uploadNewUName", updateNewUName),
+    path(r"NBI/User/uploadNewAddInfo", updateNewAddInfo),
+    path(r"NBI/User/inputInviteCode", checkInviteCode),
+
+    # """History Data"""
+    path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
     path(r'NBI/HistoryDetail',HistoryImgInfo,name="HistoryImgInfo")
 ]

@@ -146,6 +146,7 @@ export default {
     loginCheck(){
       if (this.loginForm.account === "" || this.loginForm.password===""){
         this.$message({
+          showClose: true,
           message: '请首先输入账号和密码',
           type: 'error'
         });
@@ -158,12 +159,14 @@ export default {
       }).then((response) => {
         if (response.data === 1){
           this.$message({
+            showClose: true,
             message: '该邮箱未注册！',
             type: 'error'
           });
         }
         else if (response.data === 2){
           this.$message({
+            showClose: true,
             message: '密码错误！',
             type: 'error'
           });
@@ -178,6 +181,7 @@ export default {
             this.setCookie("NBI_pwd", this.loginForm.password, 72, "/NBI");
           }
           this.$message({
+            showClose: true,
             message: '登录成功！页面将会自动跳转',
             type: 'success'
           });
@@ -194,6 +198,7 @@ export default {
     registerCheck(){
       if (this.registerForm.checkPass !== this.registerForm.password){
         this.$message({
+          showClose: true,
           message: '两次密码输入不一致',
           type: 'error'
         });
@@ -201,6 +206,7 @@ export default {
       }
       if (this.registerForm.account === null || this.registerForm.password === null){
         this.$message({
+          showClose: true,
           message: '注册关键信息不能为空',
           type: 'error'
         });
@@ -208,6 +214,7 @@ export default {
       }
       if (!this.checkEmail(this.registerForm.account)){
         this.$message({
+          showClose: true,
           message: '请输入符合规范的电子邮箱',
           type: 'error'
         });
@@ -219,6 +226,7 @@ export default {
       }).then((response) => {
         if (response.data === 0){
           this.$message({
+            showClose: true,
             message: '注册失败，该邮箱地址已被注册！',
             type: 'error'
           });
@@ -227,6 +235,7 @@ export default {
         }
         else if (response.data === 1){
           this.$message({
+            showClose: true,
             message: '注册成功！请登录。',
             type: 'success'
           });
