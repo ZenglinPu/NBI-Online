@@ -46,13 +46,18 @@ export default {
 </script>
 
 <style scoped>
-/* el-input {
-  height: 100%;
+.el-input, .search {
+  /* height: 100%; */
   line-height: 34px;
   border: none;
   padding: 0;
   pointer-events: none;
   font-size: 14px;
+}
+
+.el-input, .search >>> .el-input__inner {
+  cursor: pointer;
+  border: none;
 }
 
 .public-search {
@@ -62,8 +67,18 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
+.public-search >>> .el-input__inner {
+  width: 70px;
+  padding-right: 0;
+  transition: all 0.3s ease-in-out;
+}
+
 .isActive {
   border: 1px solid;
   transition: all 0.3s ease-in-out;
-} */
+}
+
+.isActive >>> .el-input__inner {
+  width: 210px;
+}
 </style>

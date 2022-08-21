@@ -10,16 +10,9 @@
       <td>过期时间</td>
       <td>附加信息</td>
     </div>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
-    <HistoryItem></HistoryItem>
+    <ul>
+      <li v-for="count in 10" :key="count"><HistoryItem></HistoryItem></li>
+    </ul>
   </div>
 </template>
 
@@ -30,11 +23,75 @@ export default {
   name: 'HistoryTable',
   components: {
     HistoryItem
-  }
+  },
+  data(){
+    return{
+      historyShow:{
+
+      }
+    }
+  },
+  methods: {
+    // cookie
+    getCookie(objName){//获取指定名称的cookie的值
+      const arrStr = document.cookie.split("; ");
+      for(let i = 0; i < arrStr.length; i ++){
+        const temp = arrStr[i].split("=");
+        if(temp[0] === objName) return temp[1];
+      }
+      return null;
+    },
+    getToken(){
+      return this.getCookie("NBI_token");
+    },
+    getUID(){
+      return this.getCookie("NBI_UID");
+    },
+    downloadHistory(currentPage){
+      let getHistoryForm = new FormData();
+      // 身份识别数据
+      getHistoryForm.append("uid", this.getUID());
+      getHistoryForm.append("token", this.getToken());
+      getHistoryForm.append("currentPage", currentPage);
+      let config = {
+         headers: {'Content-Type': 'multipart/form-data'}
+      };
+      this.$axios.post("NBI/History/display/",getHistoryForm, config).then((response) => {
+        if (response.data === 1){
+            this.$message({
+              showClose: true,
+              message: '登录状态错误！请重新登录。',
+              type: 'error'
+            });
+        }
+        else if (response.data === 2){
+            this.$message({
+              showClose: true,
+              message: '未找到对应信息！',
+              type: 'error'
+            });
+        }
+        else {
+          console.log(response.data);
+        }
+      })
+    }
+  },
+  mounted() {
+    this.$options.methods.downloadHistory();
+  },
 }
 </script>
 
 <style scoped>
+ul {
+  margin: 0;
+}
+
+li {
+  list-style-type: none;
+}
+
 .table-container {
   width: 1300px;
   margin: 0 auto;
