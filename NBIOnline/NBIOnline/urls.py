@@ -23,15 +23,15 @@ urlpatterns = [
     path(r"NBI/User/register/sendEmail", sendValidCodeEmail, name="validCodeEmail"),
     path(r"NBI/User/register/", registerNewUser, name="registerNewUser"),
     path(r"NBI/User/checkLogin/", loginCheck, name="loginWithAccount"),
-    path(r"NBI/User/logout", logoutCheck, name="logout"),
+    path(r"NBI/User/logout/", logoutCheck, name="logout"),
     path(r"NBI/User/checkByToken/", checkByToken, name="checkByToken"),
     path(r"NBI/User/getUserInfo/", getUserInfo, name="getUserInfoByToken"),
-    path(r"NBI/User/uploadNewUName", updateNewUName),
-    path(r"NBI/User/uploadNewAddInfo", updateNewAddInfo),
-    path(r"NBI/User/uploadNewPwd", updateNewPwd),
-    path(r"NBI/User/inputInviteCode", checkInviteCode),
+    path(r"NBI/User/uploadNewUName/", updateNewUName),
+    path(r"NBI/User/uploadNewAddInfo/", updateNewAddInfo),
+    path(r"NBI/User/uploadNewPwd/", updateNewPwd),
+    path(r"NBI/User/inputInviteCode/", checkInviteCode),
 
     # """History Data"""
     path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
-    path(r'NBI/HistoryDetail', HistoryImgInfo, name="HistoryImgInfo")
+    path(r'NBI/HistoryDetail/', HistoryImgInfo, name="HistoryImgInfo")
 ]

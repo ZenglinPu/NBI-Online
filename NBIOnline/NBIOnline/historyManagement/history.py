@@ -9,7 +9,6 @@ def historyDisplay(request):
     if request.method == 'POST':
         user = request.POST.get('uid')
         token = request.POST.get('token')
-        currentPage = request.POST.get('currentPage')
         # 检查登录状态
         if not tokenCheck(user, token):
             # 1表示登录状态有问题
@@ -18,9 +17,11 @@ def historyDisplay(request):
         # 在进行图片的处理中应当替换掉
         user = user.replace('.', '*')
 
-        ret = getHistory(user, currentPage)
-        if ret == 2:
-            return HttpResponse(2)
+        # 现在想要的是第几页
+        currentPage = int(request.POST.get('currentPage'))
+        # 每一页展示多少条数据
+        pageCount = int(request.POST.get("pageCount"))
 
+        ret = getHistory(user, currentPage, pageCount)
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type='application/json')

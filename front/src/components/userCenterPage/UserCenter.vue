@@ -258,7 +258,7 @@ export default {
       changePwdForm.append("uid", this.getUID());
       changePwdForm.append("oldPwd", this.pwdForm.oldPwd);
       changePwdForm.append("newPwd", this.pwdForm.newPwd);
-      this.$axios.post("/NBI/User/uploadNewPwd",changePwdForm, {
+      this.$axios.post("/NBI/User/uploadNewPwd/",changePwdForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response)=>{
         if (response.data === 1){
@@ -299,7 +299,7 @@ export default {
       inviteCodeForm.append("token", this.getToken());
       inviteCodeForm.append("uid", this.getUID());
       inviteCodeForm.append("inviteCode", this.$refs.othersInviteCode.value);
-      this.$axios.post("/NBI/User/inputInviteCode",inviteCodeForm, {
+      this.$axios.post("/NBI/User/inputInviteCode/",inviteCodeForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response)=>{
         if (response.data === 1){
@@ -346,7 +346,7 @@ export default {
       changeUnameForm.append("uid", this.getUID());
       this.uname = document.getElementById("newUName").value;
       changeUnameForm.append("name",this.uname);
-      this.$axios.post("/NBI/User/uploadNewUName",changeUnameForm, {
+      this.$axios.post("/NBI/User/uploadNewUName/",changeUnameForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response)=>{
         if (response.data===1){
@@ -373,7 +373,7 @@ export default {
       newAddInfo.append("workPlace", this.$refs.workPlaceInput.value);
       newAddInfo.append("department", this.$refs.departmentInput.value);
       newAddInfo.append("competent", this.$refs.competentInput.value);
-      this.$axios.post("/NBI/User/uploadNewAddInfo",newAddInfo, {
+      this.$axios.post("/NBI/User/uploadNewAddInfo/",newAddInfo, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response)=>{
         if (response.data===1){
@@ -430,7 +430,7 @@ export default {
       let logoutForm = new FormData();
       logoutForm.append("token", this.getToken());
       logoutForm.append("uid", this.getUID());
-      this.$axios.post("/NBI/User/logout",logoutForm, {
+      this.$axios.post("/NBI/User/logout/",logoutForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response)=>{
         console.log(response)

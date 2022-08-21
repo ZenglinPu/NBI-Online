@@ -1,7 +1,6 @@
-from datetime import datetime
+import time
 import json
 
-from urllib import request
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
@@ -86,7 +85,7 @@ def uploadImage(request):
             image_white=image_white_name,
             image_result=None,
             image_compress=None,
-            lastChangeTime=datetime.now(),
+            lastChangeTime=time.time(),
         )
         gid = newImageData.saveData().inserted_id
 
@@ -185,7 +184,7 @@ def updateInputAndGetNBI(request):
             image_white=lastInfo.get("Image_White"),
             image_result=resultName,
             image_compress=cname,
-            lastChangeTime=datetime.now(),
+            lastChangeTime=time.time(),
         )
         updateImageData.replaceData()
 

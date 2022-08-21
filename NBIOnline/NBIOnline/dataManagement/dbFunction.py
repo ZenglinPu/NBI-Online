@@ -1,9 +1,10 @@
+import math
+
 import pymongo
 import os
 
+
 # 获取用户修改的上一张图片数据
-
-
 def getLastImage(user):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
@@ -40,9 +41,8 @@ def getAdditionalInfoBy_id(id):
     conn.close()
     return ret
 
+
 # 根据打算注册的新UID检查是否已经注册
-
-
 def checkUIDRegistered(uid):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
@@ -64,37 +64,45 @@ def deleteOneImage(type, name):
               type + "/" + name)
 
 
-# 提取HistoryData页面所需的基础信息
-def getHistory(user, currentPage):
+# 提取HistoryData页面所需的基础信息，无筛选条件
+def getHistory(user, currentPage, pageCount):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
-    ret_temp = {}
-    count = 0
+    ret = {}
+    allInfo = table_PhotoInfo.find({'UID': user})
+    ret['totalPage'] = math.ceil(float(allInfo.count() / pageCount))
+    """
+    我们当前每一页展示pageCount张图，
+    目前需要的数据是currentPage页的数据，
+    因此应该先跳过前(currentPage-1)*pageCount条的数据，
+    然后取其之后的pageCount条数据
+    """
+    # 这里count就当作序号了，因此返回的数据其开头不一定是0，但是一定连续且不重复
+    count = 1
+    jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
+    end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
     for object1 in table_PhotoInfo.find({'UID': user}):
-        innerdict = {
-            '_id': object1['_id'],
+        if count <= jump:
+            count += 1
+            continue
+        innerDict = {
+            'index': count,
+            '_id': str(object1['_id']),
             'Image_Compress': object1['Image_Compress'],
-            'UID': object1['UID'],
+            # 'UID': object1['UID'],
             'lastChangeTime': object1['lastChangeTime'],
             'expireTime': object1['expireTime']
         }
-        id = object1['_id']
-        object2 = table_PhotoAdditionInfo.find_one({"gid": id})
-        innerdict['sampleName'] = object2['sampleName']
-        innerdict['part'] = object2['part']
-        innerdict['preDiagnosis'] = object2['preDiagnosis']
-        ret_temp[count] = innerdict
-        count = count + 1
-    if (currentPage - 1) * 10 not in ret_temp:
-        return 2
-    ret = {}
-    count = 0
-    while(count!=10 and ((currentPage - 1) * 10 + count) in ret_temp):
-        ret[(currentPage - 1) * 10 + count] = ret_temp[(currentPage - 1) * 10 + count]
-        count = count + 1
+        _id = object1['_id']
+        object2 = table_PhotoAdditionInfo.find_one({"gid": _id})
+        innerDict['sampleName'] = object2['sampleName']
+        innerDict['part'] = object2['part']
+        innerDict['preDiagnosis'] = object2['preDiagnosis']
+        ret[count] = innerDict
+        count += 1
+        if count > end:
+            break
     conn.close()
     return ret
-
-print(getHistory('6@6*com', 1))

@@ -1,4 +1,4 @@
-from datetime import datetime
+import time
 import pymongo
 
 
@@ -30,9 +30,9 @@ class imageData:
         self.image_white = image_white
         self.image_result = image_result
         self.image_compress = image_compress
-        self.uploadTime = datetime.now()
+        self.uploadTime = time.time()
         self.lastChangeTime = lastChangeTime
-        self.expireTime = self.uploadTime  # 这个暂时还没做，临时存储为这个时间戳
+        self.expireTime = self.uploadTime # 这个暂时还没做，临时存储为这个时间戳
         self.contrast = None
         self.light = None
         self.saturation = None

@@ -31,6 +31,9 @@ export default {
       }
     }
   },
+  mounted() {
+    this.downloadHistory(2,2);
+  },
   methods: {
     // cookie
     getCookie(objName){//获取指定名称的cookie的值
@@ -47,40 +50,28 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
-    downloadHistory(currentPage){
-      console.log(this);
-      // console.log(this.$axios);
+    downloadHistory(currentPage, pageCount){
       let getHistoryForm = new FormData();
       // 身份识别数据
       getHistoryForm.append("uid", this.getUID());
       getHistoryForm.append("token", this.getToken());
       getHistoryForm.append("currentPage", currentPage);
-      let config = {
+      getHistoryForm.append("pageCount", pageCount);
+      this.$axios.post("/NBI/History/display/",getHistoryForm, {
          headers: {'Content-Type': 'multipart/form-data'}
-      };
-      this.$axios.post("NBI/History/display",getHistoryForm, config).then((response) => {
+      }).then((response) => {
         if (response.data === 1){
-            this.$message({
-              showClose: true,
-              message: '登录状态错误！请重新登录。',
-              type: 'error'
-            });
-        }
-        else if (response.data === 2){
-            this.$message({
-              showClose: true,
-              message: '未找到对应信息！',
-              type: 'error'
-            });
+          this.$message({
+            showClose: true,
+            message: '登录状态错误！请重新登录。',
+            type: 'error'
+          });
         }
         else {
           console.log(response.data);
         }
       })
     }
-  },
-  mounted() {
-    this.$options.methods.downloadHistory();
   },
 }
 </script>
