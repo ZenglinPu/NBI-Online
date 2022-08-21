@@ -2,10 +2,11 @@
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
+
 from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
-from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage
+from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, HistoryImgInfo
 from .historyManagement.history import historyDisplay
 
 
@@ -32,4 +33,5 @@ urlpatterns = [
 
     # """History Data"""
     path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
+    path(r'NBI/HistoryDetail', HistoryImgInfo, name="HistoryImgInfo")
 ]

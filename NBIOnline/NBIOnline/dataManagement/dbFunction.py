@@ -65,15 +65,16 @@ def deleteOneImage(type, name):
 
 
 # 提取HistoryData页面所需的基础信息
-def getHistory():
+def getHistory(user, currentPage):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
-    ret = {}
+    ret_temp = {}
     count = 0
-    for object1 in table_PhotoInfo.find():
+    for object1 in table_PhotoInfo.find({'UID': user}):
         innerdict = {
+            '_id': object1['_id'],
             'Image_Compress': object1['Image_Compress'],
             'UID': object1['UID'],
             'lastChangeTime': object1['lastChangeTime'],
@@ -84,7 +85,16 @@ def getHistory():
         innerdict['sampleName'] = object2['sampleName']
         innerdict['part'] = object2['part']
         innerdict['preDiagnosis'] = object2['preDiagnosis']
-        ret[count] = innerdict
+        ret_temp[count] = innerdict
+        count = count + 1
+    if (currentPage - 1) * 10 not in ret_temp:
+        return 2
+    ret = {}
+    count = 0
+    while(count!=10 and ((currentPage - 1) * 10 + count) in ret_temp):
+        ret[(currentPage - 1) * 10 + count] = ret_temp[(currentPage - 1) * 10 + count]
         count = count + 1
     conn.close()
     return ret
+
+print(getHistory('6@6*com', 1))

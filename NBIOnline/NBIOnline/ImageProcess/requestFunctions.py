@@ -1,10 +1,14 @@
 from datetime import datetime
 import json
+
+from urllib import request
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
 from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getInfobyUID, getLastImage
+
 from ..dataManagement.db_ImageData import imageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 
@@ -12,48 +16,48 @@ from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 # 查询并返回上一次提交的图片
 @csrf_exempt
 def chooseLastImage(request):
-    if request.method == 'POST':
-        user = request.POST.get('uid')
-        token = request.POST.get('token')
+    if request.method == "POST":
+        user = request.POST.get("uid")
+        token = request.POST.get("token")
         # 检查登录状态
         if not tokenCheck(user, token):
             # 1表示登录状态有问题
             return HttpResponse(2)
 
         # 查询现有图片数据库中是否有名字和uid都一样的数据，如果有则说明这是重复提交
-        result = getLastImage(user.replace('.', '*'))
+        result = getLastImage(user.replace(".", "*"))
         if not result:
             # 返回1表示没有之前提交的图片
             return HttpResponse(1)
         else:
-            addtionalInfo = getAdditionalInfoBy_id(result['_id'])
+            addtionalInfo = getAdditionalInfoBy_id(result["_id"])
             # 返回0表示可以提交完整的新图片数据
             # print(addtionalInfo)
             ret = {
-                'imageBlue': result['Image_Blue'],
-                'imageGreen': result['Image_Green'],
-                'imageWhite': result['Image_White'],
-                'sampleName': addtionalInfo['sampleName'],
-                'remark': addtionalInfo['remark'],
+                "imageBlue": result["Image_Blue"],
+                "imageGreen": result["Image_Green"],
+                "imageWhite": result["Image_White"],
+                "sampleName": addtionalInfo["sampleName"],
+                "remark": addtionalInfo["remark"],
             }
             ret = json.dumps(ret)
-            return HttpResponse(ret, content_type='application/json')
+            return HttpResponse(ret, content_type="application/json")
 
 
 # 处理单张提交图片
 # 先创建数据库新条目，然后处理图片数据并存储
 @csrf_exempt
 def uploadImage(request):
-    if request.method == 'POST':
-        user = request.POST.get('uid')
-        token = request.POST.get('token')
+    if request.method == "POST":
+        user = request.POST.get("uid")
+        token = request.POST.get("token")
         # 检查登录状态
         if not tokenCheck(user, token):
             # 1表示登录状态有问题
             return HttpResponse(1)
         # 因为uid中存在特殊符号.
         # 在进行图片的处理中应当替换掉
-        user = user.replace('.', '*')
+        user = user.replace(".", "*")
 
         image_blue = request.FILES.get("blueImage")
         image_green = request.FILES.get("greenImage")
@@ -67,7 +71,9 @@ def uploadImage(request):
         # 处理并存储图片
         try:
             # 存储一组三张图片数据，返回压缩图路由
-            image_blue_name, image_green_name, image_white_name = storeInputImage(image_blue=image_blue, image_green=image_green, image_white=image_white)
+            image_blue_name, image_green_name, image_white_name = storeInputImage(
+                image_blue=image_blue, image_green=image_green, image_white=image_white
+            )
         except Exception as e:
             print(e)
             # 3表示图片存储过程错误
@@ -97,20 +103,20 @@ def uploadImage(request):
         # 向前端返回结果名以及缩略图名
         # 处理流程完成且正常
         ret = {
-            'imageBlue': image_blue_name,
-            'imageGreen': image_green_name,
-            'imageWhite': image_white_name,
+            "imageBlue": image_blue_name,
+            "imageGreen": image_green_name,
+            "imageWhite": image_white_name,
         }
         ret = json.dumps(ret)
-        return HttpResponse(ret, content_type='application/json')
+        return HttpResponse(ret, content_type="application/json")
 
 
 # 更新单张图片属性，然后重新生成，重新返回结果
 @csrf_exempt
 def updateInputAndGetNBI(request):
-    if request.method == 'POST':
-        user = request.POST.get('user')
-        token = request.POST.get('token')
+    if request.method == "POST":
+        user = request.POST.get("user")
+        token = request.POST.get("token")
         # 检查登录状态
         if not tokenCheck(user, token):
             # 1表示登录状态有问题
@@ -118,7 +124,7 @@ def updateInputAndGetNBI(request):
 
         # 因为uid中存在符号.
         # 在进行图片的处理中应当替换掉
-        user = user.replace('.', '*')
+        user = user.replace(".", "*")
 
         channelOffset = int(request.POST.get("channelOffset"))
         brightnessOffset = int(request.POST.get("brightnessAdjust"))
@@ -156,7 +162,7 @@ def updateInputAndGetNBI(request):
                 isAutoBrightness=isAutoBrightness,
                 contrast=contrastOffset,
                 numinosity=luminosityOffset,
-                saturation=saturationOffset
+                saturation=saturationOffset,
             )
             cname = compressImage(resultImage, resultName, 20)
         else:
@@ -168,27 +174,59 @@ def updateInputAndGetNBI(request):
 
         # 把旧的NBI&&Temp图片删除
         if lastInfo.get("Image_Result") is not None:
-            deleteOneImage('NBI', lastInfo.get("Image_Result"))
-            deleteOneImage('Temp', lastInfo.get("Image_Compress"))
+            deleteOneImage("NBI", lastInfo.get("Image_Result"))
+            deleteOneImage("Temp", lastInfo.get("Image_Compress"))
 
         # 更新数据库
-        updateImageData = imageData(uid=user,
-                                    image_green=lastInfo.get("Image_Green"),
-                                    image_blue=lastInfo.get("Image_Blue"),
-                                    image_white=lastInfo.get("Image_White"),
-                                    image_result=resultName,
-                                    image_compress=cname,
-                                    lastChangeTime=datetime.now(),
-                                    )
+        updateImageData = imageData(
+            uid=user,
+            image_green=lastInfo.get("Image_Green"),
+            image_blue=lastInfo.get("Image_Blue"),
+            image_white=lastInfo.get("Image_White"),
+            image_result=resultName,
+            image_compress=cname,
+            lastChangeTime=datetime.now(),
+        )
         updateImageData.replaceData()
 
         # 返回新的图片数据到前端
-        ret = {
-            'resultImage': resultName,
-            'showImage': cname
-        }
+        ret = {"resultImage": resultName, "showImage": cname}
         ret = json.dumps(ret)
-        return HttpResponse(ret, content_type='application/json')
+        return HttpResponse(ret, content_type="application/json")
     else:
         # 请求方式错误
+        return HttpResponse(2)
+
+
+@csrf_exempt
+def HistoryImgInfo(request):
+    if request.method == "POST":
+        sampleName = request.POST.get("sampleName")
+        partName = request.POST.get("partName")
+        preDiagnosis = request.POST.get("preDiagnosis")
+        pathologic = request.POST.get("pathologic")
+        ret = {
+            "sampleName": sampleName,
+            "partName": partName,
+            "preDiagnosis": preDiagnosis,
+            "pathologic": pathologic,
+        }
+        ret = json.dumps(ret)
+        return HttpResponse(ret, content_type="application/json")
+    elif request.method == "GET":
+        # addtionalInfo = getAdditionalInfoBy_id(GID)
+        # print("path  url")
+        gid = request.GET["GID"]
+        ret = {
+            "sampleName": "bob的胃标本",
+            "partName": "胃",
+            "preDiagnosis": "肺癌|炎症",
+            "pathologic": "肺癌|炎症|胃癌",
+            "cuttingEdge": "1",
+            "differentiation": "1|2",
+            "remark": "备注123",
+        }
+        ret = json.dumps(ret)
+        return HttpResponse(ret, content_type="application/json")
+    else:
         return HttpResponse(2)
