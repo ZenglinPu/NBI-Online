@@ -4,7 +4,7 @@ import time
 from django.http import HttpResponse
 
 from ..userManagement.token import tokenCheck
-from ..dataManagement.db_User import getUserInfoByUID, updateUname, updateAddInfo, inviteCodeReward
+from ..dataManagement.db_User import getUserInfoByUID, updateUname, updateAddInfo, inviteCodeReward, changePwd
 
 
 # 修改用户名
@@ -91,3 +91,18 @@ def checkInviteCode(request):
         inviteCode = request.POST.get("inviteCode").strip()
         result = inviteCodeReward(user, inviteCode)
         return HttpResponse(result)
+
+
+def updateNewPwd(request):
+    if request.method == 'POST':
+        user = request.POST.get('uid')
+        token = request.POST.get('token')
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        result = changePwd(user, request.POST.get("oldPwd"), request.POST.get("newPwd"))
+        # 2表示原密码错误, 3表示成功
+        if result:
+            return HttpResponse(3)
+        return HttpResponse(2)
