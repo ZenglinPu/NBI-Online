@@ -33,11 +33,24 @@ export default {
   data(){
     return{
       totalPage: 0,
+      pageSize:5,
       historyList: []
     }
   },
   mounted() {
-    this.downloadHistory(1,5);
+    this.downloadHistory(1,this.pageSize);
+    this.$bus.$on('historyCPChange',(data)=>{
+      console.log('我是HistoryTable组件，收到了当前页码',data);
+      this.downloadHistory(data,this.pageSize);
+    });
+    this.$bus.$on('historySizeChange',(data)=>{
+      console.log('我是HistoryTable组件，收到了显示条数',data);
+      this.pageSize = data;
+      this.downloadHistory(1,this.pageSize);
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off('historyCPChange');
   },
   methods: {
     // cookie
@@ -88,6 +101,7 @@ export default {
       //   console.log(item);
       // }
       this.totalPage = totalPage;
+      this.historyList.splice(0);
       for (var key in data) {
         var item = data[key];
         this.historyList.push({
@@ -102,6 +116,11 @@ export default {
         })
       }
       console.log(this.historyList);
+
+      this.sendTotalPage();
+    },
+    sendTotalPage() {
+      this.$bus.$emit('historyTotalPage',this.totalPage);
     }
   },
 }
