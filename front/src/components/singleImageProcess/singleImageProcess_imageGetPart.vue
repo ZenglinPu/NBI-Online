@@ -6,13 +6,11 @@
         <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">生成图片</button>
-<!--          TODO-->
-          <button id="saveImage">保存结果</button>
           <el-popover
             placement="top-start"
             width="100"
             trigger="hover"
-            content="是否在历史记录中保存此次提交，未保存的数据仅会在历史记录中保存24小时！">
+            content="只有点击生成图片之后的数据才会在历史记录中保存此次提交">
             <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
           </el-popover>
         </div>

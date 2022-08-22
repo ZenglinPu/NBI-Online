@@ -89,7 +89,7 @@
         <div style="width: 50%; height: 100%; display: flex;flex-direction: column;">
             <div id="addInfo_diagnoseBefore_Container" style="display: flex;flex-direction: column;">
                 <div class="addInfo">
-                    <p class="addInfo_formLabel">术前诊断：<br>(可按住shift多选)</p>
+                    <p class="addInfo_formLabel">术前诊断：<br>(可按住ctrl多选)</p>
                     <select multiple="multiple" style="width: 60%;height: 200px;" id="addInfo_diagnoseBefore" @change="addInfoDiagnoseBeforeChange()">
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    早癌</option>
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    LGIN</option>
@@ -284,6 +284,8 @@ export default {
           this.$refs.blueImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageBlue.split("~")[0]+'.'+response.data.imageBlue.split(".")[1]);
           this.$refs.greenImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageGreen.split("~")[0]+'.'+response.data.imageGreen.split(".")[1]);
           this.isUploaded = true;
+          this.$refs.uploadStatus.innerText = "已上传";
+          this.uploadStatus_class = "uploadStatus_green";
         }
       });
     },

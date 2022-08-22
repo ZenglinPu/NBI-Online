@@ -1,5 +1,5 @@
 import math
-
+from bson.objectid import ObjectId
 import pymongo
 import os
 
@@ -31,6 +31,17 @@ def getInfobyUID(UID):
     conn.close()
     return ret
 
+
+# 根据_id在图片数据表中提取数据
+def getAllImageInfoBy_id(_id):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.PhotoInfo
+    table_addition = conn.nbi.PhotoAdditionInfo
+    ret = table.find_one({'_id':ObjectId(_id)})
+    ret_addition = table_addition.find_one({'gid':ObjectId(_id)})
+    conn.close()
+    return ret, ret_addition
 
 # 根据_id在图片附加信息库中提取图片附加信息
 def getAdditionalInfoBy_id(id):
@@ -84,19 +95,19 @@ def getHistory(user, currentPage, pageCount):
     count = 1
     jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
     end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
-    for object1 in table_PhotoInfo.find({'UID': user}):
+
+    for object1 in allInfo:
         if count <= jump:
             count += 1
             continue
+        _id = object1['_id']
         innerDict = {
             'index': count,
-            '_id': str(object1['_id']),
-            'Image_Compress': object1['Image_Compress'],
-            # 'UID': object1['UID'],
-            'lastChangeTime': object1['lastChangeTime'],
-            'expireTime': object1['expireTime']
+            '_id': str(_id),
+            'Image_Compress': str(object1['Image_Compress']),
+            'lastChangeTime': str(object1['lastChangeTime']),
+            'expireTime': str(object1['expireTime']),
         }
-        _id = object1['_id']
         object2 = table_PhotoAdditionInfo.find_one({"gid": _id})
         innerDict['sampleName'] = object2['sampleName']
         innerDict['part'] = object2['part']

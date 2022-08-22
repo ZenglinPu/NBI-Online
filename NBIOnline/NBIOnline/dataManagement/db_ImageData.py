@@ -59,7 +59,8 @@ class imageData:
         ret['Image_Result'] = self.image_result
         ret['Image_Compress'] = self.image_compress
         ret['lastChangeTime'] = self.lastChangeTime
-        ret['expireTime'] = self.uploadTime
+        ret['uploadTime'] = self.uploadTime
+        ret['expireTime'] = self.uploadTime  # TODO
         ret['contrast'] = None
         ret['light'] = None
         ret['saturation'] = None

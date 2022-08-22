@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
-from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getInfobyUID, getLastImage
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getInfobyUID, getLastImage
 
 from ..dataManagement.db_ImageData import imageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
@@ -24,7 +24,7 @@ def chooseLastImage(request):
             return HttpResponse(2)
 
         # 查询现有图片数据库中是否有名字和uid都一样的数据，如果有则说明这是重复提交
-        result = getLastImage(user.replace(".", "*"))
+        result = getLastImage(user.replace(".", "^"))
         if not result:
             # 返回1表示没有之前提交的图片
             return HttpResponse(1)
@@ -56,7 +56,7 @@ def uploadImage(request):
             return HttpResponse(1)
         # 因为uid中存在特殊符号.
         # 在进行图片的处理中应当替换掉
-        user = user.replace(".", "*")
+        user = user.replace(".", "^")
 
         image_blue = request.FILES.get("blueImage")
         image_green = request.FILES.get("greenImage")
@@ -123,7 +123,7 @@ def updateInputAndGetNBI(request):
 
         # 因为uid中存在符号.
         # 在进行图片的处理中应当替换掉
-        user = user.replace(".", "*")
+        user = user.replace(".", "^")
 
         channelOffset = int(request.POST.get("channelOffset"))
         brightnessOffset = int(request.POST.get("brightnessAdjust"))
@@ -200,30 +200,27 @@ def updateInputAndGetNBI(request):
 @csrf_exempt
 def HistoryImgInfo(request):
     if request.method == "POST":
-        sampleName = request.POST.get("sampleName")
-        partName = request.POST.get("partName")
-        preDiagnosis = request.POST.get("preDiagnosis")
-        pathologic = request.POST.get("pathologic")
+        user = request.POST.get("uid")
+        token = request.POST.get("token")
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        # git是图片的_id，是图片附加信息的gid
+        gid = request.POST.get("gid")
+
+        imageInfo,imageAdditionInfo = getAllImageInfoBy_id(gid)
+        print(imageInfo)
+        print(imageAdditionInfo)
+
         ret = {
-            "sampleName": sampleName,
-            "partName": partName,
-            "preDiagnosis": preDiagnosis,
-            "pathologic": pathologic,
-        }
-        ret = json.dumps(ret)
-        return HttpResponse(ret, content_type="application/json")
-    elif request.method == "GET":
-        # addtionalInfo = getAdditionalInfoBy_id(GID)
-        # print("path  url")
-        gid = request.GET["GID"]
-        ret = {
-            "sampleName": "bob的胃标本",
-            "partName": "胃",
-            "preDiagnosis": "肺癌|炎症",
-            "pathologic": "肺癌|炎症|胃癌",
-            "cuttingEdge": "1",
-            "differentiation": "1|2",
-            "remark": "备注123",
+            "sampleName": imageAdditionInfo.get('sampleName'),
+            "uploadTime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(imageInfo.get('uploadTime')))),
+            "expiresTime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(float(imageInfo.get('expireTime')))),
+            "imageNBIName": imageInfo.get('Image_Result'),
+            "imageGreenName": imageInfo.get("Image_Green"),
+            "imageWhiteName": imageInfo.get("Image_White"),
+            "imageBlueName": imageInfo.get("Image_Blue"),
         }
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type="application/json")
