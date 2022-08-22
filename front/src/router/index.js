@@ -6,7 +6,7 @@ import HistoryData from '@/components/HistoryData'
 import UserCenter from '@/components/userCenterPage/UserCenter'
 import AccountPage from '@/components/AccountPage'
 
-import HistoryItemDetailPage from '@/components/history/HistoryItemDetailPage'
+import HistoryItemDetailPage from '@/components/history/historyItemDetail/HistoryItemDetailPage'
 
 import SingleImage from "@/components/singleImageProcess/SingleImageProcess"
 import MultiImage from "@/components/multiImageProcess/MultiImageProcess"
