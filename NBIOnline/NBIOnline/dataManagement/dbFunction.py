@@ -85,6 +85,7 @@ def getHistory(user, currentPage, pageCount):
     data = {}
     allInfo = table_PhotoInfo.find({'UID': user}).sort("lastChangeTime", -1)
     ret['totalPage'] = math.ceil(float(allInfo.count() / pageCount))
+    ret['totalImage'] = allInfo.count()
     """
     我们当前每一页展示pageCount张图，
     目前需要的数据是currentPage页的数据，
