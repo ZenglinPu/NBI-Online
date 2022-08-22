@@ -6,9 +6,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
-from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getInfobyUID, getLastImage
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getInfobyUID, \
+    getLastImage
 
-from ..dataManagement.db_ImageData import imageData
+from ..dataManagement.db_ImageData import imageData, updateImageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 
 
@@ -163,7 +164,7 @@ def updateInputAndGetNBI(request):
                 numinosity=luminosityOffset,
                 saturation=saturationOffset,
             )
-            cname = compressImage(resultImage, resultName, 20)
+            cname = compressImage(resultImage, resultName, 15)
         else:
             return HttpResponse(3)
 
@@ -177,16 +178,25 @@ def updateInputAndGetNBI(request):
             deleteOneImage("Temp", lastInfo.get("Image_Compress"))
 
         # 更新数据库
-        updateImageData = imageData(
-            uid=user,
-            image_green=lastInfo.get("Image_Green"),
-            image_blue=lastInfo.get("Image_Blue"),
-            image_white=lastInfo.get("Image_White"),
-            image_result=resultName,
-            image_compress=cname,
-            lastChangeTime=time.time(),
-        )
-        updateImageData.replaceData()
+        updateDict = {}
+        if mode == "easy":
+            updateDict = {
+                "Image_Result": resultName,
+                "Image_Compress": cname,
+                "lastChangeTime": time.time(),
+                "channelOffset": channelOffset,
+            }
+        elif mode == "full":
+            updateDict = {
+                "Image_Result": resultName,
+                "Image_Compress": cname,
+                "lastChangeTime": time.time(),
+                "contrast": int(request.POST.get("contrastOffset")),
+                "light": int(request.POST.get("luminosityOffset")),  # 明度
+                "saturation": int(request.POST.get("saturationOffset")),  # 饱和度
+                "channelOffset": channelOffset,
+            }
+        updateImageData(lastInfo.get("_id"), updateDict)
 
         # 返回新的图片数据到前端
         ret = {"resultImage": resultName, "showImage": cname}
@@ -209,7 +219,7 @@ def HistoryImgInfo(request):
         # git是图片的_id，是图片附加信息的gid
         gid = request.POST.get("gid")
 
-        imageInfo,imageAdditionInfo = getAllImageInfoBy_id(gid)
+        imageInfo, imageAdditionInfo = getAllImageInfoBy_id(gid)
         print(imageInfo)
         print(imageAdditionInfo)
 

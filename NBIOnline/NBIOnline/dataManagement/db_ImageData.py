@@ -22,6 +22,9 @@ import pymongo
 # '''
 
 # image data
+from bson import ObjectId
+
+
 class imageData:
     def __init__(self, uid, image_green=None, image_blue=None, image_white=None, image_result=None, image_compress=None, lastChangeTime=None):
         self.uid = uid
@@ -77,13 +80,14 @@ class imageData:
         conn.close()
         return ret
 
-    # 替换原有数据，依据UID
-    def replaceData(self):
-        print("Update Data at UID={u}".format(u=self.uid))
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-        table = conn.nbi.PhotoInfo
-        condition = {'UID': self.uid}
-        result = table.replace_one(condition, self.getDict())  # 执行数据库更新操作
-        conn.close()
-        return result
+
+# 替换原有数据，依据_id，不能依据UID，这样会更新掉所有这个Uid下的数据，造成错误
+def updateImageData(_id, updateValue):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.PhotoInfo
+    condition = {'_id': _id}
+    newValue = {"$set": updateValue}
+    result = table.update_one(condition, newValue)  # 执行数据库更新操作
+    conn.close()
+    return result

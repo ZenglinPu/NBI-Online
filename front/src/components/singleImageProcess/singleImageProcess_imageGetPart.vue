@@ -10,7 +10,7 @@
             placement="top-start"
             width="100"
             trigger="hover"
-            content="只有点击生成图片之后的数据才会在历史记录中保存此次提交">
+            content="只有点击生成图片之后的数据才会在历史记录中长久保存，否则默认保留24小时。">
             <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
           </el-popover>
         </div>
