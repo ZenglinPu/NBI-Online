@@ -1,20 +1,21 @@
 <template>
   <div>
-    <tr :style="rowBackground">
+    <tr style="background: '#fefeff'">
+      <td><div id="history-index">{{ index }}</div></td>
       <td>
         <el-image style="width: 20px; height: 20px" :src="url" :preview-src-list="srcList">
         </el-image>
       </td>
-      <td>{{ userName }}</td>
+      <!-- <td>{{ userName }}</td> -->
       <td>{{ sampleName }}</td>
-      <td>{{ partName }}</td>
-      <td>{{ diagnosis }}</td>
-      <td>{{ uploadTime }}</td>
+      <td>{{ part }}</td>
+      <td>{{ preDiagnosis }}</td>
+      <td>{{ lastChangeTime }}</td>
       <td>
-        <div id="expired-time">{{ expiredTime }}</div>
+        <div id="expired-time">{{ expireTime }}</div>
       </td>
       <td>
-        <el-button type="primary" plain @click="checkDetail('g1')">查看详情</el-button>
+        <el-button type="primary" plain @click="checkDetail(_id)">查看详情</el-button>
       </td>
     </tr>
     <span></span>
@@ -24,19 +25,47 @@
 export default {
   data() {
     return {
-      url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+      url: "/static/Data/Temp/"+this.Image_Compress,
       srcList: [
-        "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+        "/static/Data/Temp/"+this.Image_Compress,
         "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
         "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg",
       ],
-      userName: 'bob',
-      sampleName: 'bob的标本',//标本名称
-      partName: '胃',//部位
-      diagnosis: '炎症',//术前诊断
-      uploadTime: '2022-8-11',//
-      expiredTime: '永久保存',//
     };
+  },
+  props:{
+    index:{
+      type:String,
+      required:true
+    },
+    Image_Compress:{
+      type:String,
+      default:''
+    },
+    sampleName:{
+      type:String,
+      default:'未命名样本'
+    },
+    part:{
+      type:String,
+      default:'未知'
+    },
+    preDiagnosis:{
+      type:String,
+      default:'未知'
+    },
+    lastChangeTime:{
+      type:String,
+      required:true
+    },
+    expireTime:{
+      type:String,
+      required:true
+    },
+    _id:{
+      type:String,
+      required:true
+    }
   },
   computed: {
     //信息填写完整，才可以“保存结果”
@@ -67,13 +96,21 @@ table {
 }
 
 td {
-  text-align: left;
+  text-align: center;
   padding: 8px;
   width: 8.5%;
 }
 
 tr:nth-child(even) {
   background-color: #8cdddd;
+}
+
+#history-index {
+  width: 20px;
+  background: #07004f;
+  color: ghostwhite;
+  border-radius: 50%;
+  margin: 0 auto;
 }
 
 .warning-row {
@@ -92,6 +129,7 @@ tr:nth-child(even) {
   background: rgb(122, 229, 136);
   padding: 6px 12px;
   border-radius: 10px;
+  margin: 0 auto;
 }
 
 .el-button {
