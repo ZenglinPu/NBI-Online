@@ -1,6 +1,7 @@
 <template>
   <div class="table-container">
     <div class="table-header">
+      <td><span class="table-header-inner">序号</span></td>
       <td><span class="table-header-inner">图片</span></td>
       <!-- <td>上传用户</td> -->
       <td><span class="table-header-inner">样本名称</span></td>
@@ -11,7 +12,11 @@
       <td><span class="table-header-inner">附加信息</span></td>
     </div>
     <ul>
-      <li v-for="count in 10" :key="count"><HistoryItem></HistoryItem></li>
+      <li v-for="(item,hisIndex) in this.historyList" :key="hisIndex">
+        <HistoryItem :index="item.index" :Image_Compress="item.Image_Compress" :sampleName="item.sampleName" 
+         :part="item.part" :preDiagnosis="item.preDiagnosis" :lastChangeTime="item.lastChangeTime" 
+         :expireTime="item.expireTime" :_id="item._id">
+        </HistoryItem>
     </ul>
   </div>
 </template>
@@ -26,13 +31,12 @@ export default {
   },
   data(){
     return{
-      historyShow:{
-
-      }
+      totalPage: 0,
+      historyList: []
     }
   },
   mounted() {
-    this.downloadHistory(2,2);
+    this.downloadHistory(1,5);
   },
   methods: {
     // cookie
@@ -50,6 +54,7 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
+    //下载当前页面历史数据
     downloadHistory(currentPage, pageCount){
       let getHistoryForm = new FormData();
       // 身份识别数据
@@ -70,9 +75,32 @@ export default {
           });
         }
         else {
-          console.log(response.data);
+          this.loadHistory(response.data.info,response.data.totalPage)
         }
       })
+    },
+    //载入下载的历史数据
+    loadHistory(data,totalPage){
+      console.log(totalPage);
+      // for (var key in data) {
+      //   var item = data[key];
+      //   console.log(item);
+      // }
+      this.totalPage = totalPage;
+      for (var key in data) {
+        var item = data[key];
+        this.historyList.push({
+          Image_Compress: item.Image_Compress,
+          expireTime: item.expireTime,
+          index: item.index,
+          lastChangeTime: item.lastChangeTime,
+          part: item.part,
+          preDiagnosis: item.preDiagnosis,
+          sampleName: item.sampleName,
+          _id: item._id
+        })
+      }
+      console.log(this.historyList);
     }
   },
 }
@@ -111,6 +139,6 @@ li {
 
 td {
   text-align: left;
-  padding: 8px 42.5px;
+  padding: 8px 31px;
 }
 </style>
