@@ -5,8 +5,6 @@
     <HistoryPagination
       v-show="total > 0"
       :total="total"
-      :page.sync="queryForm.page"
-      :limit.sync="queryForm.listRows"
       :algin="'right'"
     />
   </div>
@@ -18,7 +16,7 @@ import HistoryTable from '@/components/history/HistoryTable.vue';
 import HistoryPagination from '@/components/history/HistoryPagination.vue';
 
 export default {
-  name: "P_HistoryData",
+  name: "HistoryData",
   components: {
     HistoryQuery,
     HistoryTable,
@@ -26,22 +24,22 @@ export default {
   },
   data() {
     return {
-      total: 1,
-      tableList: [],
-      listLoading: false,
-      queryForm: {
-        page: 1,
-        listRows: 10,
-        keywords: '',
-        _filter: {}, //头部筛选
-      },
-      deatilsPath: '', //表格当前行跳转路径
-      options: [],
-      conditionList: [], //自定义筛选条件
-      columns: [], //筛选条件中的数据
-      checkList: [], //筛选条件中选中的数据
-      multipleList: [], //表格复选多选中的数据
+      totalPage: 0
     }
+  },
+  computed: {
+    total() {
+      return this.totalPage*5;
+    }
+  },
+  mounted() {
+    this.$bus.$on('historyTotalPage',(data)=>{
+      console.log('我是HistoryData组件，收到了总页数为',data);
+      this.totalPage = data;
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off('historyTotalPage');
   }
 }
 </script>

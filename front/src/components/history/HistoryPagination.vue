@@ -31,12 +31,12 @@ export default {
     },
     limit: {
       type: Number,
-      default: 10,
+      default: 5,
     },
     pageSizes: {
       type: Array,
       default() {
-        return [10, 20, 30, 50]
+        return [5, 10, 15, 20]
       },
     },
     layout: {
@@ -63,35 +63,31 @@ export default {
   computed: {
     currentPage: {
       get() {
-        return this.page
+        return this.page;
       },
       set(val) {
-        this.$emit('update:page', val)
+        this.$emit('update:page', val);
       },
     },
     pageSize: {
       get() {
-        return this.limit
+        return this.limit;
       },
       set(val) {
-        this.$emit('update:limit', val)
+        this.$emit('update:limit', val);
       },
     },
   },
   methods: {
     handleSizeChange(val) {
-      this.$emit('pagination', { page: this.currentPage, limit: val })
-      if (this.autoScroll) {
-        scrollTo(0, 800)
-      }
+      console.log(`每页 ${val} 条`);
+      this.$bus.$emit('historySizeChange',val);
     },
     handleCurrentChange(val) {
-      this.$emit('pagination', { page: val, limit: this.pageSize })
-      if (this.autoScroll) {
-        scrollTo(0, 800)
-      }
+      console.log(`当前页: ${val}`);
+      this.$bus.$emit('historyCPChange',val);
     },
-  },
+  }
 }
 </script>
 
