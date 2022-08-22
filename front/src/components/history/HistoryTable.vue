@@ -17,6 +17,7 @@
          :part="item.part" :preDiagnosis="item.preDiagnosis" :lastChangeTime="item.lastChangeTime" 
          :expireTime="item.expireTime" :_id="item._id">
         </HistoryItem>
+      </li>
     </ul>
   </div>
 </template>
