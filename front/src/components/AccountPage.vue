@@ -15,7 +15,7 @@
                 <el-input v-model="loginForm.account"></el-input>
               </el-form-item>
               <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="loginForm.password" autocomplete="off"></el-input>
+                <el-input type="password" v-model="loginForm.password" autocomplete="off" @keyup.enter="loginCheck()"></el-input>
               </el-form-item>
               <el-form-item>
                 <div style="width: 100%;display: flex;flex-direction: row;align-items: center;justify-content: center">
