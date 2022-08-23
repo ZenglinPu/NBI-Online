@@ -10,7 +10,7 @@
       <div style="width: 10%"><span class="table-header-inner">过期时间</span></div>
       <div style="width: 15%"><span class="table-header-inner">附加信息</span></div>
     </div>
-    <ul>
+    <ul v-if="itemVisible">
       <li v-for="(item,hisIndex) in this.historyList" :key="hisIndex">
         <HistoryItem :index="item.index" :Image_Compress="item.Image_Compress" :sampleName="item.sampleName" 
          :part="item.part" :preDiagnosis="item.preDiagnosis" :lastChangeTime="item.lastChangeTime" 
@@ -34,17 +34,26 @@ export default {
       totalPage: 0,
       totalImage: 0,
       pageSize:5,
-      historyList: []
+      historyList: [],
+      reset: true
+    }
+  },
+  computed: {
+    itemVisible() {
+      return this.reset;
     }
   },
   mounted() {
     this.downloadHistory(1,this.pageSize);
     this.$bus.$on('historyCPChange',(data)=>{
-      console.log('我是HistoryTable组件，收到了当前页码',data);
+      // console.log('我是HistoryTable组件，收到了当前页码',data);
+      // console.log(this.itemVisible+'前');
+      this.reset = false;
+      // console.log(this.itemVisible+'中');
       this.downloadHistory(data,this.pageSize);
     });
     this.$bus.$on('historySizeChange',(data)=>{
-      console.log('我是HistoryTable组件，收到了显示条数',data);
+      // console.log('我是HistoryTable组件，收到了显示条数',data);
       this.pageSize = data;
       this.downloadHistory(1,this.pageSize);
     });
@@ -106,6 +115,7 @@ export default {
       this.historyList.splice(0);
       for (var key in data) {
         var item = data[key];
+        // console.log(item.Image_Compress);
         this.historyList.push({
           Image_Compress: item.Image_Compress,
           expireTime: item.expireTime,
@@ -121,6 +131,9 @@ export default {
 
       this.sendTotalPage();
       this.sendTotalImage();
+
+      this.reset = true;//重建组件
+      // console.log(this.itemVisible+'后');
     },
     sendTotalPage() {
       this.$bus.$emit('historyTotalPage',this.totalPage);
