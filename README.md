@@ -85,3 +85,50 @@ npm install axios
 | inviteCode     | String  | 邀请码                                                                  |
 | SUM_generate   | Integer | 记录用户生成的总NBI张数                                                    |
 | TIMES_generate | Integer | 可生成NBI图片数，-1表示不限量                                               |
+
+**Token表**
+
+用户token表：TokenInfo
+
+| 字段名         | 类型    | 含义                 |
+| -------------- | ------- | --------------------|
+| UID            | String  | email地址           |
+| expiresTime    | Time    | token过期时间        |
+| token          | String  | token值             |
+| lastLoginTime  | Time    | 上一次登录的时间     |
+
+**图片信息表**
+
+图片生成信息表：PhotoInfo
+
+| 字段名         | 类型    | 含义                 |
+| -------------- | ------- | -------------------------------------------------------------------------|
+| UID            | String  | 图片提交者的UID                                                           |
+| Image_Green    | String  | 绿光图片名                                                                |
+| Image_White    | String  | 白光图片名(可以为空)                                                       |
+| Image_Blue     | String  | 蓝光图片名                                                                |
+| Image_Result   | String  | NBI合成图片名                                                             |
+| Image_Compress | String  | NBI合成后的压缩图片名(这个供前端展示)                                         |
+| uploadTime     | Time    | 源图片上传时间                                                            |
+| lastChangeTime | Time    | 上一次的修改时间                                                           |
+| expireTime     | Time    | 图片数据自动删除的时间，None则表示永久保存                                  |
+| contrast       | Integer | 最后一次生成时的对比度                                                     |
+| light          | Integer | 最后一次生成时的亮度                                                       |
+| saturation     | Integer | 最后一次生成时的饱和度                                                     |
+| channelOffset  | Integer | 最后一次生成时的通道调整值                                                 |
+
+**图片附加信息表**
+
+图片附加信息表：PhotoAdditionInfo
+
+| 字段名          | 类型     | 含义                 |
+| -------------- | ------- | -------------------------------------------------------------------------|
+| GID            | String  | 图片的_id                                                                 |
+| sampleName     | String  | 标本名                                                                    |
+| part           | String  | 标本部位名                                                                |
+| preDiagnosis   | String  | 预诊断结论，可多选，|分割                                                  |
+| remark         | String  | 标本备注信息，随意输入                                                     |
+| pathologic     | String  | 病理诊断结论，可多选，|分割                                                |
+| differentiation| Integer | 分化程度多选：‘0’：不适用 ‘1‘：低分化 ‘2’：中分化 ‘3‘：高分化 多选，|分割    |
+| infiltration   | Integer | 浸润深度：单选 0：粘膜上皮层，1:粘膜固有层，2:粘膜肌层3:粘膜下层（文本录入，单位μm），4:固有肌层|
+| cuttingEdge    | Boolean | 水平切缘 1-阳性；2-阴性                                                    |

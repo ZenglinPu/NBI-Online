@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
@@ -6,9 +5,8 @@ from django.views.generic.base import TemplateView
 from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
-from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, HistoryImgInfo
-from .historyManagement.history import historyDisplay
-
+from .ImageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo
+from .historyManagement.history import historyDisplay, deleteHistoryImage
 
 urlpatterns = [
     path(r'NBI/admin/', admin.site.urls),
@@ -33,5 +31,6 @@ urlpatterns = [
 
     # """History Data"""
     path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
-    path(r'NBI/HistoryDetail/', HistoryImgInfo, name="HistoryImgInfo")
+    path(r'NBI/HistoryDetail/', historyImgInfo, name="HistoryImgInfo"),
+    path(r'NBI/History/DeleteImage/', deleteHistoryImage, name="deleteOneImage")
 ]

@@ -66,13 +66,13 @@ def checkUIDRegistered(uid):
     return True
 
 
-def deleteOneImage(type, name):
-    typeOption = ['Green', 'Blue', 'NBI', 'Temp']
-    if type not in typeOption:
-        print("Can not find image type:{t}".format(t=type))
+def deleteOneImage(t, name):
+    typeOption = ['Green', 'Blue', 'NBI', 'White', 'Temp']
+    if t not in typeOption:
+        print("Can not find image type:{t}".format(t=t))
         return
-    os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" +
-              type + "/" + name)
+    if name is not None:
+        os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" + t + "/" + name)
 
 
 # 提取HistoryData页面所需的基础信息，无筛选条件，数据按照lastChangeTime逆序返回
@@ -120,3 +120,27 @@ def getHistory(user, currentPage, pageCount):
     ret['info'] = data
     conn.close()
     return ret
+
+
+# 根据_id删除一组图片的所有数据，包括图片本身，以及两个数据表中的数据
+def deleteAllInfoOfImageBy_id(_id):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table_PhotoInfo = conn.nbi.PhotoInfo
+    table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
+    info_image = table_PhotoInfo.find_one({"_id": ObjectId(_id)})
+    # print(info_image)
+    # print(info_imageAddition)
+    try:
+        # 删除图片
+        deleteOneImage("NBI", info_image.get("Image_Result"))
+        deleteOneImage("Green", info_image.get("Image_Green"))
+        deleteOneImage("Blue", info_image.get("Image_Blue"))
+        deleteOneImage("White", info_image.get("Image_White"))
+        deleteOneImage("Temp", info_image.get("Image_Compress"))
+        # 清空数据库
+        table_PhotoInfo.delete_one({"_id": ObjectId(_id)})
+        table_PhotoAdditionInfo.delete_one({"gid": ObjectId(_id)})
+        return True
+    except Exception as e:
+        return False

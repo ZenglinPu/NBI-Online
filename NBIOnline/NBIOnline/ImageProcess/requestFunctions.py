@@ -208,7 +208,7 @@ def updateInputAndGetNBI(request):
 
 
 @csrf_exempt
-def HistoryImgInfo(request):
+def historyImgInfo(request):
     if request.method == "POST":
         user = request.POST.get("uid")
         token = request.POST.get("token")
@@ -220,8 +220,8 @@ def HistoryImgInfo(request):
         gid = request.POST.get("gid")
 
         imageInfo, imageAdditionInfo = getAllImageInfoBy_id(gid)
-        print(imageInfo)
-        print(imageAdditionInfo)
+        # print(imageInfo)
+        # print(imageAdditionInfo)
 
         ret = {
             "sampleName": imageAdditionInfo.get('sampleName'),

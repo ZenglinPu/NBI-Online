@@ -116,7 +116,7 @@ export default {
           _id: item._id
         })
       }
-      // console.log(this.historyList);
+      // // console.log(this.historyList);
 
       this.sendTotalPage();
       this.sendTotalImage();

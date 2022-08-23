@@ -24,6 +24,7 @@
 </template>
 <script>
 export default {
+  name: "HistoryItem",
   data() {
     return {
       url: "/static/Data/Temp/"+this.Image_Compress,
@@ -83,11 +84,10 @@ export default {
     expireTimeShow() {
       let dateBegin = new Date(parseInt(Date.now()));
       let dateEnd = new Date(parseInt(this.expireTime) * 1000);
-
-      console.log(Date.now());
-      console.log(dateBegin);
-      console.log(this.expireTime);
-      console.log(dateEnd);
+      // console.log(Date.now());
+      // console.log(dateBegin);
+      // console.log(this.expireTime);
+      // console.log(dateEnd);
       
       //天
       let dateDiff = dateEnd.getTime() - dateBegin.getTime(); //时间差的毫秒数
@@ -103,7 +103,7 @@ export default {
       let seconds=Math.round(leave3/1000);
 
       let ret = '';
-      console.log("距离过期还有"+dayDiff+"天"+hours+"小时"+minutes+"分钟"+seconds+"秒");
+      // console.log("距离过期还有"+dayDiff+"天"+hours+"小时"+minutes+"分钟"+seconds+"秒");
       if (dayDiff > 0) {
         ret = dayDiff+'天';
       }else if (hours > 0) {
@@ -197,8 +197,7 @@ export default {
       });
     },
   },
-  name: "HistoryItem",
-};
+}
 </script>
 <style scoped>
 table {
