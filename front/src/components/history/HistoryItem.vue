@@ -1,20 +1,20 @@
 <template>
   <div>
     <tr style="background: '#fefeff'">
-      <td><div id="history-index">{{ index }}</div></td>
-      <td>
-        <el-image style="width: 20px; height: 20px" :src="url" :preview-src-list="srcList">
+      <td class="history-index"><div id="history-index-inner">{{ index }}</div></td>
+      <td class="history-content">
+        <el-image style="height: 20px" :src="url" :preview-src-list="srcList">
         </el-image>
       </td>
       <!-- <td>{{ userName }}</td> -->
-      <td>{{ sampleName }}</td>
-      <td>{{ part }}</td>
-      <td>{{ preDiagnosis }}</td>
-      <td>{{ lastChangeTimeShow }}</td>
-      <td>
+      <td class="history-content">{{ sampleName }}</td>
+      <td class="history-content">{{ part }}</td>
+      <td class="history-content">{{ preDiagnosis }}</td>
+      <td class="history-content">{{ lastChangeTimeShow }}</td>
+      <td class="history-content">
         <div id="expired-time" :style="expireBackground">{{ expireTimeShow }}</div>
       </td>
-      <td>
+      <td class="history-content">
         <el-button type="primary" plain @click="checkDetail(_id)">查看详情</el-button>
       </td>
     </tr>
@@ -155,20 +155,36 @@ table {
 
 td {
   text-align: center;
-  padding: 8px;
+  font-size: 14px;
+  color: #9195a3;
+}
+
+.history-index {
+  width: .1%;
+  font-size: 16px;
+  padding-left: 7px;
+}
+
+#history-index-inner {
+  width: 40px;
+  height: 40px;
+  background: #3ae6cc;
+  color: ghostwhite;
+  font-weight: bold;
+  border-radius: 8%;
+  margin: 0 auto;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.history-content {
   width: 8.5%;
+  padding: 8px;
 }
 
 tr:nth-child(even) {
   background-color: #8cdddd;
-}
-
-#history-index {
-  width: 20px;
-  background: #07004f;
-  color: ghostwhite;
-  border-radius: 50%;
-  margin: 0 auto;
 }
 
 .warning-row {
@@ -191,5 +207,29 @@ tr:nth-child(even) {
 
 .el-button {
   padding: 8px 20px;
+}
+
+.el-button--primary.is-plain {
+    color: #3ae6cc;
+    background: #effffd;
+    border-color: #3ae6cc;
+}
+
+.el-button--primary {
+    color: #3ae6cc;
+    background-color: #effffd;
+    border-color: #3ae6cc;
+}
+
+.el-button--primary.is-plain:focus, .el-button--primary.is-plain:hover {
+    background: #3ae6cc;
+    border-color: #3ae6cc;
+    color: #fff;
+}
+
+.el-button.is-plain:focus, .el-button.is-plain:hover {
+    background: #3ae6cc;
+    border-color: #3ae6cc;
+    color: #fff;
 }
 </style>

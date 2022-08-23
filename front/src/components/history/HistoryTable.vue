@@ -1,7 +1,7 @@
 <template>
   <div class="table-container">
     <div class="table-header">
-      <td><span class="table-header-inner">序号</span></td>
+      <td class="table-header-index-td"><span class="table-header-index"></span></td>
       <td><span class="table-header-inner">图片</span></td>
       <!-- <td>上传用户</td> -->
       <td><span class="table-header-inner">样本名称</span></td>
@@ -33,6 +33,7 @@ export default {
   data(){
     return{
       totalPage: 0,
+      totalImage: 0,
       pageSize:5,
       historyList: []
     }
@@ -89,18 +90,19 @@ export default {
           });
         }
         else {
-          this.loadHistory(response.data.info,response.data.totalPage)
+          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage)
         }
       })
     },
     //载入下载的历史数据
-    loadHistory(data,totalPage){
-      console.log(totalPage);
+    loadHistory(data,totalPage,totalImage){
+      // console.log(totalPage);
       // for (var key in data) {
       //   var item = data[key];
       //   console.log(item);
       // }
       this.totalPage = totalPage;
+      this.totalImage = totalImage;
       this.historyList.splice(0);
       for (var key in data) {
         var item = data[key];
@@ -115,12 +117,16 @@ export default {
           _id: item._id
         })
       }
-      console.log(this.historyList);
+      // console.log(this.historyList);
 
       this.sendTotalPage();
+      this.sendTotalImage();
     },
     sendTotalPage() {
       this.$bus.$emit('historyTotalPage',this.totalPage);
+    },
+    sendTotalImage() {
+      this.$bus.$emit('historyTotalImage',this.totalImage);
     }
   },
 }
@@ -142,17 +148,25 @@ li {
 }
 
 .table-header {
-  background: rgb(81, 158, 245);
-  border-radius: 5px 5px 0 0;
+  background: #767ff6;
+  border-radius: 3px 3px 0 0;
   margin-top: 5px;
   font-weight: 500;
   font-size: 16px;
   color: #fff;
   padding: 12px 0;
+  border: #fff solid 7px;
+  box-shadow: 0px -3px 3px #e8e8e8, 0px 0px 8px #fff inset;;
 }
 
 .table-header-inner {
-  width: 100px;
+  width: 116.3px;
+  display: inline-block;
+  text-align: center;
+}
+
+.table-header-index {
+  width: 0;
   display: inline-block;
   text-align: center;
 }
@@ -160,5 +174,9 @@ li {
 td {
   text-align: left;
   padding: 8px 31px;
+}
+
+.table-header-index-td {
+  padding: 8px 20px;
 }
 </style>
