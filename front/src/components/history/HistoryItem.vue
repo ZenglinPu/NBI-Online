@@ -1,35 +1,35 @@
 <template>
-  <div>
-    <tr style="background: '#fefeff'">
-      <td><div id="history-index">{{ index }}</div></td>
-      <td>
-        <el-image style="width: 20px; height: 20px" :src="url" :preview-src-list="srcList">
-        </el-image>
-      </td>
-      <!-- <td>{{ userName }}</td> -->
-      <td>{{ sampleName }}</td>
-      <td>{{ part }}</td>
-      <td>{{ preDiagnosis }}</td>
-      <td>{{ lastChangeTimeShow }}</td>
-      <td>
+  <div class="historyItemContainer">
+      <span class="historyItemInner" style="width: 4%">
+          <div class="history-index">{{ index }}</div>
+      </span>
+      <span class="historyItemInner" style="width: 15%">
+        <div style="width: 85%;background-color: #d3d3d3;height: 90%;display: flex;justify-content: center;align-items: center;border: 1px solid gray">
+          <p v-show="this.Image_Compress==='None'" style="color: darkred">未生成NBI图片</p>
+          <el-image v-show="this.Image_Compress!=='None'" class="historyPageImageSmall" :src="url" :preview-src-list="srcList"></el-image>
+        </div>
+      </span>
+      <span class="historyItemInner" style="width: 15%;font-weight: bold;">{{ sampleName }}</span>
+      <span class="historyItemInner" style="width: 10%">{{ part }}</span>
+      <span class="historyItemInner" style="width: 10%">{{ preDiagnosis }}</span>
+      <span class="historyItemInner" style="width: 10%">{{ lastChangeTimeShow }}</span>
+      <span class="historyItemInner" style="width: 10%">
         <div id="expired-time" :style="expireBackground">{{ expireTimeShow }}</div>
-      </td>
-      <td>
+      </span>
+      <span class="historyItemInner" style="width: 14%">
         <el-button type="primary" plain @click="checkDetail(_id)">查看详情</el-button>
-      </td>
-    </tr>
-    <span></span>
+        <i class="el-icon-delete oneImageDeleteBtn" @click="deleteDetail(_id)"></i>
+      </span>
   </div>
 </template>
 <script>
 export default {
+  name: "HistoryItem",
   data() {
     return {
       url: "/static/Data/Temp/"+this.Image_Compress,
       srcList: [
         "/static/Data/Temp/"+this.Image_Compress,
-        "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
-        "https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg",
       ],
     };
   },
@@ -134,6 +134,21 @@ export default {
     },
   },
   methods: {
+     // cookie
+    getCookie(objName){//获取指定名称的cookie的值
+      const arrStr = document.cookie.split("; ");
+      for(let i = 0; i < arrStr.length; i ++){
+        const temp = arrStr[i].split("=");
+        if(temp[0] === objName) return temp[1];
+      }
+      return null;
+    },
+    getToken(){
+      return this.getCookie("NBI_token");
+    },
+    getUID(){
+      return this.getCookie("NBI_UID");
+    },
     //传入GID
     checkDetail(GID) {
       this.$router.push({
@@ -142,9 +157,47 @@ export default {
           GID: GID
         }
       })
-    }
+    },
+    deleteDetail(GID) {
+      this.$confirm('确认删除？（操作不可逆）')
+      .then(() => {
+        let deleteImageForm = new FormData();
+        // 身份识别数据
+        deleteImageForm.append("uid", this.getUID());
+        deleteImageForm.append("token", this.getToken());
+        //当前页面
+        deleteImageForm.append("gid", GID);
+        this.$axios.post("/NBI/History/DeleteImage/", deleteImageForm, {
+         headers: {'Content-Type': 'multipart/form-data'}
+        }).then((response) => {
+          if (response.data === 1){
+            this.$message({
+              showClose: true,
+              message: '登录状态错误！请重新登录。',
+              type: 'error'
+            });
+          }
+          else if (response.data === 3){
+            this.$message({
+              showClose: true,
+              message: '删除失败，处理错误！',
+              type: 'error'
+            });
+          }
+          else{
+            this.$message({
+              showClose: true,
+              message: '图片已删除',
+              type: 'success'
+            });
+            this.$bus.$emit("reloadHistoryData");
+          }
+        });
+      })
+      .catch(() => {
+      });
+    },
   },
-  name: "HistoryItem",
 };
 </script>
 <style scoped>
@@ -163,7 +216,7 @@ tr:nth-child(even) {
   background-color: #8cdddd;
 }
 
-#history-index {
+.history-index {
   width: 20px;
   background: #07004f;
   color: ghostwhite;
@@ -191,5 +244,38 @@ tr:nth-child(even) {
 
 .el-button {
   padding: 8px 20px;
+}
+
+.historyItemContainer{
+  width: 100%;
+  height: 85px;
+  border-bottom: 1px gray solid;
+  background: #fefeff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+.historyItemInner{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: 幼圆,STHeiti,serif;
+}
+.historyPageImageSmall{
+  height: 100%;
+  object-fit: contain;
+}
+.oneImageDeleteBtn{
+  margin-left: 7px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.oneImageDeleteBtn:hover{
+  background-color: white;
+  color: red;
 }
 </style>

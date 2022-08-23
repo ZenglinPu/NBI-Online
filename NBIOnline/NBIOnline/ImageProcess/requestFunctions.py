@@ -208,7 +208,7 @@ def updateInputAndGetNBI(request):
 
 
 @csrf_exempt
-def HistoryImgInfo(request):
+def historyImgInfo(request):
     if request.method == "POST":
         user = request.POST.get("uid")
         token = request.POST.get("token")
