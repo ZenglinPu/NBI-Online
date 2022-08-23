@@ -40,17 +40,18 @@ export default {
   mounted() {
     this.downloadHistory(1,this.pageSize);
     this.$bus.$on('historyCPChange',(data)=>{
-      console.log('我是HistoryTable组件，收到了当前页码',data);
+      // console.log('我是HistoryTable组件，收到了当前页码',data);
       this.downloadHistory(data,this.pageSize);
     });
     this.$bus.$on('historySizeChange',(data)=>{
-      console.log('我是HistoryTable组件，收到了显示条数',data);
+      // console.log('我是HistoryTable组件，收到了显示条数',data);
       this.pageSize = data;
       this.downloadHistory(1,this.pageSize);
     });
   },
   beforeDestroy() {
     this.$bus.$off('historyCPChange');
+    this.$bus.$off('historySizeChange');
   },
   methods: {
     // cookie
