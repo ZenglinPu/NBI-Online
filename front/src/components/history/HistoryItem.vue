@@ -189,7 +189,7 @@ export default {
               message: '图片已删除',
               type: 'success'
             });
-            this.$bus.$emit("reloadHistoryData");
+            this.$bus.$emit("updateHistoryPage");
           }
         });
       })

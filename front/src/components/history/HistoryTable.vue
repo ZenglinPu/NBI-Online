@@ -57,10 +57,14 @@ export default {
       this.pageSize = data;
       this.downloadHistory(1,this.pageSize);
     });
+    this.$bus.$on('updateHistoryPage', ()=>{
+      this.downloadHistory(1,this.pageSize);
+    });
   },
   beforeDestroy() {
     this.$bus.$off('historyCPChange');
     this.$bus.$off('historySizeChange');
+    this.$bus.$off('updateHistoryPage');
   },
   methods: {
     // cookie
