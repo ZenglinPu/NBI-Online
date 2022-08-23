@@ -42,11 +42,11 @@ export default {
   },
   mounted() {
     this.$bus.$on('historyTotalPage',(data)=>{
-      console.log('我是HistoryData组件，收到了总页数为',data);
+      // console.log('我是HistoryData组件，收到了总页数为',data);
       this.totalPage = data;
     });
     this.$bus.$on('historyTotalImage',(data)=>{
-      console.log('我是HistoryData组件，收到了总条数为',data);
+      // console.log('我是HistoryData组件，收到了总条数为',data);
       this.totalImage = data;
     });
   },
