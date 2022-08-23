@@ -51,6 +51,7 @@ export default {
   },
   beforeDestroy() {
     this.$bus.$off('historyCPChange');
+    this.$bus.$off('historySizeChange');
   },
   methods: {
     // cookie
