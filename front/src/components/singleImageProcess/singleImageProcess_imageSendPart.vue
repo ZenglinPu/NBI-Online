@@ -371,7 +371,7 @@ export default {
         }
         imageShow.className = "uploadImageShow";
       }else{
-        imageShow.src = "/static/unknownImageTypeIcon.png";
+        imageShow.src = "/static/img/unknownImageTypeIcon.png";
       }
     },
     whiteImageShowChange(){
@@ -390,7 +390,7 @@ export default {
         }
         imageShow.className = "uploadImageShow";
       }else{
-        imageShow.src = "/static/unknownImageTypeIcon.png";
+        imageShow.src = "/static/img/unknownImageTypeIcon.png";
       }
     },
   },
