@@ -62,7 +62,7 @@ export default {
   min-height: 171px;
   padding: 20px 5% 5px;
   width: 100%;
-  height: 100%;
+  height: 96%;
   overflow: auto;
 }
 </style>
