@@ -22,9 +22,6 @@ import pymongo
 # '''
 
 # image data
-from bson import ObjectId
-
-
 class imageData:
     def __init__(self, uid, image_green=None, image_blue=None, image_white=None, image_result=None, image_compress=None, lastChangeTime=None):
         self.uid = uid

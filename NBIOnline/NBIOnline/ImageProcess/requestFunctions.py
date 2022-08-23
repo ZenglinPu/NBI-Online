@@ -220,8 +220,8 @@ def historyImgInfo(request):
         gid = request.POST.get("gid")
 
         imageInfo, imageAdditionInfo = getAllImageInfoBy_id(gid)
-        print(imageInfo)
-        print(imageAdditionInfo)
+        # print(imageInfo)
+        # print(imageAdditionInfo)
 
         ret = {
             "sampleName": imageAdditionInfo.get('sampleName'),
