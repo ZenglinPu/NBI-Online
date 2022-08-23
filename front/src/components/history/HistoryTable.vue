@@ -1,15 +1,14 @@
 <template>
   <div class="table-container">
     <div class="table-header">
-      <td class="table-header-index-td"><span class="table-header-index"></span></td>
-      <td><span class="table-header-inner">图片</span></td>
-      <!-- <td>上传用户</td> -->
-      <td><span class="table-header-inner">样本名称</span></td>
-      <td><span class="table-header-inner">部位</span></td>
-      <td><span class="table-header-inner">症状</span></td>
-      <td><span class="table-header-inner">上传时间</span></td>
-      <td><span class="table-header-inner">过期时间</span></td>
-      <td><span class="table-header-inner">附加信息</span></td>
+      <div style="width: 1%" class="table-header-index-td"><span class="table-header-index"></span></div>
+      <div style="width: 11%"><span class="table-header-inner">图片</span></div>
+      <div style="width: 15%"><span class="table-header-inner">样本名称</span></div>
+      <div style="width: 10%"><span class="table-header-inner">部位</span></div>
+      <div style="width: 15%"><span class="table-header-inner">症状</span></div>
+      <div style="width: 15%"><span class="table-header-inner">上传时间</span></div>
+      <div style="width: 10%"><span class="table-header-inner">过期时间</span></div>
+      <div style="width: 15%"><span class="table-header-inner">附加信息</span></div>
     </div>
     <ul>
       <li v-for="(item,hisIndex) in this.historyList" :key="hisIndex">
@@ -134,7 +133,7 @@ export default {
 
 <style scoped>
 ul {
-  margin: 0;
+  margin: 0 0 5px 0;
   padding: 0;
 }
 
@@ -157,13 +156,22 @@ li {
   padding: 12px 0;
   border: #fff solid 7px;
   box-shadow: 0px -3px 3px #e8e8e8, 0px 0px 8px #fff inset;;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
 }
 
-.table-header-inner {
-  width: 116.3px;
+.table-header div {
   display: inline-block;
   text-align: center;
 }
+
+/* .table-header-inner {
+  width: 116.3px;
+  display: inline-block;
+  text-align: center;
+} */
 
 .table-header-index {
   width: 0;
