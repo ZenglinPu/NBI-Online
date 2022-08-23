@@ -5,12 +5,12 @@
     @click.stop="handleSearch"
   >
     <el-input
+      placeholder="搜索"
       v-model="searchText"
       class="search"
       ref="search"
       clearable
       prefix-icon="el-icon-search"
-      placeholder="搜索"
       @input="searchHandler"
     ></el-input>
   </div>

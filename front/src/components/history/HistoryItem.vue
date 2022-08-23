@@ -1,25 +1,25 @@
 <template>
   <div class="historyItemContainer">
-      <span class="historyItemInner" style="width: 4%">
-          <div class="history-index">{{ index }}</div>
-      </span>
-      <span class="historyItemInner" style="width: 15%">
-        <div style="width: 85%;background-color: #d3d3d3;height: 90%;display: flex;justify-content: center;align-items: center;border: 1px solid gray">
-          <p v-show="this.Image_Compress==='None'" style="color: darkred">未生成NBI图片</p>
-          <el-image v-show="this.Image_Compress!=='None'" class="historyPageImageSmall" :src="url" :preview-src-list="srcList"></el-image>
-        </div>
-      </span>
-      <span class="historyItemInner" style="width: 15%;font-weight: bold;">{{ sampleName }}</span>
-      <span class="historyItemInner" style="width: 10%">{{ part }}</span>
-      <span class="historyItemInner" style="width: 10%">{{ preDiagnosis }}</span>
-      <span class="historyItemInner" style="width: 10%">{{ lastChangeTimeShow }}</span>
-      <span class="historyItemInner" style="width: 10%">
-        <div id="expired-time" :style="expireBackground">{{ expireTimeShow }}</div>
-      </span>
-      <span class="historyItemInner" style="width: 14%">
-        <el-button type="primary" plain @click="checkDetail(_id)">查看详情</el-button>
-        <i class="el-icon-delete oneImageDeleteBtn" @click="deleteDetail(_id)"></i>
-      </span>
+    <span class="historyItemInner" style="width: 4%">
+      <div id="history-index-inner">{{ index }}</div>
+    </span>
+    <span class="historyItemInner" style="width: 11%">
+      <div style="width: 85%;background-color: #d3d3d3;height: 90%;display: flex;justify-content: center;align-items: center;border: 1px solid #b7b7b7">
+        <p v-show="this.Image_Compress==='None'" style="color: darkred">未生成NBI图片</p>
+        <el-image v-show="this.Image_Compress!=='None'" class="historyPageImageSmall" :src="url" :preview-src-list="srcList"></el-image>
+      </div>
+    </span>
+    <span class="historyItemInner" style="width: 15%">{{ sampleName }}</span>
+    <span class="historyItemInner" style="width: 10%">{{ part }}</span>
+    <span class="historyItemInner" style="width: 15%">{{ preDiagnosis }}</span>
+    <span class="historyItemInner" style="width: 15%">{{ lastChangeTimeShow }}</span>
+    <span class="historyItemInner" style="width: 10%">
+      <div id="expired-time" :style="expireBackground">{{ expireTimeShow }}</div>
+    </span>
+    <span class="historyItemInner" style="width: 15%">
+      <el-button type="primary" plain @click="checkDetail(_id)">查看详情</el-button>
+      <i class="el-icon-delete oneImageDeleteBtn" @click="deleteDetail(_id)"></i>
+    </span>
   </div>
 </template>
 <script>
@@ -29,7 +29,7 @@ export default {
     return {
       url: "/static/Data/Temp/"+this.Image_Compress,
       srcList: [
-        "/static/Data/Temp/"+this.Image_Compress,
+        "/static/Data/Temp/"+this.Image_Compress
       ],
     };
   },
@@ -197,7 +197,7 @@ export default {
       });
     },
   },
-};
+}
 </script>
 <style scoped>
 table {
@@ -205,22 +205,19 @@ table {
   width: 100%;
 }
 
-td {
-  text-align: center;
-  padding: 8px;
-  width: 8.5%;
-}
-
-tr:nth-child(even) {
-  background-color: #8cdddd;
-}
-
-.history-index {
-  width: 20px;
-  background: #07004f;
+#history-index-inner {
+  font-size: 16px;
+  /* padding-left: 7px; */
+  width: 40px;
+  height: 40px;
+  background: #3ae6cc;
   color: ghostwhite;
-  border-radius: 50%;
+  font-weight: bold;
+  border-radius: 8%;
   margin: 0 auto;
+  display:flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .warning-row {
@@ -241,40 +238,69 @@ tr:nth-child(even) {
   margin: 0 auto;
 }
 
-.el-button {
-  padding: 8px 20px;
-}
-
 .historyItemContainer{
-  width: 100%;
   height: 85px;
-  border-bottom: 1px gray solid;
+  border-bottom: .5px rgb(224, 224, 224) solid;
   background: #fefeff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  margin: 0 7px;
 }
+
 .historyItemInner{
-  width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-family: 幼圆,STHeiti,serif;
+  /* font-family: 幼圆,STHeiti,serif; */
+  text-align: center;
+  font-size: 14px;
+  color: #9195a3;
 }
+
 .historyPageImageSmall{
   height: 100%;
   object-fit: contain;
 }
+
 .oneImageDeleteBtn{
   margin-left: 7px;
   cursor: pointer;
   transition: 0.3s ease;
 }
+
 .oneImageDeleteBtn:hover{
   background-color: white;
   color: red;
+}
+
+.el-button {
+  padding: 8px 20px;
+}
+
+.el-button--primary.is-plain {
+    color: #3ae6cc;
+    background: #effffd;
+    border-color: #3ae6cc;
+}
+
+.el-button--primary {
+    color: #3ae6cc;
+    background-color: #effffd;
+    border-color: #3ae6cc;
+}
+
+.el-button--primary.is-plain:focus, .el-button--primary.is-plain:hover {
+    background: #3ae6cc;
+    border-color: #3ae6cc;
+    color: #fff;
+}
+
+.el-button.is-plain:focus, .el-button.is-plain:hover {
+    background: #3ae6cc;
+    border-color: #3ae6cc;
+    color: #fff;
 }
 </style>

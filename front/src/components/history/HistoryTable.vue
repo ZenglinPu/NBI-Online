@@ -1,14 +1,14 @@
 <template>
   <div class="table-container">
-    <div class="table-header" style="display: flex;justify-content: space-between;flex-direction: row;align-items: center;">
-      <span class="table-header-inner" style="width: 4%">序号</span>
-      <span class="table-header-inner" style="width: 15%">图片</span>
-      <span class="table-header-inner" style="width: 15%">样本名称</span>
-      <span class="table-header-inner" style="width: 10%">部位</span>
-      <span class="table-header-inner" style="width: 10%">症状</span>
-      <span class="table-header-inner" style="width: 10%">上次修改时间</span>
-      <span class="table-header-inner" style="width: 10%">过期时间</span>
-      <span class="table-header-inner" style="width: 14%">附加信息</span>
+    <div class="table-header">
+      <div style="width: 1%" class="table-header-index-td"><span class="table-header-index"></span></div>
+      <div style="width: 11%"><span class="table-header-inner">图片</span></div>
+      <div style="width: 15%"><span class="table-header-inner">样本名称</span></div>
+      <div style="width: 10%"><span class="table-header-inner">部位</span></div>
+      <div style="width: 15%"><span class="table-header-inner">症状</span></div>
+      <div style="width: 15%"><span class="table-header-inner">上传时间</span></div>
+      <div style="width: 10%"><span class="table-header-inner">过期时间</span></div>
+      <div style="width: 15%"><span class="table-header-inner">附加信息</span></div>
     </div>
     <ul>
       <li v-for="(item,hisIndex) in this.historyList" :key="hisIndex">
@@ -32,6 +32,7 @@ export default {
   data(){
     return{
       totalPage: 0,
+      totalImage: 0,
       pageSize:5,
       historyList: []
     }
@@ -39,21 +40,17 @@ export default {
   mounted() {
     this.downloadHistory(1,this.pageSize);
     this.$bus.$on('historyCPChange',(data)=>{
+      console.log('我是HistoryTable组件，收到了当前页码',data);
       this.downloadHistory(data,this.pageSize);
     });
     this.$bus.$on('historySizeChange',(data)=>{
+      console.log('我是HistoryTable组件，收到了显示条数',data);
       this.pageSize = data;
-      this.downloadHistory(1,this.pageSize);
-    });
-    this.$bus.$on('reloadHistoryData',()=>{
-      // 重新加载页面数据的接口
       this.downloadHistory(1,this.pageSize);
     });
   },
   beforeDestroy() {
     this.$bus.$off('historyCPChange');
-    this.$bus.$off('historySizeChange');
-    this.$bus.$off('reloadHistoryData');
   },
   methods: {
     // cookie
@@ -92,18 +89,19 @@ export default {
           });
         }
         else {
-          this.loadHistory(response.data.info,response.data.totalPage)
+          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage)
         }
       })
     },
     //载入下载的历史数据
-    loadHistory(data,totalPage){
+    loadHistory(data,totalPage,totalImage){
       // console.log(totalPage);
       // for (var key in data) {
       //   var item = data[key];
       //   console.log(item);
       // }
       this.totalPage = totalPage;
+      this.totalImage = totalImage;
       this.historyList.splice(0);
       for (var key in data) {
         var item = data[key];
@@ -118,12 +116,16 @@ export default {
           _id: item._id
         })
       }
-      // console.log(this.historyList);
+      // // console.log(this.historyList);
 
       this.sendTotalPage();
+      this.sendTotalImage();
     },
     sendTotalPage() {
       this.$bus.$emit('historyTotalPage',this.totalPage);
+    },
+    sendTotalImage() {
+      this.$bus.$emit('historyTotalImage',this.totalImage);
     }
   },
 }
@@ -131,7 +133,7 @@ export default {
 
 <style scoped>
 ul {
-  margin: 0;
+  margin: 0 0 5px 0;
   padding: 0;
 }
 
@@ -145,17 +147,34 @@ li {
 }
 
 .table-header {
-  background: rgb(81, 158, 245);
-  border-radius: 5px 5px 0 0;
+  background: #767ff6;
+  border-radius: 3px 3px 0 0;
   margin-top: 5px;
   font-weight: 500;
   font-size: 16px;
   color: #fff;
   padding: 12px 0;
+  border: #fff solid 7px;
+  box-shadow: 0px -3px 3px #e8e8e8, 0px 0px 8px #fff inset;;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
 }
 
-.table-header-inner {
-  width: 100px;
+.table-header div {
+  display: inline-block;
+  text-align: center;
+}
+
+/* .table-header-inner {
+  width: 116.3px;
+  display: inline-block;
+  text-align: center;
+} */
+
+.table-header-index {
+  width: 0;
   display: inline-block;
   text-align: center;
 }
@@ -163,5 +182,9 @@ li {
 td {
   text-align: left;
   padding: 8px 31px;
+}
+
+.table-header-index-td {
+  padding: 8px 20px;
 }
 </style>
