@@ -246,8 +246,10 @@
       size="medium"
       slot="reference"
     >
-      <!-- <icon :iconName="'icon-filter'" /> -->
-      <span>筛选</span>
+    <div class="filter-holder">
+      <i class="iconfont icon-shaixuan" style="vertical-align: middle"></i>
+      <span>  筛选</span>
+    </div>
     </el-button>
   </el-popover>
 </template>
@@ -513,4 +515,18 @@ export default {
 .add {
   margin-top: 13px;
 }
+
+.el-button--text {
+  color: #767ff6;
+}
+
+.el-button:hover{
+  color: #989ffc;
+}
+
+.el-button:focus{
+  color: #989ffc;
+}
+
+
 </style>

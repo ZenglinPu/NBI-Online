@@ -9,7 +9,7 @@
         <el-image v-show="this.Image_Compress!=='None'" class="historyPageImageSmall" :src="url" :preview-src-list="srcList"></el-image>
       </div>
     </span>
-    <span class="historyItemInner" style="width: 15%">{{ sampleName }}</span>
+    <span class="historyItemInner" style="width: 15%; font-weight: bold;">{{ sampleName }}</span>
     <span class="historyItemInner" style="width: 10%">{{ part }}</span>
     <span class="historyItemInner" style="width: 15%">{{ preDiagnosis }}</span>
     <span class="historyItemInner" style="width: 15%">{{ lastChangeTimeShow }}</span>
