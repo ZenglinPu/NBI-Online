@@ -5,7 +5,7 @@
       <div style="width: 11%"><span class="table-header-inner">图片</span></div>
       <div style="width: 15%"><span class="table-header-inner">样本名称</span></div>
       <div style="width: 10%"><span class="table-header-inner">部位</span></div>
-      <div style="width: 15%"><span class="table-header-inner">症状</span></div>
+      <div style="width: 15%"><span class="table-header-inner">术前诊断</span></div>
       <div style="width: 15%"><span class="table-header-inner">上传时间</span></div>
       <div style="width: 10%"><span class="table-header-inner">过期时间</span></div>
       <div style="width: 15%"><span class="table-header-inner">附加信息</span></div>
@@ -51,25 +51,25 @@ export default {
   mounted() {
     this.downloadHistory(1,this.pageSize);
     this.$bus.$on('historyCPChange',(data)=>{
-      // console.log('我是HistoryTable组件，收到了当前页码',data);
-      // console.log(this.itemVisible+'前');
       this.reset = false;
-      // console.log(this.itemVisible+'中');
       this.downloadHistory(data,this.pageSize);
     });
     this.$bus.$on('historySizeChange',(data)=>{
-      // console.log('我是HistoryTable组件，收到了显示条数',data);
       this.pageSize = data;
       this.downloadHistory(1,this.pageSize);
     });
     this.$bus.$on('updateHistoryPage', ()=>{
       this.downloadHistory(1,this.pageSize);
     });
+    this.$bus.$on('updateHistoryPageWithFilter', (data)=>{
+      this.downloadHistoryWithFilter(1, this.pageSize, data.filterType, data.filterValue);
+    });
   },
   beforeDestroy() {
     this.$bus.$off('historyCPChange');
     this.$bus.$off('historySizeChange');
     this.$bus.$off('updateHistoryPage');
+    this.$bus.$off('updateHistoryPageWithFilter');
   },
   methods: {
     // cookie
@@ -86,6 +86,41 @@ export default {
     },
     getUID(){
       return this.getCookie("NBI_UID");
+    },
+    //根据条件搜索数据并显示
+    downloadHistoryWithFilter(currentPage, pageCount, filterType, filterValue){
+      let getHistoryFilterForm = new FormData();
+      // 身份识别数据
+      getHistoryFilterForm.append("uid", this.getUID());
+      getHistoryFilterForm.append("token", this.getToken());
+      //当前页面
+      getHistoryFilterForm.append("currentPage", currentPage);
+      //显示条数
+      getHistoryFilterForm.append("pageCount", pageCount);
+      //过滤类型
+      getHistoryFilterForm.append("filterType", filterType);
+      //值
+      if (filterType === 3){
+        getHistoryFilterForm.append("filterValue", [filterValue[0].getTime(), filterValue[1].getTime()]);
+      }
+      else{
+        getHistoryFilterForm.append("filterValue", filterValue);
+      }
+      // console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
+      this.$axios.post("/NBI/History/getHistoryWithFilter/", getHistoryFilterForm, {
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response) => {
+        if (response.data === 1){
+          this.$message({
+            showClose: true,
+            message: '登录状态错误！请重新登录。',
+            type: 'error'
+          });
+        }
+        else {
+          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage);
+        }
+      });
     },
     //下载当前页面历史数据
     downloadHistory(currentPage, pageCount){

@@ -1,7 +1,7 @@
 import pymongo
 import time
 import datetime
-from ..ImageProcess.NBIGenerator import getRandom
+from ..imageProcess.NBIGenerator import getRandom
 import random
 
 

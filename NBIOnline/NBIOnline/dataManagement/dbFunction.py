@@ -1,4 +1,6 @@
+import difflib
 import math
+
 from bson.objectid import ObjectId
 import pymongo
 import os
@@ -38,10 +40,11 @@ def getAllImageInfoBy_id(_id):
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table = conn.nbi.PhotoInfo
     table_addition = conn.nbi.PhotoAdditionInfo
-    ret = table.find_one({'_id':ObjectId(_id)})
-    ret_addition = table_addition.find_one({'gid':ObjectId(_id)})
+    ret = table.find_one({'_id': ObjectId(_id)})
+    ret_addition = table_addition.find_one({'gid': ObjectId(_id)})
     conn.close()
     return ret, ret_addition
+
 
 # 根据_id在图片附加信息库中提取图片附加信息
 def getAdditionalInfoBy_id(id):
@@ -81,11 +84,8 @@ def getHistory(user, currentPage, pageCount):
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
-    ret = {}
     data = {}
     allInfo = table_PhotoInfo.find({'UID': user}).sort("lastChangeTime", -1)
-    ret['totalPage'] = math.ceil(float(allInfo.count() / pageCount))
-    ret['totalImage'] = allInfo.count()
     """
     我们当前每一页展示pageCount张图，
     目前需要的数据是currentPage页的数据，
@@ -117,7 +117,81 @@ def getHistory(user, currentPage, pageCount):
         count += 1
         if count > end:
             break
-    ret['info'] = data
+    ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
+    conn.close()
+    return ret
+
+
+# 根据user,filterType,filterValue获得数据
+def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table_PhotoInfo = conn.nbi.PhotoInfo
+    table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
+    # 这个用户的所有数据
+    allInfo = table_PhotoInfo.find({'UID': user}).sort("lastChangeTime", -1)
+    data = {}
+    count = 1
+    jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
+    end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
+    # 根据筛选条件获得满足条件的数据
+    if filterType == 1:
+        # 名称模糊搜索
+        for info in allInfo:
+            additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
+            # print(similar_diff_ratio(filterValue, additionInfo['sampleName']))
+            if similar_diff_ratio(filterValue, additionInfo['sampleName']) > 0.76:
+                if count <= jump:
+                    count += 1
+                    continue
+                _id = info['_id']
+                innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
+                             'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
+                             'sampleName': additionInfo['sampleName'], 'part': additionInfo['part'],
+                             'preDiagnosis': additionInfo['preDiagnosis']}
+                data[count] = innerDict
+                count += 1
+                if count > end:
+                    break
+
+    elif filterType == 2:
+        # 部位搜索
+        for info in allInfo:
+            additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
+            # print(similar_diff_ratio(filterValue, additionInfo['part']))
+            if similar_diff_ratio(filterValue, additionInfo['part']) > 0.9:
+                if count <= jump:
+                    count += 1
+                    continue
+                _id = info['_id']
+                innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
+                             'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
+                             'sampleName': additionInfo['sampleName'], 'part': additionInfo['part'],
+                             'preDiagnosis': additionInfo['preDiagnosis']}
+                data[count] = innerDict
+                count += 1
+                if count > end:
+                    break
+
+    elif filterType == 3:
+        # 时间范围内搜索
+        for info in allInfo:
+            additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
+            # print(float(filterValue.split(',')[0]) , info['uploadTime'], float(filterValue.split(',')[1]))
+            if float(filterValue.split(',')[0]) <= info['uploadTime']*1000 <= float(filterValue.split(',')[1]):
+                if count <= jump:
+                    count += 1
+                    continue
+                _id = info['_id']
+                innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
+                             'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
+                             'sampleName': additionInfo['sampleName'], 'part': additionInfo['part'],
+                             'preDiagnosis': additionInfo['preDiagnosis']}
+                data[count] = innerDict
+                count += 1
+                if count > end:
+                    break
+    ret = {'info': data, 'totalPage': math.ceil(float((count-1) / pageCount)), 'totalImage': (count-1)}
     conn.close()
     return ret
 
@@ -144,3 +218,8 @@ def deleteAllInfoOfImageBy_id(_id):
         return True
     except Exception as e:
         return False
+
+
+# 字符串相似度
+def similar_diff_ratio(str1, str2):
+    return difflib.SequenceMatcher(None, str1, str2).quick_ratio()

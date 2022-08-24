@@ -58,6 +58,7 @@ npm install axios
         - ImageProcess：NBI图片处理相关脚本
         - UserManagement：用户管理相关脚本
       - static：后端静态资源文件
+        - img：前端图片静态资源
         - Data：图片实际的存放位置，数据库中仅仅记录图片名称
           - Blue：蓝色波段图片
           - Green：绿色波段图片

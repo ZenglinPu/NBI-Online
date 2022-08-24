@@ -166,7 +166,7 @@ export default {
         deleteImageForm.append("token", this.getToken());
         //当前页面
         deleteImageForm.append("gid", GID);
-        this.$axios.post("/NBI/History/DeleteImage/", deleteImageForm, {
+        this.$axios.post("/NBI/History/deleteImage/", deleteImageForm, {
          headers: {'Content-Type': 'multipart/form-data'}
         }).then((response) => {
           if (response.data === 1){
