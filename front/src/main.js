@@ -5,6 +5,7 @@ import vueRouter from 'vue-router'
 import router from '@/router/index'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import '@/assets/iconfont/iconfont.css'; 
 
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false

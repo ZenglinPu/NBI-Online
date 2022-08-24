@@ -22,5 +22,6 @@ export default {
 .query-container {
   width: 1300px;
   margin: 0 auto;
+  padding-bottom: 10px;
 }
 </style>

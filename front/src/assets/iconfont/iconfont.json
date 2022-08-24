@@ -1,0 +1,16 @@
+{
+  "id": "3607094",
+  "name": "filter",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1526270",
+      "name": "筛选",
+      "font_class": "shaixuan",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    }
+  ]
+}
