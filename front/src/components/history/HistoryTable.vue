@@ -18,16 +18,21 @@
         </HistoryItem>
       </li>
     </ul>
+    <div v-if="!itemVisible" class="load-container">
+      <HistoryLoadPage/>
+    </div>
   </div>
 </template>
 
 <script>
 import HistoryItem from '@/components/history/HistoryItem.vue'
+import HistoryLoadPage from '@/components/history/HistoryLoadPage.vue'
 
 export default {
   name: 'HistoryTable',
   components: {
-    HistoryItem
+    HistoryItem,
+    HistoryLoadPage
   },
   data(){
     return{
@@ -204,5 +209,10 @@ td {
 
 .table-header-index-td {
   padding: 8px 20px;
+}
+
+.load-container {
+  height: 429px;
+  margin: 0 0 5px 0;
 }
 </style>
