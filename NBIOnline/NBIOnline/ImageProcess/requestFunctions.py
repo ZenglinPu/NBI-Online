@@ -6,8 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
-from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getInfobyUID, \
-    getLastImage
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, getInfoByUID
 
 from ..dataManagement.db_ImageData import imageData, updateImageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
@@ -30,15 +29,15 @@ def chooseLastImage(request):
             # 返回1表示没有之前提交的图片
             return HttpResponse(1)
         else:
-            addtionalInfo = getAdditionalInfoBy_id(result["_id"])
+            additionalInfo = getAdditionalInfoBy_id(result["_id"])
             # 返回0表示可以提交完整的新图片数据
-            # print(addtionalInfo)
+            # print(additionalInfo)
             ret = {
                 "imageBlue": result["Image_Blue"],
                 "imageGreen": result["Image_Green"],
                 "imageWhite": result["Image_White"],
-                "sampleName": addtionalInfo["sampleName"],
-                "remark": addtionalInfo["remark"],
+                "sampleName": additionalInfo["sampleName"],
+                "remark": additionalInfo["remark"],
             }
             ret = json.dumps(ret)
             return HttpResponse(ret, content_type="application/json")
@@ -134,7 +133,7 @@ def updateInputAndGetNBI(request):
         mode = request.POST.get("mode")
 
         # 通过数据库找到上次刚刚提交的图片信息
-        lastInfo = getInfobyUID(user)
+        lastInfo = getInfoByUID(user)
         # 生成新NBI图片
         if mode == "easy":
             processResult, resultName, resultImage = generateNBIImage_easy(

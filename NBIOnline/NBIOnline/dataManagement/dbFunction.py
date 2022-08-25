@@ -11,7 +11,7 @@ def getLastImage(user):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table = conn.nbi.PhotoInfo
-    result = table.find({"UID": user})
+    result = table.find({"UID": user}, sort=[('lastChangeTime', -1)])
 
     # 这个UID没有提交过数据
     if result.count() == 0:
@@ -19,17 +19,16 @@ def getLastImage(user):
         return False
 
     # 这个UID提交过数据，查看是否是同样的图片
-    ret = getInfobyUID(user)
     conn.close()
-    return ret
+    return result[0]
 
 
 # 根据UID获取最近一次提交的数据的信息
-def getInfobyUID(UID):
+def getInfoByUID(UID):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table = conn.nbi.PhotoInfo
-    ret = table.find_one(sort=[('lastChangeTime', -1)])
+    ret = table.find_one({"UID": UID}, sort=[('lastChangeTime', -1)])
     conn.close()
     return ret
 
