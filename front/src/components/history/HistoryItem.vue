@@ -5,10 +5,14 @@
     </span>
     <span class="historyItemInner" style="width: 11%">
       <div style="width: 85%;background-color: #d3d3d3;height: 90%;display: flex;justify-content: center;align-items: center;border: 1px solid #b7b7b7">
-        <p v-show="this.Image_Compress==='None'" style="color: darkred">未生成NBI图片</p>
-        <el-image v-show="this.Image_Compress!=='None'" class="historyPageImageSmall" :src="url" :preview-src-list="srcList"></el-image>
+        <div v-show="this.Image_Compress==='None'" style="width: 100%;height: 80px;display: flex;justify-content: center;align-items: center">
+          <p style="color: darkred">未生成NBI图片</p>
+        </div>
+        <div v-show="this.Image_Compress!=='None'" style="width: 100%;height: 80px;overflow: hidden;display: flex;justify-content: center;align-items: center">
+          <el-image class="historyPageImageSmall" :src="url" :preview-src-list="srcList"></el-image>
+        </div>
       </div>
-    </span>
+  </span>
     <span class="historyItemInner" style="width: 15%; font-weight: bold;">{{ sampleName }}</span>
     <span class="historyItemInner" style="width: 10%">{{ part }}</span>
     <span class="historyItemInner" style="width: 15%">{{ preDiagnosis }}</span>
@@ -27,10 +31,11 @@ export default {
   name: "HistoryItem",
   data() {
     return {
-      url: "/static/Data/Temp/"+this.Image_Compress,
-      srcList: [
-        "/static/Data/Temp/"+this.Image_Compress
-      ],
+      // 26.28修改，避免图片缓存修改成计算属性了
+      // url: "/static/Data/Temp/"+this.Image_Compress,
+      // srcList: [
+      //   "/static/Data/Temp/"+this.Image_Compress
+      // ],
     };
   },
   props:{
@@ -68,6 +73,14 @@ export default {
     }
   },
   computed: {
+    url(){
+      return "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime();
+    },
+    srcList(){
+      return [
+        "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
+      ]
+    },
     lastChangeTimeShow() {
       let date = new Date(parseInt(this.lastChangeTime) * 1000);
       let Year = date.getFullYear();
@@ -255,13 +268,13 @@ table {
   align-items: center;
   text-align: center;
   /* font-family: 幼圆,STHeiti,serif; */
-  text-align: center;
   font-size: 14px;
   color: #9195a3;
 }
 
 .historyPageImageSmall{
-  height: 100%;
+  /*height: 100%;*/
+  /*width: 100%;*/
   object-fit: contain;
 }
 
