@@ -1,7 +1,7 @@
 import json
 from django.http import HttpResponse
 from ..userManagement.token import tokenCheck
-from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter
+from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter, saveModification
 
 
 # 进入historyData页面后，展示基本信息
@@ -65,3 +65,33 @@ def historyFilter(request):
         ret = getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue)
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type='application/json')
+
+# 修改信息
+def modifyInfo(request):
+    if request.method == 'POST':
+        user = request.POST.get("uid")
+        token = request.POST.get("token")
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        # 因为uid中存在特殊符号.
+        # 在进行图片的处理中应当替换掉
+        user = user.replace(".", "^")
+
+        id = request.POST.get("_id")
+        # 获取更改的输入
+        sampleName = request.POST.get("sampleName")
+        partName = request.POST.get("partName")
+        preDiagnosis = request.POST.get("preDiagnosis")
+        pathologic = request.POST.get("pathologic")
+        differentiation = request.POST.get("differentiation")
+        cuttingEdge = request.POST.get("cuttingEdge")
+        remark = request.POST.get("remark")
+
+        if sampleName is None or partName is None or preDiagnosis is None or pathologic is None or differentiation is None:
+            # 返回2表示存在必填选项为空
+            return HttpResponse(2)
+        
+        # 存储更改
+        saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, cuttingEdge, remark)

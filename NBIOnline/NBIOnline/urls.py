@@ -6,7 +6,7 @@ from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
 from .imageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo
-from .historyManagement.history import historyDisplay, deleteHistoryImage, historyFilter
+from .historyManagement.history import historyDisplay, deleteHistoryImage, historyFilter, modifyInfo
 
 urlpatterns = [
     path(r'NBI/admin/', admin.site.urls),
@@ -31,6 +31,7 @@ urlpatterns = [
 
     # """History Data"""
     path(r"NBI/History/display/", historyDisplay, name="historyDisplay"),
+    path(r'NBI/HistoryDetail/modifyInfo/', modifyInfo, name="historyModifyInfo"),
     path(r'NBI/HistoryDetail/', historyImgInfo, name="HistoryImgInfo"),
     path(r'NBI/History/deleteImage/', deleteHistoryImage, name="deleteOneImage"),
     path(r'NBI/History/getHistoryWithFilter/', historyFilter),

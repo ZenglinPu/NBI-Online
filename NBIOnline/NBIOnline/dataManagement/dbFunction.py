@@ -222,3 +222,20 @@ def deleteAllInfoOfImageBy_id(_id):
 # 字符串相似度
 def similar_diff_ratio(str1, str2):
     return difflib.SequenceMatcher(None, str1, str2).quick_ratio()
+
+# 存储更改的信息
+def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, cuttingEdge, remark):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
+    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"sampleName":sampleName}})
+    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"partName":partName}})
+    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"preDiagnosis":preDiagnosis}})
+    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"pathologic":pathologic}})
+    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"differentiation":differentiation}})
+    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"cuttingEdge":cuttingEdge}})
+    # 如果备注为空就不修改
+    if remark is not None:
+        table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"remark":remark}})
+    conn.close()
+
