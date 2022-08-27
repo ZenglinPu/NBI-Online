@@ -38,6 +38,7 @@ export default {
     return{
       totalPage: 0,
       totalImage: 0,
+      currentPage: 1,
       pageSize:5,
       historyList: [],
       reset: true
@@ -49,17 +50,18 @@ export default {
     }
   },
   mounted() {
-    this.downloadHistory(1,this.pageSize);
+    this.downloadHistory(this.currentPage,this.pageSize);
     this.$bus.$on('historyCPChange',(data)=>{
+      this.currentPage = data;
       this.reset = false;
-      this.downloadHistory(data,this.pageSize);
+      this.downloadHistory(this.currentPage,this.pageSize);
     });
     this.$bus.$on('historySizeChange',(data)=>{
       this.pageSize = data;
       this.downloadHistory(1,this.pageSize);
     });
     this.$bus.$on('updateHistoryPage', ()=>{
-      this.downloadHistory(1,this.pageSize);
+      this.downloadHistory(this.currentPage,this.pageSize);
     });
     this.$bus.$on('updateHistoryPageWithFilter', (data)=>{
       this.downloadHistoryWithFilter(1, this.pageSize, data.filterType, data.filterValue);
