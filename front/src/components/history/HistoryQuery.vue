@@ -1,7 +1,13 @@
 <template>
   <el-row class="query-container">
-    <div style="width: 15%;height: 90%;justify-content: center;align-items: center;display: flex">
-      <el-select v-model="searchValue" placeholder="请选择搜索方式" style="border: #767ff6 solid 1px;border-radius: 4px" @change="searchText='';dateRange='';isSearch=false">
+    <button class="filter-first" :style="filterFirstBorder" @click="changeFilterState()">
+      <div class="filter-holder">
+        <i class="iconfont icon-shaixuan" style="vertical-align: middle"></i>
+        <span>  筛选</span>
+      </div>
+    </button>
+    <div style="width: 15%;height: 90%;justify-content: center;align-items: center;display: flex" v-show="isFiltrate">
+      <el-select v-model="searchValue" placeholder="请选择搜索方式" :popper-append-to-body="false" @change="searchText='';dateRange='';isSearch=false">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -12,7 +18,7 @@
         </el-option>
       </el-select>
     </div>
-    <div style="width: 77%;height: 90%;justify-content: center;align-items: center;display: flex">
+    <div class="filter-third" style="width: 70%;height: 90%;justify-content: center;align-items: center;display: flex" v-show="isFiltrate">
       <el-input
         v-show="searchValue === '1'"
         placeholder="请输入标本名称"
@@ -20,7 +26,6 @@
         ref="search"
         clearable
         prefix-icon="el-icon-search"
-        style="border: #767ff6 solid 1px;border-radius: 4px"
         @keyup.enter.native="searchNewHistory()"
       ></el-input>
       <el-input
@@ -30,7 +35,6 @@
         ref="search"
         clearable
         prefix-icon="el-icon-search"
-        style="border: #767ff6 solid 1px;border-radius: 4px"
         @keyup.enter.native="searchNewHistory()"
       ></el-input>
       <el-date-picker
@@ -44,20 +48,20 @@
         end-placeholder="结束日期"
         :picker-options="pickerOptions"
         @blur="searchNewHistory()"
-        style="border: #767ff6 solid 1px;border-radius: 4px;width: 100%;"
+        style="width: 100%"
       >
       </el-date-picker>
     </div>
-    <div style="width: 8%;height: 90%;justify-content: center;align-items: center;display: flex">
-      <div v-show="!isSearch" @click="searchNewHistory()" class="filter-holder">
-        <i class="iconfont icon-shaixuan" style="vertical-align: middle"></i>
-        <span>  筛选</span>
+    <button class="filter-last" :style="filterLastBackground" @click="filterLastEvent()" v-show="isFiltrate">
+      <div v-show="!isSearch" class="filter-starter">
+        <i class="el-icon-check" style="vertical-align: middle"></i>
+        <span>  确定</span>
       </div>
-      <div v-show="isSearch" @click="getAllHistory()" class="filter-closer">
+      <div v-show="isSearch" class="filter-closer">
         <i class="el-icon-close" style="vertical-align: middle"></i>
         <span>  取消</span>
       </div>
-    </div>
+    </button>
   </el-row>
 </template>
 
@@ -112,9 +116,36 @@ export default {
       searchText: '',
       dateRange: '',
       isSearch: false,
+      isFiltrate: false
+    }
+  },
+  computed: {
+    filterFirstBorder() {
+      if (!this.isFiltrate) {
+        return { 'border-radius': '40px 40px 40px 40px' };
+      } else {
+        return { 'border-radius': '40px 0 0 40px' };
+      }
+    },
+    filterLastBackground(){
+      if (!this.isSearch) {
+        return { 'background-image': 'linear-gradient(135deg, #6cc3de 0%, #767ff6 100%)' };
+      } else {
+        return { 'background-image': 'linear-gradient(135deg, #ff833b 0%, #cc0c0c 74%)' };
+      }
     }
   },
   methods:{
+    changeFilterState() {
+      this.isFiltrate = !this.isFiltrate;
+    },
+    filterLastEvent(){
+      if (!this.isSearch) {
+        this.searchNewHistory();
+      } else {
+        this.getAllHistory();
+      }
+    },
     searchNewHistory(){
       if (this.searchValue === '1'){
         // 根据标本名字搜索
@@ -147,6 +178,12 @@ export default {
 </script>
 
 <style>
+button {
+	border-radius: 0;
+	border: none;
+	outline: none;
+}
+
 .query-container {
   width: 1300px;
   height: 75px;
@@ -157,30 +194,89 @@ export default {
   align-items: center;
   flex-direction: row;
 }
+
+.filter-first {
+  width: 7%;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-image: linear-gradient(45deg, #7de1ff 0%, #85FFBD 100%);
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
 .filter-holder {
-  color: #4b56ff;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  transition: 0.15s ease;
+}
+
+.filter-first:hover {
+  opacity: .8;
+}
+
+.filter-first:hover .filter-holder{
+  color: #1d5a7d;
+}
+
+.filter-last {
+  width: 8%;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border-radius: 0 40px 40px 0;
   cursor: pointer;
-  transition: 0.3s ease;
-
-}
-.filter-holder:hover{
-  color: #989ffc;
-}
-.filter-holder:focus{
-  color: #989ffc;
+  transition: 0.15s ease;
 }
 
-.filter-closer {
-  color: #d30000;
-  cursor: pointer;
-  transition: 0.3s ease;
-
-}
-.filter-closer:hover{
-  color: #ff4c4c;
-}
-.filter-closer:focus{
-  color: #ff4c4c;
+.filter-last:hover {
+  opacity: 0.8;
 }
 
+.filter-starter,.filter-closer {
+  color: #ffffff;
+  transition: 0.15s ease;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.filter-last:hover .filter-starter,.filter-closer{
+  color: #e5e3e3;
+}
+
+.el-select .el-input__inner {
+  border-radius: 0;
+  border-left: transparent;
+}
+
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: #3ae6cc !important;
+}
+
+.el-select .el-input__inner:focus {
+  border-color: #3ae6cc !important;
+}
+
+.el-select .el-scrollbar .el-select-dropdown__item.selected {
+  color: #3ae6cc;
+}
+
+.el-input .el-input__inner {
+  border-radius: 0;
+}
+
+.filter-third .el-input .el-input__inner:focus {
+  border-color: #3ae6cc !important;
+}
+
+.filter-third .el-date-editor.el-input__inner {
+  border-radius: 0;
+}
+
+.filter-third .el-range-editor.is-active {
+  border-color: #3ae6cc !important;
+}
 </style>
