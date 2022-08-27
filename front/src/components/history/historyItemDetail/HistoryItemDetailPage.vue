@@ -17,6 +17,7 @@
           </div>
         </div>
         <div style="height: 100%;width: 40%;display: flex;justify-content: end;align-items: center;">
+          <el-button style="width: 30%;height: 45%;display: flex;justify-content: center;align-items: center" type="warning" icon="el-icon-download" @click="downloadResult()">下 载 结 果</el-button>
           <el-button style="width: 30%;height: 45%;display: flex;justify-content: center;align-items: center" type="danger" icon="el-icon-delete" @click="deleteDetail()">删 除</el-button>
         </div>
       </div>
@@ -222,6 +223,9 @@ export default {
     },
     backToHistory(){
       window.history.back();
+    },
+    downloadResult() {
+      return undefined;
     },
     deleteDetail() {
       this.$confirm('确认删除？（操作不可逆）')

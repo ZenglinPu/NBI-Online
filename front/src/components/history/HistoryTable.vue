@@ -40,7 +40,12 @@ export default {
       totalImage: 0,
       pageSize:5,
       historyList: [],
-      reset: true
+      reset: true,
+      filter:{
+        isFilter: false,
+        filterType: '',
+        filterValue: '',
+      },
     }
   },
   computed: {
@@ -52,17 +57,38 @@ export default {
     this.downloadHistory(1,this.pageSize);
     this.$bus.$on('historyCPChange',(data)=>{
       this.reset = false;
-      this.downloadHistory(data,this.pageSize);
+      if (this.filter.isFilter){
+        this.downloadHistoryWithFilter(data, this.pageSize, this.filter.filterType, this.filter.filterValue);
+      }
+      else{
+        this.downloadHistory(data,this.pageSize);
+      }
     });
     this.$bus.$on('historySizeChange',(data)=>{
       this.pageSize = data;
-      this.downloadHistory(1,this.pageSize);
+      if (this.filter.isFilter){
+        this.downloadHistoryWithFilter(1, this.pageSize, this.filter.filterType, this.filter.filterValue);
+      }
+      else{
+        this.downloadHistory(1,this.pageSize);
+      }
     });
     this.$bus.$on('updateHistoryPage', ()=>{
-      this.downloadHistory(1,this.pageSize);
+      if (this.filter.isFilter){
+        this.downloadHistoryWithFilter(1, this.pageSize, this.filter.filterType, this.filter.filterValue);
+      }
+      else{
+        this.downloadHistory(1,this.pageSize);
+      }
     });
     this.$bus.$on('updateHistoryPageWithFilter', (data)=>{
       this.downloadHistoryWithFilter(1, this.pageSize, data.filterType, data.filterValue);
+      this.filter.isFilter = true;
+      this.filter.filterType = data.filterType;
+      this.filter.filterValue = data.filterValue;
+    });
+    this.$bus.$on('noFilter',()=>{
+      this.filter.isFilter = false;
     });
   },
   beforeDestroy() {
@@ -70,6 +96,7 @@ export default {
     this.$bus.$off('historySizeChange');
     this.$bus.$off('updateHistoryPage');
     this.$bus.$off('updateHistoryPageWithFilter');
+    this.$bus.$off('noFilter');
   },
   methods: {
     // cookie
@@ -118,6 +145,7 @@ export default {
           });
         }
         else {
+          // console.log(response.data);
           this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage);
         }
       });

@@ -130,7 +130,7 @@ export default {
           this.$message({
             showClose: true,
             message: '搜索条件不能为空',
-            type: 'error'
+            type: 'error',
           });
           return;
         }
@@ -139,6 +139,7 @@ export default {
       this.isSearch = true;
     },
     getAllHistory(){
+      this.$bus.$emit('noFilter');
       this.$bus.$emit('updateHistoryPage');
       this.isSearch = false;
     }

@@ -143,6 +143,10 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                 if count <= jump:
                     count += 1
                     continue
+                if count > end:
+                    # 就不往返回的数据里加东西了，但是要继续计数
+                    count += 1
+                    continue
                 _id = info['_id']
                 innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
                              'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
@@ -150,8 +154,6 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                              'preDiagnosis': additionInfo['preDiagnosis']}
                 data[count] = innerDict
                 count += 1
-                if count > end:
-                    break
 
     elif filterType == 2:
         # 部位搜索
@@ -162,6 +164,9 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                 if count <= jump:
                     count += 1
                     continue
+                if count > end:
+                    count += 1
+                    continue
                 _id = info['_id']
                 innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
                              'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
@@ -169,8 +174,6 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                              'preDiagnosis': additionInfo['preDiagnosis']}
                 data[count] = innerDict
                 count += 1
-                if count > end:
-                    break
 
     elif filterType == 3:
         # 时间范围内搜索
@@ -181,6 +184,9 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                 if count <= jump:
                     count += 1
                     continue
+                if count > end:
+                    count += 1
+                    continue
                 _id = info['_id']
                 innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
                              'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
@@ -188,8 +194,7 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                              'preDiagnosis': additionInfo['preDiagnosis']}
                 data[count] = innerDict
                 count += 1
-                if count > end:
-                    break
+
     ret = {'info': data, 'totalPage': math.ceil(float((count-1) / pageCount)), 'totalImage': (count-1)}
     conn.close()
     return ret
