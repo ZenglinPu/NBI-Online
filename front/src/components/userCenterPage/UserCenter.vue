@@ -267,6 +267,7 @@ export default {
             message: '您的账号状态错误！',
             type: 'error',
           });
+          this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if(response.data === 2){
           this.$message({
@@ -440,6 +441,7 @@ export default {
             message: '注销失败，您的账号状态错误！',
             type: 'error'
           });
+          this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if (response.data === 2){
           this.$message({

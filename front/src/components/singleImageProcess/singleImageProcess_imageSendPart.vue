@@ -202,6 +202,7 @@ export default {
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }

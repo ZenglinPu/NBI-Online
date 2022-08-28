@@ -188,6 +188,7 @@ export default {
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
           }
           else if (response.data === 3){
             this.$message({

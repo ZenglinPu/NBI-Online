@@ -209,6 +209,7 @@ export default {
               message: '登录状态错误！',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if (response.data === 2){
           this.$message({
