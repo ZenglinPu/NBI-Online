@@ -13,6 +13,9 @@ from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 
 
 # 查询并返回上一次提交的图片
+from ..userManagement.userRank import getUserRankByUID
+
+
 @csrf_exempt
 def chooseLastImage(request):
     if request.method == "POST":
@@ -184,17 +187,25 @@ def updateInputAndGetNBI(request):
                 "Image_Compress": cname,
                 "lastChangeTime": time.time(),
                 "channelOffset": channelOffset,
+                'isAutoBrightness': isAutoBrightness,
             }
         elif mode == "full":
             updateDict = {
                 "Image_Result": resultName,
                 "Image_Compress": cname,
                 "lastChangeTime": time.time(),
+                'isAutoBrightness': isAutoBrightness,
                 "contrast": int(request.POST.get("contrastOffset")),
                 "light": int(request.POST.get("luminosityOffset")),  # 明度
                 "saturation": int(request.POST.get("saturationOffset")),  # 饱和度
                 "channelOffset": channelOffset,
             }
+        # 根据用户等级判断刚刚生成的图片保留多久
+        # 高级用户保存一年，低级用户30天
+        if getUserRankByUID(user.replace("^", ".")) == 2:
+            updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 366
+        else:
+            updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 30
         updateImageData(lastInfo.get("_id"), updateDict)
 
         # 返回新的图片数据到前端

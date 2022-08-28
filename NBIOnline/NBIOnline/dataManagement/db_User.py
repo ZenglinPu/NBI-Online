@@ -13,7 +13,6 @@ import random
 # | pwd            | String  | md5加密后的密码                                                           |
 # | registerTime   | Time    | 注册时间                                                                  |
 # | name           | String  | 用户昵称（初始为随机）                                                     |
-# | rank           | Integer | 用户等级（1=普通；2=超级）                                                  |
 # | expiresTime    | Time    | 高级用户过期时间戳                                                        |
 # | workPlace      | String  | 用户工作单位（初始为空）                                                   |
 # | department     | String  | 用户工作部门（初始为空）                                                   |
@@ -28,20 +27,20 @@ import random
 # 普通用户与高级用户的区别：
 # 普通用户的下载图片是压缩后的图片，无法下载高清晰度原图；
 # 普通用户每天有10次的生成次数限制;
+# 如果上传图片不生成，则保留24小时，如果生成了，普通用户30天，高级用户1年
 
 # 普通用户与高级用户的判别：
-# rank==2且当前时间没有超过它的高级用户过期时间戳
+# 当前时间没有超过它的高级用户过期时间戳
 # '''
 from ..userManagement.md5 import transToMD5
 
 
 class User:
-    def __init__(self, uid, pwd, rank=2, name=None, workPlace=None,
+    def __init__(self, uid, pwd, name=None, workPlace=None,
                  department=None, competent=None):
         self.uid = uid
         self.pwd = pwd
         self.registerTime = time.time()
-        self.rank = rank
         if name is None:
             self.name = "User" + getRandom() + str(int(time.time()) % 10000)
         # 刚刚注册给予3天高级用户身份
@@ -62,7 +61,6 @@ class User:
         ret['pwd'] = self.pwd
         ret['registerTime'] = self.registerTime
         ret['name'] = self.name
-        ret['rank'] = self.rank
         ret['expiresTime'] = self.expiresTime
         ret['workPlace'] = self.workPlace
         ret['department'] = self.department

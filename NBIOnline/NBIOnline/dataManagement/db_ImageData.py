@@ -15,6 +15,7 @@ import pymongo
 # | uploadTime     | Time    | 源图片上传时间                                                            |
 # | lastChangeTime | Time    | 上一次的修改时间                                                           |
 # | expireTime     | Time    | 图片数据自动删除的时间，None则表示永久保存                                  |
+# | isAutoBrightness| Boolean| 最后一次生成时是否自动调节亮度                                              |
 # | contrast       | Integer | 最后一次生成时的对比度                                                     |
 # | light          | Integer | 最后一次生成时的亮度                                                       |
 # | saturation     | Integer | 最后一次生成时的饱和度                                                     |
@@ -23,7 +24,7 @@ import pymongo
 
 # image data
 class imageData:
-    def __init__(self, uid, image_green=None, image_blue=None, image_white=None, image_result=None, image_compress=None, lastChangeTime=None):
+    def __init__(self, uid, image_green=None, isAutoBrightness=None, image_blue=None, image_white=None, image_result=None, image_compress=None, lastChangeTime=None):
         self.uid = uid
         self.image_blue = image_blue
         self.image_green = image_green
@@ -32,23 +33,12 @@ class imageData:
         self.image_compress = image_compress
         self.uploadTime = time.time()
         self.lastChangeTime = lastChangeTime
-        self.expireTime = self.uploadTime # 这个暂时还没做，临时存储为这个时间戳
+        self.expireTime = self.uploadTime + 24*60*60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后
+        self.isAutoBrightness = isAutoBrightness
         self.contrast = None
         self.light = None
         self.saturation = None
         self.channelOffset = None
-
-    def setImageGreenName(self, gname):
-        self.image_green = gname
-
-    def setImageBlueName(self, bname):
-        self.image_blue = bname
-
-    def setImageResultName(self, rname):
-        self.image_result = rname
-
-    def setImageCompressName(self, cname):
-        self.image_compress = cname
 
     def getDict(self):
         ret = dict()
@@ -60,11 +50,12 @@ class imageData:
         ret['Image_Compress'] = self.image_compress
         ret['lastChangeTime'] = self.lastChangeTime
         ret['uploadTime'] = self.uploadTime
-        ret['expireTime'] = self.uploadTime  # TODO
+        ret['expireTime'] = self.uploadTime
         ret['contrast'] = None
         ret['light'] = None
         ret['saturation'] = None
         ret['channelOffset'] = None
+        ret['isAutoBrightness'] = self.isAutoBrightness
         return ret
 
     # 创建新数据并保存
