@@ -241,6 +241,14 @@ export default {
           });
           return -1;
         }
+        if (this.recordRealResult === -1){
+          this.$message({
+            showClose: true,
+            message: '您不是高级用户，仅有高级用户享有下载无压缩图片的权力',
+            type: 'error'
+          });
+          return -1;
+        }
         this.$message({
           showClose: true,
           message: '已开始下载。',
@@ -249,10 +257,10 @@ export default {
         this.downloadImage("/static/Data/NBI/"+this.recordRealResult, "resultNBI.jpg");
     },
     downloadImage(imgSrc, fileName){
-        var alink = document.createElement("a");
-        alink.href = imgSrc;
-        alink.download = fileName; //fileName保存提示中用作预先填写的文件名
-        alink.click();
+      let alink = document.createElement("a");
+      alink.href = imgSrc;
+      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
+      alink.click();
     },
     showResultImage(data){
       this.isShowResult = true;

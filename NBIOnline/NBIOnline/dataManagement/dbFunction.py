@@ -246,5 +246,3 @@ def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differe
     if remark is not None:
         table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"remark":remark}})
     conn.close()
-
-# saveModification(ObjectId('630825fe0dfd3ae69940f0f8'), "test_YK", "", "SMT", None, None, None, "tset_YK")

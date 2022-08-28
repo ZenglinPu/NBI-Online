@@ -205,17 +205,19 @@ def updateInputAndGetNBI(request):
             }
         # 根据用户等级判断刚刚生成的图片保留多久
         # 高级用户保存一年，低级用户30天
+        ret = {}
         if not lastInfo.get("isGenerated"):  # 没有生成才更新
             if getUserRankByUID(user.replace("^", ".")) == 2:
                 updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 366
                 updateDict['isGenerated'] = True
+                ret = {"resultImage": resultName, "showImage": cname}
             else:
                 updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 30
                 updateDict['isGenerated'] = True
+                ret = {"resultImage": -1, "showImage": cname}  # 普通用户不返回高清图片名称，不能下载高清图片
         updateImageData(lastInfo.get("_id"), updateDict)
 
         # 返回新的图片数据到前端
-        ret = {"resultImage": resultName, "showImage": cname}
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type="application/json")
     else:

@@ -1,4 +1,6 @@
 import os
+import time
+
 import pymongo
 
 
@@ -52,7 +54,8 @@ class NBIManager():
             os.system("mkdir /home/ubuntu/NBI-Online/NBIOnline/static/Data/Temp")
 
 
-manager = NBIManager("UserInfo")
+# manager = NBIManager("UserInfo")
 # manager.clearAllImageData()
 # manager.removeAllTableData()
-manager.printAll()
+# manager.printAll()
+print(time.time())
