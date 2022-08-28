@@ -18,9 +18,9 @@ import random
 # | department     | String  | 用户工作部门（初始为空）                                                   |
 # | competent      | String  | 用户职称（初始为空）                                                       |
 # | inviteCode     | String  | 邀请码                                                                  |
-# | isSend         | Boolean | 是否已经赠送过邀请码？true表示已经赠送（每人赠送一次，可多次接受）
+# | isSend         | Boolean | 是否已经赠送过邀请码？true表示已经赠送（每人赠送一次，可多次接受）                  |
 # | SUM_generate   | Integer | 记录用户生成的总NBI张数                                                    |
-# | TIMES_generate | Integer | 可生成NBI图片数，-1表示不限量                                               |
+# | TIMES_generate | Integer | 可生成NBI图片数，-1为不限，普通用户为10                                      |
 # '''
 
 # '''
@@ -53,7 +53,7 @@ class User:
         self.inviteCode = getInviteCode()
         self.isSend = False
         self.SUM_generate = 0
-        self.TIMES_generate = -1
+        self.TIMES_generate = 10
 
     def getDict(self):
         ret = dict()
@@ -130,29 +130,17 @@ def updateAddInfo(uid, workPlace, department, competent):
     return result
 
 
-# 检查是否有次数，有则减一并返回true，无则返回false
-def checkGenerateTimes(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
-    times = table.find_one({"UID": uid})['TIMES_generate']
-    if times > 0:
-        newValue = {"$set": {"TIMES_generate": times - 1}}
-        table.update_one({"UID": uid}, newValue)
-        conn.close()
-        return True
-    else:
-        conn.close()
-        return False
-
-
-# 生成总条数加一
+# 生成总条数加一，同时会更新剩余生成次数，但是要根据用户等级
 def addSumGenerate(uid):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table = conn.nbi.UserInfo
     oldTimes = table.find_one({"UID": uid})['SUM_generate']
     newValue = {"$set": {"SUM_generate": oldTimes + 1}}
+    if table.find_one({"UID": uid})['expiresTime'] < time.time():
+        # 不是超级用户了，那么需要将次数-1
+        oldSum = int(table.find_one({"UID": uid})['TIMES_generate'])
+        table.update_one({"UID": uid}, {"$set": {"TIMES_generate": oldSum - 1}})
     table.update_one({"UID": uid}, newValue)
     conn.close()
 
@@ -196,7 +184,7 @@ def addSuperDay(user, num):
         newExpiresTime = user['expiresTime'] + num * 24 * 60 * 60
     else:
         newExpiresTime = time.time() + num * 24 * 60 * 60
-    newValue = {"$set": {"expiresTime": newExpiresTime}}
+    newValue = {"$set": {"expiresTime": newExpiresTime, "TIMES_generate": 10}}
     table.update_one({"UID": user["UID"]}, newValue)
     conn.close()
 

@@ -128,11 +128,11 @@
             </div>
             <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               <div style="width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-                &emsp;&emsp;剩余次数:&emsp;
+                &emsp;&emsp;剩余上传次数:&emsp;
                 {{leftTimes===-1?'不限':leftTimes}}
               </div>
               <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-                &emsp;&emsp;总共生成次数:&emsp;
+                &emsp;&emsp;总共上传次数:&emsp;
                 {{totalTimes}}
               </div>
             </div>
@@ -419,7 +419,7 @@ export default {
           this.workPlace = response.data.workPlace;
           this.department = response.data.department;
           this.competent = response.data.competent;
-          this.leftTimes = response.data.TIMES_generate;
+          this.leftTimes = this.rank === 2? '不限':response.data.TIMES_generate;
           this.totalTimes = response.data.SUM_generate;
           this.expiresTime = response.data.expiresTime;
           this.inviteCode = response.data.inviteCode;

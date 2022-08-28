@@ -16,6 +16,7 @@ import pymongo
 # | lastChangeTime | Time    | 上一次的修改时间                                                           |
 # | expireTime     | Time    | 图片数据自动删除的时间，None则表示永久保存                                  |
 # | isAutoBrightness| Boolean| 最后一次生成时是否自动调节亮度                                              |
+# | isGenerated    | Boolean | 是否点击了生成按钮，没有的则默认保留24小时                                              |
 # | contrast       | Integer | 最后一次生成时的对比度                                                     |
 # | light          | Integer | 最后一次生成时的亮度                                                       |
 # | saturation     | Integer | 最后一次生成时的饱和度                                                     |
@@ -24,7 +25,8 @@ import pymongo
 
 # image data
 class imageData:
-    def __init__(self, uid, image_green=None, isAutoBrightness=None, image_blue=None, image_white=None, image_result=None, image_compress=None, lastChangeTime=None):
+    def __init__(self, uid, image_green=None, isAutoBrightness=None, image_blue=None, image_white=None,
+                 image_result=None, image_compress=None, lastChangeTime=None):
         self.uid = uid
         self.image_blue = image_blue
         self.image_green = image_green
@@ -33,8 +35,9 @@ class imageData:
         self.image_compress = image_compress
         self.uploadTime = time.time()
         self.lastChangeTime = lastChangeTime
-        self.expireTime = self.uploadTime + 24*60*60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后
+        self.expireTime = self.uploadTime + 24 * 60 * 60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后
         self.isAutoBrightness = isAutoBrightness
+        self.isGenerated = False
         self.contrast = None
         self.light = None
         self.saturation = None
@@ -50,12 +53,13 @@ class imageData:
         ret['Image_Compress'] = self.image_compress
         ret['lastChangeTime'] = self.lastChangeTime
         ret['uploadTime'] = self.uploadTime
-        ret['expireTime'] = self.uploadTime
+        ret['expireTime'] = self.expireTime
         ret['contrast'] = None
         ret['light'] = None
         ret['saturation'] = None
         ret['channelOffset'] = None
         ret['isAutoBrightness'] = self.isAutoBrightness
+        ret['isGenerated'] = self.isGenerated
         return ret
 
     # 创建新数据并保存

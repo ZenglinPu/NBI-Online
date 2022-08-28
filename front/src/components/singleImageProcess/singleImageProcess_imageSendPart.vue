@@ -224,6 +224,15 @@ export default {
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
+        else if (response.data === 4){
+            this.$message({
+              showClose: true,
+              message: '上传失败，您是普通用户，并且已经没有上传次数。',
+              type: 'error'
+            });
+            this.$refs.uploadStatus.innerText = "等待上传";
+            this.uploadStatus_class = "uploadStatus_red";
+        }
         else{
           const imageShow_blue = this.$refs.imageShow_blue;
           imageShow_blue.className = "uploadImageShow";
@@ -258,6 +267,7 @@ export default {
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if (response.data === 1){
             this.$message({

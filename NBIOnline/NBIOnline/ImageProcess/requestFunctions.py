@@ -4,18 +4,15 @@ import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from ..dataManagement.db_User import addSumGenerate
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
 from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, getInfoByUID
-
 from ..dataManagement.db_ImageData import imageData, updateImageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
-
+from ..userManagement.userRank import getUserRankByUID, checkUploadTime
 
 # 查询并返回上一次提交的图片
-from ..userManagement.userRank import getUserRankByUID
-
-
 @csrf_exempt
 def chooseLastImage(request):
     if request.method == "POST":
@@ -57,6 +54,11 @@ def uploadImage(request):
         if not tokenCheck(user, token):
             # 1表示登录状态有问题
             return HttpResponse(1)
+
+        # 根据uid检查是否有上传次数，没有返回4，表示无次数
+        if not checkUploadTime(user):
+            return HttpResponse(4)
+
         # 因为uid中存在特殊符号.
         # 在进行图片的处理中应当替换掉
         user = user.replace(".", "^")
@@ -101,7 +103,8 @@ def uploadImage(request):
             preDiagnosis=request.POST.get("diagnoseBefore"),
         )
         newAdditionInfo.saveNewAdditionalInfo()
-
+        # 更新次数信息
+        addSumGenerate(user.replace("^", "."))
         # 向前端返回结果名以及缩略图名
         # 处理流程完成且正常
         ret = {
@@ -202,10 +205,13 @@ def updateInputAndGetNBI(request):
             }
         # 根据用户等级判断刚刚生成的图片保留多久
         # 高级用户保存一年，低级用户30天
-        if getUserRankByUID(user.replace("^", ".")) == 2:
-            updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 366
-        else:
-            updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 30
+        if not lastInfo.get("isGenerated"):  # 没有生成才更新
+            if getUserRankByUID(user.replace("^", ".")) == 2:
+                updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 366
+                updateDict['isGenerated'] = True
+            else:
+                updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 30
+                updateDict['isGenerated'] = True
         updateImageData(lastInfo.get("_id"), updateDict)
 
         # 返回新的图片数据到前端

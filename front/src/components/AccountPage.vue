@@ -130,9 +130,9 @@ export default {
     },
     getCookie(objname){//获取指定名称的cookie的值
       const arrstr = document.cookie.split("; ");
-      for(var i = 0;i < arrstr.length;i ++){
-          var temp = arrstr[i].split("=");
-          if(temp[0] === objname) return temp[1];
+      for(let i = 0; i < arrstr.length; i ++){
+        const temp = arrstr[i].split("=");
+        if(temp[0] === objname) return temp[1];
       }
       return null;
     },
