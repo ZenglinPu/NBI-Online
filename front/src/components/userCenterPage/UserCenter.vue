@@ -116,12 +116,12 @@
                 </div>
               </div>
               <div style="height: 100%;width: 20%;display: flex;justify-content: center;align-items: center">
-                <p class="fontLink">
+                <p class="fontLink" @click="toInfoPage_userType()">
                   超级用户有什么用？
                 </p>
               </div>
               <div style="height: 100%;width: 20%;display: flex;justify-content: center;align-items: center">
-                <p class="fontLink">
+                <p class="fontLink" @click="toInfoPage_howToBeSuperUser()">
                   如何成为超级用户？
                 </p>
               </div>
@@ -222,6 +222,18 @@ export default {
     this.getUserCenterInfo();
   },
   methods:{
+    toInfoPage_userType(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "userType"},
+      })
+    },
+    toInfoPage_howToBeSuperUser(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "beSuper"},
+      })
+    },
     getCookie(objName){//获取指定名称的cookie的值
       const arrStr = document.cookie.split("; ");
       for(let i = 0; i < arrStr.length; i ++){

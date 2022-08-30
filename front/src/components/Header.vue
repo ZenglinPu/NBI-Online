@@ -4,7 +4,7 @@
             <img src="@/assets/webicon.jpg" alt="图片加载失败" style="height: 82%; align-self: center; border-radius: 50%">
         </div>
         <div id="nameContainer">
-            <div style="width: 100%; text-align: left; height: 45%; display: inline-flex;">
+            <div style="cursor: pointer; width: 100%; text-align: left; height: 45%; display: inline-flex;" @click="toInfoPage_nbi()">
                 <p class="headerFont" style="color: #d1ffd3">
                         NBI
                 </p>
@@ -84,6 +84,12 @@ export default {
     this.$bus.$off('changeStatus');
   },
   methods:{
+    toInfoPage_nbi(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "nbi"},
+      })
+    },
     // cookie
     getCookie(objname){//获取指定名称的cookie的值
       const arrstr = document.cookie.split("; ");

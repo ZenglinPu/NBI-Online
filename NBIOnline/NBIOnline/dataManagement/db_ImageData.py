@@ -16,7 +16,7 @@ import pymongo
 # | lastChangeTime | Time    | 上一次的修改时间                                                           |
 # | expireTime     | Time    | 图片数据自动删除的时间，None则表示永久保存                                  |
 # | isAutoBrightness| Boolean| 最后一次生成时是否自动调节亮度                                              |
-# | isGenerated    | Boolean | 是否点击了生成按钮，没有的则默认保留24小时                                              |
+# | isGenerated    | Boolean | 是否点击了生成按钮，没有的则默认保留24小时                                    |
 # | contrast       | Integer | 最后一次生成时的对比度                                                     |
 # | light          | Integer | 最后一次生成时的亮度                                                       |
 # | saturation     | Integer | 最后一次生成时的饱和度                                                     |

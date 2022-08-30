@@ -49,6 +49,7 @@
                 <el-button style="margin-left: 5%;width: 20%;" type="primary" :loading="validateCodeSending">发送</el-button>
               </el-form-item>
               <input type="button" id="registerBtn" @click="registerCheck()" value="注      册"/>
+              <p style="color: gray;font-size: small;text-align: center;font-family: 幼圆,serif;">点击即代表同意 <a @click="toInfoPage_userAgreement()" class="fontLink">NBI-Online 用户协议</a></p>
             </el-form>
           </div>
         </div>
@@ -120,6 +121,12 @@ export default {
     }
   },
   methods:{
+    toInfoPage_userAgreement(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "userAgreement"},
+      })
+    },
     switchPage(w){
       if (w===1){
         this.sliderType = "mainContainer_switch_slider_left";
@@ -410,5 +417,16 @@ input[type="checkbox"] {
 	align-items: center;
 	font-family: Arial, Helvetica, sans-serif;
 	color: grey;
+}
+.fontLink{
+  margin-left: 4px;
+  margin-right: 4px;
+  color: #1122AA;
+  cursor: pointer;
+  font-size: small;
+  font-family: 幼圆,serif;
+}
+.fontLink:hover{
+  color: #2a3ff5;
 }
 </style>

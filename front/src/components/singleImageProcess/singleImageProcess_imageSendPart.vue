@@ -1,5 +1,15 @@
 <template>
   <div id="imgPart">
+    <el-dialog
+      title="无上传次数？"
+      :visible.sync="moreMessage.noUpdateTime"
+      width="30%"
+      center>
+      <span>点击<a @click="toInfoPage_upload()" class="fontLink">这里</a>查看图片上传规则</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="moreMessage.noUpdateTime = false">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="subTitle">
       <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
@@ -127,6 +137,9 @@ export default {
       },
       part_Other: false,
       part_diagnose: false,
+      moreMessage:{
+        noUpdateTime: false,
+      }
     }
   },
   mounted() {
@@ -138,6 +151,13 @@ export default {
     this.$bus.$off("sendUploadedInfoToGet");
   },
   methods:{
+    toInfoPage_upload(){
+      this.moreMessage.noUpdateTime = false;
+      this.$router.push({
+        path: "/Info",
+        query: {which: "uploadTimes"},
+      })
+    },
     // cookie
     getCookie(objName){//获取指定名称的cookie的值
       const arrStr = document.cookie.split("; ");
@@ -230,6 +250,7 @@ export default {
               message: '上传失败，您是普通用户，并且已经没有上传次数。',
               type: 'error'
             });
+            this.moreMessage.noUpdateTime = true;
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
@@ -594,10 +615,9 @@ export default {
     text-align: center;
     position: relative;
     overflow: hidden;
-    font-family: STHeiti;
+    font-family: STHeiti,serif;
     font-size: smaller;
     color: blue;
-    overflow: hidden;
 }
 .uploadButton:after {
     position: absolute;
@@ -674,5 +694,14 @@ export default {
     border-radius:4px;
     border:1px solid #c8cccf;
     color:#6a6f77;
+}
+.fontLink{
+  margin-left: 4px;
+  margin-right: 4px;
+  color: #1122AA;
+  cursor: pointer;
+}
+.fontLink:hover{
+  color: #2a3ff5;
 }
 </style>

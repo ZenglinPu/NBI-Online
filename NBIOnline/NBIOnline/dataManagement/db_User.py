@@ -20,7 +20,7 @@ import random
 # | inviteCode     | String  | 邀请码                                                                  |
 # | isSend         | Boolean | 是否已经赠送过邀请码？true表示已经赠送（每人赠送一次，可多次接受）                  |
 # | SUM_generate   | Integer | 记录用户生成的总NBI张数                                                    |
-# | TIMES_generate | Integer | 可生成NBI图片数，-1为不限，普通用户为10                                      |
+# | TIMES_generate | Integer | 可生成NBI图片数，超级用户为不限，也为10，但是上传时不会减少，普通用户为10            |
 # '''
 
 # '''

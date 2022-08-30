@@ -11,6 +11,8 @@ import HistoryItemDetailPage from '@/components/history/historyItemDetail/Histor
 import SingleImage from "@/components/singleImageProcess/SingleImageProcess"
 import MultiImage from "@/components/multiImageProcess/MultiImageProcess"
 
+import InfoShowPage from "@/components/infoPage/infoShowPage"
+
 const router = new vueRouter({
     routes:[
         {
@@ -47,7 +49,10 @@ const router = new vueRouter({
             path:"/AccountPage",
             component:AccountPage,
         },
-
+        {
+            path:"/Info",
+            component: InfoShowPage,
+        }
     ]
 });
 

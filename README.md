@@ -27,8 +27,8 @@ npm install axios
 - 支持对图片的亮度调节并进行保存
 - 对已上传图片的关联
 - **TODO**：对批量上传图片的支持
-- **TODO**：对用户个人信息进行管理，包括完善和补充个人信息
-- **TODO**：将用户分为高级用户和初级用户，不同等级的用户将拥有不同的操作权限，用户可以通过一系列的方式成为高级用户
+- 对用户个人信息进行管理，包括完善和补充个人信息
+- 将用户分为高级用户和初级用户，不同等级的用户将拥有不同的操作权限，用户可以通过一系列的方式成为高级用户
 - **TODO**：对一组图片进行附加信息的管理，同时用户可以查看历史提交数据并进行管理
 
 #### 2、功能模块
@@ -36,8 +36,8 @@ npm install axios
 - 单组图片上传以及处理模块：支持用户上传一组图片，快速反应生成一张NBI图片
 - **TODO**：批处理模块，用户通过一定的规则批量上传图片数据
 - 用户注册登录模块：通过邮箱验证注册，以及登录（！目前邮件验证并未开启，可以随便注册）
-- **TODO**：用户个人信息管理模块：负责用户完善和补充个人信息，以及管理高级用户和初级用户（管理包括高级用户如何获取，当前身份等等）
-- **TODO**：历史提交数据查看和管理模块，对于历史提交过的数据进行增删改查
+- 用户个人信息管理模块：负责用户完善和补充个人信息，以及管理高级用户和初级用户（管理包括高级用户如何获取，当前身份等等）
+- 历史提交数据查看和管理模块，对于历史提交过的数据进行增删改查
 
 ### 2. 系统实现
 
@@ -78,14 +78,14 @@ npm install axios
 | pwd            | String  | md5加密后的密码                                                           |
 | registerTime   | Time    | 注册时间                                                                  |
 | name           | String  | 用户昵称（初始为随机）                                                     |
-| rank           | Integer | 用户等级（1=普通；2=超级）                                                  |
 | expiresTime    | Time    | 高级用户过期时间戳                                                        |
 | workPlace      | String  | 用户工作单位（初始为空）                                                   |
 | department     | String  | 用户工作部门（初始为空）                                                   |
 | competent      | String  | 用户职称（初始为空）                                                       |
 | inviteCode     | String  | 邀请码                                                                  |
+| isSend         | Boolean | 是否已经赠送过邀请码？true表示已经赠送（每人赠送一次，可多次接受）                  |
 | SUM_generate   | Integer | 记录用户生成的总NBI张数                                                    |
-| TIMES_generate | Integer | 可生成NBI图片数，-1表示不限量                                               |
+| TIMES_generate | Integer | 可生成NBI图片数，超级用户为不限，也为10，但是上传时不会减少，普通用户为10           |
 
 **Token表**
 
@@ -113,6 +113,8 @@ npm install axios
 | uploadTime     | Time    | 源图片上传时间                                                            |
 | lastChangeTime | Time    | 上一次的修改时间                                                           |
 | expireTime     | Time    | 图片数据自动删除的时间，None则表示永久保存                                  |
+| isAutoBrightness| Boolean| 最后一次生成时是否自动调节亮度                                              |
+| isGenerated    | Boolean | 是否点击了生成按钮，没有的则默认保留24小时                                    |
 | contrast       | Integer | 最后一次生成时的对比度                                                     |
 | light          | Integer | 最后一次生成时的亮度                                                       |
 | saturation     | Integer | 最后一次生成时的饱和度                                                     |
