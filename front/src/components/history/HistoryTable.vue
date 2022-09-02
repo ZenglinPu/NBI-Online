@@ -225,8 +225,9 @@ export default {
 
 <style scoped>
 ul {
-  margin: 0 0 5px 0;
-  padding: 0;
+  margin: 0;
+  padding: 0 0 5px 0;
+  background: #fff;
 }
 
 li {
@@ -247,7 +248,7 @@ li {
   color: #fff;
   padding: 12px 0;
   border: #fff solid 7px;
-  box-shadow: 0px -3px 3px #e8e8e8, 0px 0px 8px #fff inset;;
+  box-shadow: 0px 0px 8px #fff inset;;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -258,12 +259,6 @@ li {
   display: inline-block;
   text-align: center;
 }
-
-/* .table-header-inner {
-  width: 116.3px;
-  display: inline-block;
-  text-align: center;
-} */
 
 .table-header-index {
   width: 0;
