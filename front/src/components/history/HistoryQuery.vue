@@ -116,7 +116,7 @@ export default {
       searchText: '',
       dateRange: '',
       isSearch: false,
-      isFiltrate: false
+      isFiltrate: true
     }
   },
   computed: {
@@ -178,9 +178,8 @@ export default {
 }
 </script>
 
-<style>
-button {
-	border-radius: 0;
+<style scoped>
+.query-container button {
 	border: none;
 	outline: none;
 }
@@ -248,28 +247,28 @@ button {
   color: #e5e3e3;
 }
 
-.el-select .el-input__inner {
+.query-container .el-select >>> .el-input__inner {
   border-radius: 0;
   border-left: transparent;
 }
 
-.el-select .el-input.is-focus .el-input__inner {
+.query-container .el-select >>> .el-input.is-focus .el-input__inner {
   border-color: #3ae6cc !important;
 }
 
-.el-select .el-input__inner:focus {
+.query-container .el-select >>> .el-input__inner:focus {
   border-color: #3ae6cc !important;
 }
 
-.el-select .el-scrollbar .el-select-dropdown__item.selected {
+.query-container .el-select >>> .el-scrollbar .el-select-dropdown__item.selected {
   color: #3ae6cc;
 }
 
-.el-input .el-input__inner {
+.query-container .el-input >>> .el-input__inner {
   border-radius: 0;
 }
 
-.filter-third .el-input .el-input__inner:focus {
+.filter-third .el-input >>> .el-input__inner:focus {
   border-color: #3ae6cc !important;
 }
 
