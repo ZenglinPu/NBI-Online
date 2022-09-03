@@ -10,8 +10,18 @@
         <el-button type="primary" @click="moreMessage.noUpdateTime = false">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="无法下载结果图片？"
+      :visible.sync="moreMessage.noDownload"
+      width="30%"
+      center>
+      <span>点击<a @click="toInfoPage_download()" class="fontLink">这里</a>查看图片下载规则</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="moreMessage.noDownload = false">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="subTitle">
-      <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
+      <p style="font-weight: bold;height: 50%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div id="uploadBtnContainer">
           <el-button icon="el-icon-upload2" type="primary" ref="uploadBtn" @click="uploadNewImage()" style="width: 90%;border-radius: 5px;font-size: small">开始上传</el-button>
@@ -139,16 +149,21 @@ export default {
       part_diagnose: false,
       moreMessage:{
         noUpdateTime: false,
+        noDownload: false,
       }
     }
   },
   mounted() {
     this.$bus.$on('sendUploadedInfoToGet',()=>{
       this.$bus.$emit("getUploadedInfo",this.isUploaded);
+    });
+    this.$bus.$on('showNoDownloadInfo',()=>{
+      this.moreMessage.noDownload = true;
     })
   },
   beforeDestroy() {
     this.$bus.$off("sendUploadedInfoToGet");
+    this.$bus.$off('showNoDownloadInfo');
   },
   methods:{
     toInfoPage_upload(){
@@ -156,6 +171,13 @@ export default {
       this.$router.push({
         path: "/Info",
         query: {which: "uploadTimes"},
+      })
+    },
+    toInfoPage_download(){
+      this.moreMessage.noDownload = false;
+      this.$router.push({
+        path: "/Info",
+        query: {which: "userType"},
       })
     },
     // cookie

@@ -19,6 +19,8 @@ class NBIManager():
             self.__table = self.__conn.nbi.TokenInfo
         elif table == "PhotoAdditionInfo":
             self.__table = self.__conn.nbi.PhotoAdditionInfo
+        elif table == "BatchProcess":
+            self.__table = self.__conn.nbi.BatchProcess
         else:
             print("No table:{t}".format(t=table))
 

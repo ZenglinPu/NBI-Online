@@ -1,7 +1,7 @@
 <template>
   <div id="imgShowPart">
     <div class="subTitle">
-      <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;align-items: center;margin: 0 0 0 2%;">生成结果(Get Result):</p>
+      <p style="font-weight: bold;height: 50%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: center;align-items: center;margin: 0 0 0 2%;">生成结果(Get Result):</p>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
@@ -247,6 +247,7 @@ export default {
             message: '您不是高级用户，仅有高级用户享有下载无压缩图片的权力',
             type: 'error'
           });
+          this.$bus.$emit('showNoDownloadInfo');
           return -1;
         }
         this.$message({

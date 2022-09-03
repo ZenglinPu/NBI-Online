@@ -2,9 +2,9 @@
 // 注意，vue-router应该安装3版本
 // npm i vue-router@3
 import vueRouter from 'vue-router'
-import HistoryData from '@/components/HistoryData'
+import HistoryData from '@/components/history/HistoryData'
 import UserCenter from '@/components/userCenterPage/UserCenter'
-import AccountPage from '@/components/AccountPage'
+import AccountPage from '@/components/account/AccountPage'
 
 import HistoryItemDetailPage from '@/components/history/historyItemDetail/HistoryItemDetailPage'
 

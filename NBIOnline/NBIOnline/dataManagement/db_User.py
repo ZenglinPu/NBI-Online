@@ -72,6 +72,7 @@ class User:
         return ret
 
     def saveNewUser(self):
+        print("Add New [User Data] at UID={u}".format(u=self.uid))
         conn = pymongo.MongoClient(
             'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
         table = conn.nbi.UserInfo

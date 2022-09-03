@@ -64,7 +64,7 @@ class imageData:
 
     # 创建新数据并保存
     def saveData(self):
-        print("Add New Data at UID={u}".format(u=self.uid))
+        print("Add New [Single Image Data] at UID={u}".format(u=self.uid))
         conn = pymongo.MongoClient(
             'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
         table = conn.nbi.PhotoInfo
