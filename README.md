@@ -147,4 +147,4 @@ npm install axios
 | expireTime     | Time    | 这一批次的过期时间                                                         |
 | imgList        | String  | 这一批次所有图片的_id，字符串形式，中间用|分割，其中每条数据是元组的形式             |
 | batchSize      | Integer | 这一批次的图片组数                                                         |
-| status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成  |
+| status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成；7-处理失败|
