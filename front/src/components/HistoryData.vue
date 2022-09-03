@@ -1,16 +1,15 @@
 <template>
   <div id="history-container">
     <HistoryQuery/>
-    <HistoryTable
-      v-show="total > 0"
-    />
+    <div id="history-content" v-show="total > 0">
+      <HistoryTable/>
+      <HistoryPagination
+        :total="total"
+        :algin="'right'"
+      />
+    </div>
     <HistoryDefaultPage
       v-show="total == 0"
-    />
-    <HistoryPagination
-      v-show="total > 0"
-      :total="total"
-      :algin="'right'"
     />
   </div>
 </template>
@@ -64,5 +63,13 @@ export default {
   width: 100%;
   height: 96%;
   overflow: auto;
+  background: linear-gradient(180deg,#f5f5fc,rgba(255,255,255,0) 100%);
+}
+
+#history-content {
+  width: 1300px;
+  margin: 0 auto;
+  box-shadow: 0 20px 50px rgb(65 62 101 / 15%);
+  border-radius: 3px;
 }
 </style>
