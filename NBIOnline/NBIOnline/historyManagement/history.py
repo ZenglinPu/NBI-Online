@@ -1,7 +1,7 @@
 import json
 from django.http import HttpResponse
 from ..userManagement.token import tokenCheck
-from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter, saveModification
+from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter, saveModification, getBatchHistory
 
 
 # 进入historyData页面后，展示基本信息
@@ -79,14 +79,15 @@ def modifyInfo(request):
         # 在进行图片的处理中应当替换掉
         user = user.replace(".", "^")
 
+        # 获取对应的PhotoInfo的_id
         id = request.POST.get("_id")
         # 获取更改的输入
         sampleName = request.POST.get("sampleName")
         partName = request.POST.get("partName")
         preDiagnosis = request.POST.get("preDiagnosis")
         pathologic = request.POST.get("pathologic")
-        differentiation = request.POST.get("differentiation")
-        cuttingEdge = request.POST.get("cuttingEdge")
+        differentiation = int(request.POST.get("differentiation"))
+        cuttingEdge = bool(request.POST.get("cuttingEdge"))
         remark = request.POST.get("remark")
 
         if sampleName is None or partName is None or preDiagnosis is None or pathologic is None or differentiation is None:
@@ -95,3 +96,27 @@ def modifyInfo(request):
         
         # 存储更改
         saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, cuttingEdge, remark)
+
+# 批次信息展示
+def batchDisplay(request):
+    if request.method == 'POST':
+        user = request.POST.get('uid')
+        token = request.POST.get('token')
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        # 因为uid中存在特殊符号.
+        # 在进行图片的处理中应当替换掉
+        # 8.22 发现系统在windows上运行不了的BUG是因为原来用符号*替换，这个在windows上是不允许的
+        user = user.replace('.', '^')
+
+        # 现在想要的是第几页
+        currentPage = int(request.POST.get('currentPage'))
+        # 每一页展示多少条数据
+        pageCount = int(request.POST.get("pageCount"))
+
+        ret = getBatchHistory(user, currentPage, pageCount)
+        # print(ret)
+        ret = json.dumps(ret)
+        return HttpResponse(ret, content_type='application/json')

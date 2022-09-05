@@ -246,3 +246,41 @@ def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differe
     if remark is not None:
         table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"remark":remark}})
     conn.close()
+
+# 获取批处理信息
+def getBatchHistory(user, currentPage, pageCount):
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table_BatchProcess = conn.nbi.BatchProcess
+    data = {}
+    allInfo = table_BatchProcess.find({'UID': user}).sort("lastChangeTime", -1)
+    """
+    我们当前每一页展示pageCount张图，
+    目前需要的数据是currentPage页的数据，
+    因此应该先跳过前(currentPage-1)*pageCount条的数据，
+    然后取其之后的pageCount条数据
+    """
+    # 这里count就当作序号了，因此返回的数据其开头不一定是0，但是一定连续且不重复
+    count = 1
+    jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
+    end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
+
+    for object in allInfo:
+        if count <= jump:
+            count += 1
+            continue
+        _id = object['_id']
+        innerDict = {
+            'index': count,
+            '_id': str(_id),
+            'uploadTime': str(object['uploadTime']),
+            'expireTime': str(object['expireTime']),
+            'status': str(object['status']),
+        }
+        data[count] = innerDict
+        count += 1
+        if count > end:
+            break
+    ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
+    conn.close()
+    return ret
