@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;height: 100%">
     <div id="headerContainer">
-       <c_header :singleOrMulti="singleOrMulti" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
+      <c_header :singleOrMulti="singleOrMulti" :singleOrBatchHistory="singleOrBatchHistory" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
     <div id="mainFunctionContainer">
       <keep-alive include="SingleImageProcess">
@@ -71,6 +71,18 @@ export default {
       }
       else if (w===2){
         functionPage = "/ImageProcess/MultiImage";
+      }
+      this.$router.push({
+        path: functionPage,
+      })
+    },
+    singleOrBatchHistory(w) {
+      let functionPage = "/HistoryData";
+      if (w===1){
+        functionPage = "/HistoryData";
+      }
+      else if (w===2){
+        functionPage = "/HistoryData/BatchHistoryData";
       }
       this.$router.push({
         path: functionPage,
