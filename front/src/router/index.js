@@ -5,6 +5,7 @@ import vueRouter from 'vue-router'
 import HistoryData from '@/components/history/HistoryData'
 import UserCenter from '@/components/userCenterPage/UserCenter'
 import AccountPage from '@/components/account/AccountPage'
+import BatchHistoryData from "@/components/history/BatchHistoryData"
 
 import HistoryItemDetailPage from '@/components/history/historyItemDetail/HistoryItemDetailPage'
 
@@ -34,6 +35,10 @@ const router = new vueRouter({
         {
             path:"/HistoryData",
             component:HistoryData,
+        },
+        {
+            path: "/HistoryData/BatchHistoryData",
+            component: BatchHistoryData,
         },
         {
             name: 'HistoryItemDetailPage',
