@@ -60,7 +60,74 @@
         </el-row>
       </el-header>
       <el-main>
-        
+        <el-table
+          :cell-style="{color: '#666', fontSize:'14px', height:'85px'}"
+          :header-cell-style="{color: '#222222', fontSize:'14px'}"
+          :data="tableData"
+          style="width: 100%;"
+          max-height="573">
+          <el-table-column
+            fixed
+            prop="name"
+            label="标本名称"
+            width="262">
+          </el-table-column>
+          <el-table-column
+            prop="blueCompress"
+            label="蓝色光源图片"
+            width="262">
+            <template slot-scope="scope">
+              <div style="height: 83px;display: flex;align-items: center;">
+                <el-image
+                  :src="'/static/Data/Temp/' + scope.row.blueCompress"
+                  style="height: 83px;"
+                >
+                </el-image>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="greenCompress"
+            label="绿色光源图片"
+            width="262">
+            <template slot-scope="scope">
+              <div style="height: 83px;display: flex;align-items: center;">
+                <el-image
+                  :src="'/static/Data/Temp/' + scope.row.greenCompress"
+                  style="height: 83px;"
+                >
+                </el-image>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="whiteCompress"
+            label="白色光源图片"
+            width="262">
+            <template slot-scope="scope">
+              <div style="height: 83px;display: flex;align-items: center;">
+                <el-image
+                  :src="'/static/Data/Temp/' + scope.row.whiteCompress"
+                  style="height: 83px;"
+                >
+                </el-image>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="120">
+            <template slot-scope="scope">
+              <el-button
+                @click.native.prevent="deleteRow(scope.$index, tableData)"
+                type="text"
+                size="small">
+                <i class="el-icon-delete oneImageDeleteBtn"></i>移除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-main>
     </el-container>
   </el-container>
@@ -70,46 +137,153 @@
 export default {
   name: "MultiImageProcess",
   data() {
-      return {
-        batchTitle: '玛卡巴卡',
-        activities: [{
-          content: '上传压缩包',
-          timestamp: '2022-09-03 20:46',
-          size: 'large',
-          type: 'primary',
-          icon: 'el-icon-check',
-          color: '#0bbd87'
-        }, {
-          content: '检查压缩包',
-          timestamp: '2022-09-03 20:46',
-          size: 'large',
-          type: 'primary',
-          icon: 'el-icon-check',
-          color: '#0bbd87'
-        },{
-          content: '处理图片组（18/18）',
-          timestamp: '2022-09-03 20:46',
-          size: 'large',
-          type: 'primary',
-          icon: 'el-icon-check',
-          color: '#0bbd87'
-        }, {
-          content: '打包处理结果',
-          timestamp: '',
-          size: 'large',
-          type: 'primary',
-          icon: 'el-icon-loading',
-          color: '#ff9854'
-        }, {
-          content: '',
-          timestamp: '',
-          size: 'large',
-          type: 'primary',
-          icon: 'el-icon-more',
-          color: '#808080'
-        }]
-      };
+    return {
+      batchTitle: '玛卡巴卡',
+      activities: [{
+        content: '上传压缩包',
+        timestamp: '2022-09-03 20:46',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-check',
+        color: '#0bbd87'
+      }, {
+        content: '检查压缩包',
+        timestamp: '2022-09-03 20:46',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-check',
+        color: '#0bbd87'
+      },{
+        content: '处理图片组（18/18）',
+        timestamp: '2022-09-03 20:46',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-check',
+        color: '#0bbd87'
+      }, {
+        content: '打包处理结果',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-loading',
+        color: '#ff9854'
+      }, {
+        content: '',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-more',
+        color: '#808080'
+      }],
+      tableData: [{
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }, {
+        name: '王小虎',
+        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      }]
+    };
+  },
+  computed: {
+    url(){
+      return "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime();
+    },
+    srcList(){
+      return [
+        "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
+      ]
     }
+  }
+
 }
 </script>
 
@@ -228,11 +402,16 @@ button {
 .el-main {
   background-color: #fff;
   text-align: center;
+  padding: 0 7px 0 7px;
 }
 
 .el-container {
   background: linear-gradient(180deg,#f5f5fc,rgba(255,255,255,0) 100%);
   height: 100%;
   box-shadow: 0 20px 50px rgb(65 62 101 / 15%);
+}
+
+.el-table >>> .el-table__body .el-table__cell {
+  padding: 1px 0;
 }
 </style>
