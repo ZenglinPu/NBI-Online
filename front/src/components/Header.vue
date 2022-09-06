@@ -42,7 +42,21 @@
         </div>
 
         <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>User Center</p></div>
-        <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)"><p>History Data</p></div>
+        <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)">
+          <el-dropdown :hide-on-click="false" style="color: white;font-size: small">
+            <span class="el-dropdown-link">
+              History Data<i class="el-icon-arrow-down el-icon--right"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <div style="font-family: STHeiti" @click="singleOrBatchHistorySwitch(1)">Single Image History</div>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <div style="font-family: STHeiti" @click="singleOrBatchHistorySwitch(2)">Batch Image History</div>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
         <div id="accountInfoContainer">
           <div v-show="user.status" id="loginStatusContainer">
@@ -70,7 +84,7 @@ export default {
       defaultPage: 1,
     }
   },
-  props:['accountPage', 'functionPage', 'switchFunctionPage','singleOrMulti'],
+  props:['accountPage', 'functionPage', 'switchFunctionPage','singleOrMulti','singleOrBatchHistory'],
   mounted(){
     // 检查账户状态
     this.accountStatusCheck();
@@ -159,6 +173,9 @@ export default {
     },
     singleOrMultiSwitch(w){
       this.singleOrMulti(w);
+    },
+    singleOrBatchHistorySwitch(w){
+      this.singleOrBatchHistory(w);
     }
   }
 }
