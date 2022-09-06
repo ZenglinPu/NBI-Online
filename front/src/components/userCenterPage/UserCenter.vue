@@ -116,23 +116,23 @@
                 </div>
               </div>
               <div style="height: 100%;width: 20%;display: flex;justify-content: center;align-items: center">
-                <p class="fontLink">
+                <p class="fontLink" @click="toInfoPage_userType()">
                   超级用户有什么用？
                 </p>
               </div>
               <div style="height: 100%;width: 20%;display: flex;justify-content: center;align-items: center">
-                <p class="fontLink">
+                <p class="fontLink" @click="toInfoPage_howToBeSuperUser()">
                   如何成为超级用户？
                 </p>
               </div>
             </div>
             <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               <div style="width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-                &emsp;&emsp;剩余次数:&emsp;
+                &emsp;&emsp;剩余上传次数:&emsp;
                 {{leftTimes===-1?'不限':leftTimes}}
               </div>
               <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-                &emsp;&emsp;总共生成次数:&emsp;
+                &emsp;&emsp;总共上传次数:&emsp;
                 {{totalTimes}}
               </div>
             </div>
@@ -222,6 +222,18 @@ export default {
     this.getUserCenterInfo();
   },
   methods:{
+    toInfoPage_userType(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "userType"},
+      })
+    },
+    toInfoPage_howToBeSuperUser(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "beSuper"},
+      })
+    },
     getCookie(objName){//获取指定名称的cookie的值
       const arrStr = document.cookie.split("; ");
       for(let i = 0; i < arrStr.length; i ++){
@@ -267,6 +279,7 @@ export default {
             message: '您的账号状态错误！',
             type: 'error',
           });
+          this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if(response.data === 2){
           this.$message({
@@ -418,7 +431,7 @@ export default {
           this.workPlace = response.data.workPlace;
           this.department = response.data.department;
           this.competent = response.data.competent;
-          this.leftTimes = response.data.TIMES_generate;
+          this.leftTimes = this.rank === 2? '不限':response.data.TIMES_generate;
           this.totalTimes = response.data.SUM_generate;
           this.expiresTime = response.data.expiresTime;
           this.inviteCode = response.data.inviteCode;
@@ -440,6 +453,7 @@ export default {
             message: '注销失败，您的账号状态错误！',
             type: 'error'
           });
+          this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if (response.data === 2){
           this.$message({

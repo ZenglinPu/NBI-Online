@@ -1,4 +1,6 @@
 import os
+import time
+
 import pymongo
 
 
@@ -17,6 +19,8 @@ class NBIManager():
             self.__table = self.__conn.nbi.TokenInfo
         elif table == "PhotoAdditionInfo":
             self.__table = self.__conn.nbi.PhotoAdditionInfo
+        elif table == "BatchProcess":
+            self.__table = self.__conn.nbi.BatchProcess
         else:
             print("No table:{t}".format(t=table))
 
@@ -52,7 +56,8 @@ class NBIManager():
             os.system("mkdir /home/ubuntu/NBI-Online/NBIOnline/static/Data/Temp")
 
 
-manager = NBIManager("PhotoAdditionInfo")
+# manager = NBIManager("UserInfo")
 # manager.clearAllImageData()
 # manager.removeAllTableData()
-manager.printAll()
+# manager.printAll()
+print(time.time())

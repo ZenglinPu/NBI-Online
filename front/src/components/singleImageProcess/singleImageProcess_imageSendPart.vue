@@ -1,7 +1,27 @@
 <template>
   <div id="imgPart">
+    <el-dialog
+      title="无上传次数？"
+      :visible.sync="moreMessage.noUpdateTime"
+      width="30%"
+      center>
+      <span>点击<a @click="toInfoPage_upload()" class="fontLink">这里</a>查看图片上传规则</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="moreMessage.noUpdateTime = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="无法下载结果图片？"
+      :visible.sync="moreMessage.noDownload"
+      width="30%"
+      center>
+      <span>点击<a @click="toInfoPage_download()" class="fontLink">这里</a>查看图片下载规则</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="moreMessage.noDownload = false">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="subTitle">
-      <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
+      <p style="font-weight: bold;height: 50%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div id="uploadBtnContainer">
           <el-button icon="el-icon-upload2" type="primary" ref="uploadBtn" @click="uploadNewImage()" style="width: 90%;border-radius: 5px;font-size: small">开始上传</el-button>
@@ -89,7 +109,7 @@
         <div style="width: 50%; height: 100%; display: flex;flex-direction: column;">
             <div id="addInfo_diagnoseBefore_Container" style="display: flex;flex-direction: column;">
                 <div class="addInfo">
-                    <p class="addInfo_formLabel">术前诊断：<br>(可按住shift多选)</p>
+                    <p class="addInfo_formLabel">术前诊断：<br>(可按住ctrl多选)</p>
                     <select multiple="multiple" style="width: 60%;height: 200px;" id="addInfo_diagnoseBefore" @change="addInfoDiagnoseBeforeChange()">
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    早癌</option>
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    LGIN</option>
@@ -127,17 +147,39 @@ export default {
       },
       part_Other: false,
       part_diagnose: false,
+      moreMessage:{
+        noUpdateTime: false,
+        noDownload: false,
+      }
     }
   },
   mounted() {
     this.$bus.$on('sendUploadedInfoToGet',()=>{
       this.$bus.$emit("getUploadedInfo",this.isUploaded);
+    });
+    this.$bus.$on('showNoDownloadInfo',()=>{
+      this.moreMessage.noDownload = true;
     })
   },
   beforeDestroy() {
     this.$bus.$off("sendUploadedInfoToGet");
+    this.$bus.$off('showNoDownloadInfo');
   },
   methods:{
+    toInfoPage_upload(){
+      this.moreMessage.noUpdateTime = false;
+      this.$router.push({
+        path: "/Info",
+        query: {which: "uploadTimes"},
+      })
+    },
+    toInfoPage_download(){
+      this.moreMessage.noDownload = false;
+      this.$router.push({
+        path: "/Info",
+        query: {which: "userType"},
+      })
+    },
     // cookie
     getCookie(objName){//获取指定名称的cookie的值
       const arrStr = document.cookie.split("; ");
@@ -202,6 +244,7 @@ export default {
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
@@ -220,6 +263,16 @@ export default {
               message: '图片存储错误，目前仅支持常见图片格式。',
               type: 'error'
             });
+            this.$refs.uploadStatus.innerText = "等待上传";
+            this.uploadStatus_class = "uploadStatus_red";
+        }
+        else if (response.data === 4){
+            this.$message({
+              showClose: true,
+              message: '上传失败，您是普通用户，并且已经没有上传次数。',
+              type: 'error'
+            });
+            this.moreMessage.noUpdateTime = true;
             this.$refs.uploadStatus.innerText = "等待上传";
             this.uploadStatus_class = "uploadStatus_red";
         }
@@ -257,6 +310,7 @@ export default {
               message: '登录状态错误！请重新登录。',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if (response.data === 1){
             this.$message({
@@ -284,6 +338,8 @@ export default {
           this.$refs.blueImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageBlue.split("~")[0]+'.'+response.data.imageBlue.split(".")[1]);
           this.$refs.greenImageShowBtn.innerText = "已选择："+this.cutFileName(response.data.imageGreen.split("~")[0]+'.'+response.data.imageGreen.split(".")[1]);
           this.isUploaded = true;
+          this.$refs.uploadStatus.innerText = "已上传";
+          this.uploadStatus_class = "uploadStatus_green";
         }
       });
     },
@@ -369,7 +425,7 @@ export default {
         }
         imageShow.className = "uploadImageShow";
       }else{
-        imageShow.src = "/static/unknownImageTypeIcon.png";
+        imageShow.src = "/static/img/unknownImageTypeIcon.png";
       }
     },
     whiteImageShowChange(){
@@ -388,7 +444,7 @@ export default {
         }
         imageShow.className = "uploadImageShow";
       }else{
-        imageShow.src = "/static/unknownImageTypeIcon.png";
+        imageShow.src = "/static/img/unknownImageTypeIcon.png";
       }
     },
   },
@@ -581,10 +637,9 @@ export default {
     text-align: center;
     position: relative;
     overflow: hidden;
-    font-family: STHeiti;
+    font-family: STHeiti,serif;
     font-size: smaller;
     color: blue;
-    overflow: hidden;
 }
 .uploadButton:after {
     position: absolute;
@@ -661,5 +716,14 @@ export default {
     border-radius:4px;
     border:1px solid #c8cccf;
     color:#6a6f77;
+}
+.fontLink{
+  margin-left: 4px;
+  margin-right: 4px;
+  color: #1122AA;
+  cursor: pointer;
+}
+.fontLink:hover{
+  color: #2a3ff5;
 }
 </style>

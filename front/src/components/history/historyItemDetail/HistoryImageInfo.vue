@@ -2,11 +2,6 @@
     <div id="imgPart">
         <div id="img_addInfoContainer">
             <el-form :model="infoForm" :rules="rules" ref="infoForm" label-width="80px" size="mini">
-                <el-form-item label="上传图片" prop="uploadImg">
-                    <el-image style="width: 80px; height: 80px" :src="infoForm.url" :preview-src-list="infoForm.srcList"
-                        :fit="contain">
-                    </el-image>
-                </el-form-item>
                 <el-form-item label="标本名称" prop="sampleName">
                     <el-input v-model="infoForm.sampleName"></el-input>
                 </el-form-item>
@@ -72,12 +67,6 @@ export default {
     data() {
         return {
             infoForm: {
-                url: "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-                srcList: [
-                    "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-                    "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
-                    'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
-                ],
                 sampleName: '',
                 partName: '',//部位 胃、大肠小肠、食管
                 preDiagnosis: [],//术前诊断

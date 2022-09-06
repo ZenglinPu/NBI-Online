@@ -1,18 +1,16 @@
 <template>
   <div id="imgShowPart">
     <div class="subTitle">
-      <p style="height: 50%;font-family: STHeiti,serif;color: #363636;display: flex;justify-content: center;align-items: center;margin: 0 0 0 2%;">生成结果(Get Result):</p>
+      <p style="font-weight: bold;height: 50%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: center;align-items: center;margin: 0 0 0 2%;">生成结果(Get Result):</p>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">生成图片</button>
-<!--          TODO-->
-          <button id="saveImage">保存结果</button>
           <el-popover
             placement="top-start"
             width="100"
             trigger="hover"
-            content="是否在历史记录中保存此次提交，未保存的数据仅会在历史记录中保存24小时！">
+            content="只有点击生成图片之后的数据才会在历史记录中长久保存，否则默认保留24小时。">
             <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
           </el-popover>
         </div>
@@ -211,6 +209,7 @@ export default {
               message: '登录状态错误！',
               type: 'error'
             });
+            this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else if (response.data === 2){
           this.$message({
@@ -242,6 +241,15 @@ export default {
           });
           return -1;
         }
+        if (this.recordRealResult === -1){
+          this.$message({
+            showClose: true,
+            message: '您不是高级用户，仅有高级用户享有下载无压缩图片的权力',
+            type: 'error'
+          });
+          this.$bus.$emit('showNoDownloadInfo');
+          return -1;
+        }
         this.$message({
           showClose: true,
           message: '已开始下载。',
@@ -250,10 +258,10 @@ export default {
         this.downloadImage("/static/Data/NBI/"+this.recordRealResult, "resultNBI.jpg");
     },
     downloadImage(imgSrc, fileName){
-        var alink = document.createElement("a");
-        alink.href = imgSrc;
-        alink.download = fileName; //fileName保存提示中用作预先填写的文件名
-        alink.click();
+      let alink = document.createElement("a");
+      alink.href = imgSrc;
+      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
+      alink.click();
     },
     showResultImage(data){
       this.isShowResult = true;
