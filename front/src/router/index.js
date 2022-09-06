@@ -3,6 +3,7 @@
 // npm i vue-router@3
 import vueRouter from 'vue-router'
 import HistoryData from '@/components/history/HistoryData'
+import BatchHistoryData from "@/components/history/BatchHistoryData";
 import UserCenter from '@/components/userCenterPage/UserCenter'
 import AccountPage from '@/components/account/AccountPage'
 
@@ -34,6 +35,10 @@ const router = new vueRouter({
         {
             path:"/HistoryData",
             component:HistoryData,
+        },
+        {
+            path:"/HistoryData/BatchHistoryData",
+            component:BatchHistoryData,
         },
         {
             name: 'HistoryItemDetailPage',
