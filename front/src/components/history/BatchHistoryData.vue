@@ -1,10 +1,9 @@
 <template>
   <div id="history-container">
-    <p>这是batch history</p>
-    <HistoryQuery/>
+    <BatchHistoryQuery/>
     <div id="history-content" v-show="total > 0">
-      <HistoryTable/>
-      <HistoryPagination
+      <BatchHistoryTable/>
+      <BatchHistoryPagination
         :total="total"
         :algin="'right'"
       />
@@ -16,23 +15,24 @@
 </template>
 
 <script>
-import HistoryQuery from '@/components/history/HistoryQuery.vue';
-import HistoryTable from '@/components/history/HistoryTable.vue';
+
+import BatchHistoryTable from "@/components/history/batchHistory/BatchHistoryTable";
 import HistoryDefaultPage from '@/components/history/HistoryDefaultPage.vue'
-import HistoryPagination from '@/components/history/HistoryPagination.vue';
+import BatchHistoryPagination from "@/components/history/batchHistory/BatchHistoryPagination";
+import BatchHistoryQuery from "@/components/history/batchHistory/BatchHistoryQuery";
 
 export default {
   name: "BatchHistoryData",
   components: {
-    HistoryQuery,
-    HistoryTable,
+    BatchHistoryQuery,
+    BatchHistoryTable,
     HistoryDefaultPage,
-    HistoryPagination
+    BatchHistoryPagination
   },
   data() {
     return {
       totalPage: 0,
-      totalImage: 0
+      totalImage: 10
     }
   },
   computed: {
