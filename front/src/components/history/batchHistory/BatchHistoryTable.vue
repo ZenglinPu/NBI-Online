@@ -3,8 +3,8 @@
     <div class="table-header">
       <div style="width: 1%" class="table-header-index-td"><span class="table-header-index"></span></div>
       <div style="width: 15%"><span class="table-header-inner">批次名称</span></div>
-      <div style="width: 15%"><span class="table-header-inner">上传时间</span></div>
-      <div style="width: 10%"><span class="table-header-inner">过期时间</span></div>
+      <div style="width: 20%"><span class="table-header-inner">上传时间</span></div>
+      <div style="width: 20%"><span class="table-header-inner">过期时间</span></div>
       <div style="width: 15%"><span class="table-header-inner">附加信息</span></div>
     </div>
     <ul v-if="itemVisible">

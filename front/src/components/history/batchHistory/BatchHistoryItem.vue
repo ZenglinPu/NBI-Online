@@ -4,8 +4,8 @@
       <div id="history-index-inner">{{ index }}</div>
     </span>
     <span class="historyItemInner" style="width: 15%; font-weight: bold;">{{ batchName }}</span>
-    <span class="historyItemInner" style="width: 15%">{{ lastChangeTimeShow }}</span>
-    <span class="historyItemInner" style="width: 10%">
+    <span class="historyItemInner" style="width: 20%">{{ lastChangeTimeShow }}</span>
+    <span class="historyItemInner" style="width: 20%">
       <div id="expired-time" :style="expireBackground">{{ expireTimeShow }}</div>
     </span>
     <span class="historyItemInner" style="width: 15%">
