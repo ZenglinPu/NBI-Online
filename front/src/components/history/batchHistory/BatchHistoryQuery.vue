@@ -21,7 +21,7 @@
     <div class="filter-third" style="width: 70%;height: 90%;justify-content: center;align-items: center;display: flex" v-show="isFiltrate">
       <el-input
         v-show="searchValue === '1'"
-        placeholder="请输入标本名称"
+        placeholder="请输入批次名称"
         v-model="searchText"
         ref="search"
         clearable
@@ -74,7 +74,7 @@ export default {
     return {
       options: [{
         value: '1',
-        label: '标本名称',
+        label: '批次名称',
         disabled: false,
       }, {
         value: '2',
