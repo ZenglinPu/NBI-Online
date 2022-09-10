@@ -6,6 +6,7 @@ import HistoryData from '@/components/history/HistoryData'
 import UserCenter from '@/components/userCenterPage/UserCenter'
 import AccountPage from '@/components/account/AccountPage'
 import BatchHistoryData from "@/components/history/BatchHistoryData"
+import BatchImgData from "@/components/history/batchHistory/BatchImgData";
 
 import HistoryItemDetailPage from '@/components/history/historyItemDetail/HistoryItemDetailPage'
 
@@ -39,6 +40,12 @@ const router = new vueRouter({
         {
             path: "/HistoryData/BatchHistoryData",
             component: BatchHistoryData,
+        },
+        {
+            name:  'BatchImgData',
+            path: "/HistoryData/BatchImgData/:BID",
+            component: BatchImgData,
+            props:true
         },
         {
             name: 'HistoryItemDetailPage',
