@@ -135,11 +135,11 @@ export default {
       return this.getCookie("NBI_UID");
     },
     //传入GID
-    checkDetail(GID) {
+    checkDetail(BID) {
       this.$router.push({
-        name: 'HistoryItemDetailPage',
+        name: 'BatchImgData',
         params: {
-          GID: GID
+          BID: BID
         }
       })
     },
