@@ -2,8 +2,10 @@
 import time
 
 from apscheduler.schedulers.background import BackgroundScheduler
+from ..dataManagement.dbFunction import deleteAllExpiredImages
 
 
+# TODO: 担心删除有用数据，故尚未实际启动
 class GCTask:
     def __init__(self):
         super().__init__()
@@ -11,10 +13,11 @@ class GCTask:
         self.scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
 
     def GCImageData(self):
-        print(1)
+        # 删除过期图片及数据库中信息
+        deleteAllExpiredImages()
 
     def start(self, hours=24):
-        self.job = self.scheduler.add_job(self.GCImageData, trigger='interval', seconds=hours, id='gc')
+        self.job = self.scheduler.add_job(self.GCImageData, trigger='interval', hours=hours, id='gc')
         self.scheduler.start()
 
     def delete(self):
