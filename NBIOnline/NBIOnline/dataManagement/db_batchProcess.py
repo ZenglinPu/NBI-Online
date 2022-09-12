@@ -1,5 +1,6 @@
 import time
 import pymongo
+from ..dataManagement.db_connection import get_connection
 
 # '''
 # 批处理批次信息表：BatchProcess
@@ -39,10 +40,9 @@ class batchProcess:
 
     def saveData(self):
         print("Add New [Batch Process Data] at UID={u}".format(u=self.uid))
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+        conn = get_connection()
         table = conn.nbi.BatchProcess
         ret = table.insert_one(self.getDict())
-        conn.close()
+        #conn.close()
         return ret
 
