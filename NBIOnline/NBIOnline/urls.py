@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
 
+from .batchProcessing.batchRequest import batchUpload_compress, getBatchStatus, getInitImageInfo
 from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
@@ -35,5 +36,10 @@ urlpatterns = [
     path(r'NBI/HistoryDetail/', historyImgInfo, name="HistoryImgInfo"),
     path(r'NBI/History/deleteImage/', deleteHistoryImage, name="deleteOneImage"),
     path(r'NBI/History/getHistoryWithFilter/', historyFilter),
-    path(r'NBI/History/batchDisplay/', batchDisplay, name='batchDisplay')
+    path(r'NBI/History/batchDisplay/', batchDisplay, name='batchDisplay'),
+
+    # """Batch Processing"""
+    path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
+    path(r"NBI/Batch/checkStatus", getBatchStatus, name="get batch status by batch id"),
+    path(r"NBI/Batch/getInitImage", getInitImageInfo, name="get batch info after passing package check"),
 ]
