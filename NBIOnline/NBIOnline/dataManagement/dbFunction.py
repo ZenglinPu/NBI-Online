@@ -1,5 +1,6 @@
 import difflib
 import math
+import time
 
 from bson.objectid import ObjectId
 import pymongo
@@ -180,7 +181,7 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
         for info in allInfo:
             additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
             # print(float(filterValue.split(',')[0]) , info['uploadTime'], float(filterValue.split(',')[1]))
-            if float(filterValue.split(',')[0]) <= info['uploadTime']*1000 <= float(filterValue.split(',')[1]):
+            if float(filterValue.split(',')[0]) <= info['uploadTime'] * 1000 <= float(filterValue.split(',')[1]):
                 if count <= jump:
                     count += 1
                     continue
@@ -195,7 +196,7 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                 data[count] = innerDict
                 count += 1
 
-    ret = {'info': data, 'totalPage': math.ceil(float((count-1) / pageCount)), 'totalImage': (count-1)}
+    ret = {'info': data, 'totalPage': math.ceil(float((count - 1) / pageCount)), 'totalImage': (count - 1)}
     conn.close()
     return ret
 
@@ -224,28 +225,44 @@ def deleteAllInfoOfImageBy_id(_id):
         return False
 
 
+# 删除所有过期图片
+# TODO: 目前仅删除图片本身以及其在两个图片数据表中数据，未对batch_process表数据进行处理
+def deleteAllExpiredImages():
+    conn = pymongo.MongoClient(
+        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    table = conn.nbi.PhotoInfo
+    current_time = time.time()
+
+    # 根据时间戳判断是否过期
+    for expired_image in table.find({"expireTime": {"$lt": current_time}}):
+        deleteAllInfoOfImageBy_id(expired_image["_id"])
+    conn.close()
+
+
 # 字符串相似度
 def similar_diff_ratio(str1, str2):
     return difflib.SequenceMatcher(None, str1, str2).quick_ratio()
 
+
 # 存储更改的信息
-def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, cuttingEdge, remark):
+def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, infiltration, cuttingEdge, remark):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
-    table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{
-        "sampleName":sampleName,
-        "partName":partName,
-        "preDiagnosis":preDiagnosis,
-        "pathologic":pathologic,
-        "differentiation":differentiation,
-        "cuttingEdge":cuttingEdge,
-        "remark":remark
-        }})
+    table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {
+        "sampleName": sampleName,
+        "partName": partName,
+        "preDiagnosis": preDiagnosis,
+        "pathologic": pathologic,
+        "differentiation": differentiation,
+        "infiltration": infiltration,
+        "cuttingEdge": cuttingEdge,
+    }})
     # 如果备注为空就不修改
     if remark is not None:
-        table_PhotoAdditionInfo.update_one({"gid": id},{"$set":{"remark":remark}})
+        table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {"remark": remark}})
     conn.close()
+
 
 # 获取批处理信息
 def getBatchHistory(user, currentPage, pageCount):
@@ -273,9 +290,7 @@ def getBatchHistory(user, currentPage, pageCount):
         innerDict = {
             'index': count,
             '_id': str(_id),
-            'uploadTime': str(object['uploadTime']),
-            'expireTime': str(object['expireTime']),
-            'status': str(object['status']),
+            'Image_Result': str(object['Image_Result']),
         }
         data[count] = innerDict
         count += 1
