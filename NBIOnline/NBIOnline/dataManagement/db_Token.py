@@ -1,7 +1,7 @@
 from datetime import datetime
 from ..userManagement.token import get_token  # 获取新随机token
 import pymongo
-
+from ..dataManagement.db_connection import get_connection
 
 # '''
 # 用户token表：TokenInfo
@@ -37,8 +37,7 @@ class UserToken:
 
     # 检查token是否存在，不存在则创建，存在则更新
     def saveOrUpdateToken(self):
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+        conn = get_connection()
         table = conn.nbi.TokenInfo
         tryFind = table.find({"UID": self.uid})
         tokenDict = self.getDict()

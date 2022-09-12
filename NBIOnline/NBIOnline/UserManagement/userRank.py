@@ -2,11 +2,10 @@
 import time
 
 import pymongo
-
+from ..dataManagement.db_connection import get_connection
 
 def getUserRankByUID(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_PhotoInfo = conn.nbi.UserInfo
     if table_PhotoInfo.find_one({"UID": uid})['expiresTime'] > time.time():
         conn.close()
@@ -16,8 +15,7 @@ def getUserRankByUID(uid):
 
 
 def checkUploadTime(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_PhotoInfo = conn.nbi.UserInfo
     # print(table_PhotoInfo.find_one({"UID": uid})['TIMES_generate'])
     if table_PhotoInfo.find_one({"UID": uid})['TIMES_generate'] <= 0:

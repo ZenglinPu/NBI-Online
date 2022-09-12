@@ -6,11 +6,11 @@ from bson.objectid import ObjectId
 import pymongo
 import os
 
+from ..dataManagement.db_connection import get_connection
 
 # 获取用户修改的上一张图片数据
 def getLastImage(user):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table = conn.nbi.PhotoInfo
     result = table.find({"UID": user}, sort=[('lastChangeTime', -1)])
 
@@ -20,52 +20,48 @@ def getLastImage(user):
         return False
 
     # 这个UID提交过数据，查看是否是同样的图片
-    conn.close()
+    #conn.close()
     return result[0]
 
 
 # 根据UID获取最近一次提交的数据的信息
 def getInfoByUID(UID):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table = conn.nbi.PhotoInfo
     ret = table.find_one({"UID": UID}, sort=[('lastChangeTime', -1)])
-    conn.close()
+    #conn.close()
     return ret
 
 
 # 根据_id在图片数据表中提取数据
 def getAllImageInfoBy_id(_id):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table = conn.nbi.PhotoInfo
     table_addition = conn.nbi.PhotoAdditionInfo
     ret = table.find_one({'_id': ObjectId(_id)})
     ret_addition = table_addition.find_one({'gid': ObjectId(_id)})
-    conn.close()
+    #conn.close()
     return ret, ret_addition
 
 
 # 根据_id在图片附加信息库中提取图片附加信息
 def getAdditionalInfoBy_id(id):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table = conn.nbi.PhotoAdditionInfo
     ret = table.find_one({'gid': id})
-    conn.close()
+    #conn.close()
     return ret
 
 
 # 根据打算注册的新UID检查是否已经注册
 def checkUIDRegistered(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table = conn.nbi.UserInfo
     result = table.find({"UID": uid})
     if result.count() == 0:
         conn.close()
         return False
-    conn.close()
+    #conn.close()
     return True
 
 
@@ -80,8 +76,7 @@ def deleteOneImage(t, name):
 
 # 提取HistoryData页面所需的基础信息，无筛选条件，数据按照lastChangeTime逆序返回
 def getHistory(user, currentPage, pageCount):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
     data = {}
@@ -118,14 +113,13 @@ def getHistory(user, currentPage, pageCount):
         if count > end:
             break
     ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
-    conn.close()
+    #conn.close()
     return ret
 
 
 # 根据user,filterType,filterValue获得数据
 def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
     # 这个用户的所有数据
@@ -197,14 +191,13 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
                 count += 1
 
     ret = {'info': data, 'totalPage': math.ceil(float((count - 1) / pageCount)), 'totalImage': (count - 1)}
-    conn.close()
+    #conn.close()
     return ret
 
 
 # 根据_id删除一组图片的所有数据，包括图片本身，以及两个数据表中的数据
 def deleteAllInfoOfImageBy_id(_id):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_PhotoInfo = conn.nbi.PhotoInfo
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
     info_image = table_PhotoInfo.find_one({"_id": ObjectId(_id)})
@@ -228,15 +221,14 @@ def deleteAllInfoOfImageBy_id(_id):
 # 删除所有过期图片
 # TODO: 目前仅删除图片本身以及其在两个图片数据表中数据，未对batch_process表数据进行处理
 def deleteAllExpiredImages():
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table = conn.nbi.PhotoInfo
     current_time = time.time()
 
     # 根据时间戳判断是否过期
     for expired_image in table.find({"expireTime": {"$lt": current_time}}):
         deleteAllInfoOfImageBy_id(expired_image["_id"])
-    conn.close()
+    #conn.close()
 
 
 # 字符串相似度
@@ -246,8 +238,7 @@ def similar_diff_ratio(str1, str2):
 
 # 存储更改的信息
 def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, infiltration, cuttingEdge, remark):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
     table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {
         "sampleName": sampleName,
@@ -261,13 +252,12 @@ def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differe
     # 如果备注为空就不修改
     if remark is not None:
         table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {"remark": remark}})
-    conn.close()
+    #conn.close()
 
 
 # 获取批处理信息
 def getBatchHistory(user, currentPage, pageCount):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+    conn = get_connection()
     table_BatchProcess = conn.nbi.BatchProcess
     data = {}
     allInfo = table_BatchProcess.find({'UID': user}).sort("lastChangeTime", -1)
@@ -297,5 +287,5 @@ def getBatchHistory(user, currentPage, pageCount):
         if count > end:
             break
     ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
-    conn.close()
+    #conn.close()
     return ret
