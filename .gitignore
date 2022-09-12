@@ -3,3 +3,4 @@ front/dist/
 .idea
 NBIOnline/static/Data
 front/node_modeles
+**/__pycache__
