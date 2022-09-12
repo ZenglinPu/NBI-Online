@@ -82,20 +82,21 @@ def modifyInfo(request):
         # 获取对应的PhotoInfo的_id
         id = request.POST.get("_id")
         # 获取更改的输入
-        sampleName = request.POST.get("sampleName")
-        partName = request.POST.get("partName")
-        preDiagnosis = request.POST.get("preDiagnosis")
-        pathologic = request.POST.get("pathologic")
-        differentiation = int(request.POST.get("differentiation"))
-        cuttingEdge = bool(request.POST.get("cuttingEdge"))
-        remark = request.POST.get("remark")
+        sampleName = request.POST.get("sampleName")# 标本名称
+        partName = request.POST.get("partName")# 标本部位
+        preDiagnosis = request.POST.get("preDiagnosis")# 术前诊断
+        pathologic = request.POST.get("pathologic")# 病理诊断
+        differentiation = int(request.POST.get("differentiation"))# 分化程度
+        infiltration = int(request.POST.get("infiltration"))# 浸润深度
+        cuttingEdge = bool(request.POST.get("cuttingEdge"))# 水平切缘
+        remark = request.POST.get("remark")# 备注
 
-        if sampleName is None or partName is None or preDiagnosis is None or pathologic is None or differentiation is None:
+        if sampleName is None or partName is None or preDiagnosis is None or pathologic is None or differentiation is None or infiltration is None:
             # 返回2表示存在必填选项为空
             return HttpResponse(2)
         
         # 存储更改
-        saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, cuttingEdge, remark)
+        saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, infiltration, cuttingEdge, remark)
 
 # 批次信息展示
 def batchDisplay(request):

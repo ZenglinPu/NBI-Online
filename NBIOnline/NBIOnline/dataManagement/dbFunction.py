@@ -229,7 +229,7 @@ def similar_diff_ratio(str1, str2):
     return difflib.SequenceMatcher(None, str1, str2).quick_ratio()
 
 # 存储更改的信息
-def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, cuttingEdge, remark):
+def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation,infiltration, cuttingEdge, remark):
     conn = pymongo.MongoClient(
         'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
     table_PhotoAdditionInfo = conn.nbi.PhotoAdditionInfo
@@ -239,8 +239,8 @@ def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differe
         "preDiagnosis":preDiagnosis,
         "pathologic":pathologic,
         "differentiation":differentiation,
+        "infiltration":infiltration,
         "cuttingEdge":cuttingEdge,
-        "remark":remark
         }})
     # 如果备注为空就不修改
     if remark is not None:
@@ -273,9 +273,7 @@ def getBatchHistory(user, currentPage, pageCount):
         innerDict = {
             'index': count,
             '_id': str(_id),
-            'uploadTime': str(object['uploadTime']),
-            'expireTime': str(object['expireTime']),
-            'status': str(object['status']),
+            'Image_Result': str(object['Image_Result']),
         }
         data[count] = innerDict
         count += 1

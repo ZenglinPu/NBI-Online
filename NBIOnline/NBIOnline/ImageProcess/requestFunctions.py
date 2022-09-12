@@ -249,6 +249,12 @@ def historyImgInfo(request):
             "imageGreenName": imageInfo.get("Image_Green"),
             "imageWhiteName": imageInfo.get("Image_White"),
             "imageBlueName": imageInfo.get("Image_Blue"),
+            "part": imageAdditionInfo.get("part"),
+            "preDiagnosis": imageAdditionInfo.get("preDiagnosis"),
+            "pathologic": imageAdditionInfo.get("pathologic"),
+            "differentiation": imageAdditionInfo.get("differentiation"),
+            "infiltration": imageAdditionInfo.get("infiltration"),
+            "cuttingEdge": imageAdditionInfo.get("cuttingEdge")
         }
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type="application/json")
