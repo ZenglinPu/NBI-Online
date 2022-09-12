@@ -1,5 +1,6 @@
 import pymongo
-from ..dataManagement.db_connection import get_connection
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
+
 
 # '''
 # 图片附加信息表：PhotoAdditionInfo
@@ -43,18 +44,18 @@ class imageAdditionInfo:
         return ret
 
     def saveNewAdditionalInfo(self):
-        conn = get_connection()
-        table = conn.nbi.PhotoAdditionInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.PhotoAdditionInfo)
         # print(self.getDict())
         ret = table.insert_one(self.getDict())
-        #conn.close()
+        # conn.close()
         return ret
 
     def replaceData(self):
         print("Update Data at GID={u}".format(u=self.gid))
-        conn = get_connection()
-        table = conn.nbi.PhotoAdditionInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.PhotoAdditionInfo)
         condition = {'GID': self.gid}
         result = table.replace_one(condition, self.getDict())  # 执行数据库更新操作
-        #conn.close()
+        # conn.close()
         return result

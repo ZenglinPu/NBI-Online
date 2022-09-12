@@ -4,7 +4,8 @@ import base64
 import pymongo
 import hmac
 from datetime import datetime, timedelta
-from ..dataManagement.db_connection import get_connection
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
+
 
 # 加密获得token的方法
 # 过期时间设置为1个小时
@@ -19,8 +20,8 @@ def get_token(key, expire=3600):
 
 # 根据UID和token判断是否处于登录期间内
 def TokenCheckLogin(uid, token):
-    conn = get_connection()
-    table = conn.nbi.TokenInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.TokenInfo)
     result = table.find({"UID": uid})
     conn.close()
     # 找不到该uid，未登录
@@ -56,8 +57,8 @@ def valid_date(expireTime, nowTime):
 
 # 检查提交的token有效性
 def tokenCheck(uid, token):
-    conn = get_connection()
-    table = conn.nbi.TokenInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.TokenInfo)
     result = table.find({"UID": uid})
     conn.close()
     # 找不到，未登录
@@ -118,8 +119,8 @@ def tokenCheck(uid, token):
 
 # 使得某个uid下的token过期
 def logoutInToken(uid):
-    conn = get_connection()
-    table = conn.nbi.TokenInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.TokenInfo)
     newValue = {"$set": {"expiresTime": datetime.now()}}
     result = table.update_one({"UID": uid}, newValue)
     conn.close()
