@@ -2,14 +2,15 @@ import os
 import time
 
 import pymongo
-from ..dataManagement.db_connection import get_connection
+from ..dataManagement.db_connection import getConnection
+
 
 # 管理数据库的函数，谨慎调用
 
 # system manager
 class NBIManager():
     def __init__(self, table):
-        self.__conn = get_connection()
+        self.__conn = getConnection()
         if table == "PhotoInfo":
             self.__table = self.__conn.nbi.PhotoInfo
         elif table == "UserInfo":

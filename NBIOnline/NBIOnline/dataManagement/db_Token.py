@@ -1,7 +1,8 @@
 from datetime import datetime
 from ..userManagement.token import get_token  # 获取新随机token
 import pymongo
-from ..dataManagement.db_connection import get_connection
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
+
 
 # '''
 # 用户token表：TokenInfo
@@ -37,8 +38,8 @@ class UserToken:
 
     # 检查token是否存在，不存在则创建，存在则更新
     def saveOrUpdateToken(self):
-        conn = get_connection()
-        table = conn.nbi.TokenInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.TokenInfo)
         tryFind = table.find({"UID": self.uid})
         tokenDict = self.getDict()
         if tryFind.count() == 0:
