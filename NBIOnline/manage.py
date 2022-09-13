@@ -2,19 +2,12 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-import argparse
 
-from .NBIOnline.imageProcess.imageGCSchedule import GCTask
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--django_settings', required=False, help='Django settings module', default='NBIOnline.settings')
-parser.add_argument('--gc_mode', required=False, help='', default=False)
-parameters = parser.parse_args()
-
+from NBIOnline.imageProcess.imageGCSchedule import GCTask
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', parameters.django_settings)
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'NBIOnline.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -27,7 +20,7 @@ def main():
 
 
 if __name__ == '__main__':
-    gc_task = GCTask(gc=parameters.gc_mode)
+    gc_task = GCTask(gc=False)
     gc_task.start()
     main()
     gc_task.shutdown()

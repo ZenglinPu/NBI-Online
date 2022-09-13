@@ -35,13 +35,3 @@ class GCTask:
 
     def shutdown(self):
         self.scheduler.shutdown()
-
-
-gcTask = GCTask(True)
-gcTask.start(hours=2)
-
-print(1000)
-
-time.sleep(50)
-
-gcTask.shutdown()
