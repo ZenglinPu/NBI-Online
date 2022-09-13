@@ -18,7 +18,8 @@ def logoutCheck(request):
             # 1表示登录状态有问题
             return HttpResponse(1)
         ret = logoutInToken(user)
-        return HttpResponse(2) # 正常
+        return HttpResponse(2)  # 正常
+
 
 # 检查登录
 def loginCheck(request):

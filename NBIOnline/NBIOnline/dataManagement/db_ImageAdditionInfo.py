@@ -1,4 +1,5 @@
 import pymongo
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
 # '''
@@ -43,20 +44,18 @@ class imageAdditionInfo:
         return ret
 
     def saveNewAdditionalInfo(self):
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-        table = conn.nbi.PhotoAdditionInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.PhotoAdditionInfo)
         # print(self.getDict())
         ret = table.insert_one(self.getDict())
-        conn.close()
+        # conn.close()
         return ret
 
     def replaceData(self):
         print("Update Data at GID={u}".format(u=self.gid))
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-        table = conn.nbi.PhotoAdditionInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.PhotoAdditionInfo)
         condition = {'GID': self.gid}
         result = table.replace_one(condition, self.getDict())  # 执行数据库更新操作
-        conn.close()
+        # conn.close()
         return result

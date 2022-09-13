@@ -3,7 +3,7 @@ import time
 import datetime
 from ..imageProcess.NBIGenerator import getRandom
 import random
-
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 # '''
 # 用户信息表: UserInfo
@@ -73,9 +73,8 @@ class User:
 
     def saveNewUser(self):
         print("Add New [User Data] at UID={u}".format(u=self.uid))
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-        table = conn.nbi.UserInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.UserInfo)
         ret = table.insert_one(self.getDict())
         conn.close()
         return ret
@@ -90,9 +89,8 @@ def getInviteCode():
 
 
 def getUnameByUID(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     ret = table.find_one({'UID': uid})
     conn.close()
     if ret is not None:
@@ -101,9 +99,8 @@ def getUnameByUID(uid):
 
 
 def getUserInfoByUID(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     ret = table.find_one({'UID': uid})
     conn.close()
     if ret is not None:
@@ -112,9 +109,8 @@ def getUserInfoByUID(uid):
 
 
 def updateUname(uid, uname):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     newValue = {"$set": {"name": uname}}
     result = table.update_one({"UID": uid}, newValue)
     conn.close()
@@ -122,9 +118,8 @@ def updateUname(uid, uname):
 
 
 def updateAddInfo(uid, workPlace, department, competent):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     newValue = {"$set": {"workPlace": workPlace, "department": department, "competent": competent}}
     result = table.update_one({"UID": uid}, newValue)
     conn.close()
@@ -133,9 +128,8 @@ def updateAddInfo(uid, workPlace, department, competent):
 
 # 生成总条数加一，同时会更新剩余生成次数，但是要根据用户等级
 def addSumGenerate(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     oldTimes = table.find_one({"UID": uid})['SUM_generate']
     newValue = {"$set": {"SUM_generate": oldTimes + 1}}
     if table.find_one({"UID": uid})['expiresTime'] < time.time():
@@ -149,14 +143,13 @@ def addSumGenerate(uid):
 # 根据邀请码查询用户信息，满足要求则给予奖励并返回true,失败返回false
 def inviteCodeReward(uid, inviteCode):
     # 检查用户是否为刚注册第一天内
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     isSend = table.find_one({"UID": uid})['isSend']
     if isSend:
         return -4  # 表示已经送过了
     registerTime = table.find_one({"UID": uid})['registerTime']
-    oneDayLater = registerTime + 24*60*60
+    oneDayLater = registerTime + 24 * 60 * 60
     if time.time() >= oneDayLater:
         return -1  # 表示过时了
     targetUID = table.find({"inviteCode": inviteCode})
@@ -176,9 +169,8 @@ def inviteCodeReward(uid, inviteCode):
 
 
 def addSuperDay(user, num):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     # 先看是否是超级用户，如果是就直接加上时间，不是则在当前的基础上加上时间
     if user['expiresTime'] >= time.time():
         # 没过期
@@ -192,9 +184,8 @@ def addSuperDay(user, num):
 
 # 输入旧密码，更新为新密码，旧密码不对则返回false,对的则返回true,并且更新
 def changePwd(uid, oldPwd, newPwd):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     oldPwdInDatabase = table.find_one({"UID": uid})['pwd']
     if not transToMD5(oldPwd) == oldPwdInDatabase:
         return False
@@ -202,4 +193,3 @@ def changePwd(uid, oldPwd, newPwd):
     table.update_one({"UID": uid}, newValue)
     conn.close()
     return True
-

@@ -9,6 +9,7 @@ def historyDisplay(request):
     if request.method == 'POST':
         user = request.POST.get('uid')
         token = request.POST.get('token')
+        # print(tokenCheck(user, token), token)
         # 检查登录状态
         if not tokenCheck(user, token):
             # 1表示登录状态有问题

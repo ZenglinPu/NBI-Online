@@ -1,5 +1,7 @@
 import time
 import pymongo
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
+
 
 # '''
 # 批处理批次信息表：BatchProcess
@@ -15,6 +17,9 @@ import pymongo
 
 
 # 批处理信息
+from NBIOnline.NBIOnline.dataManagement.dbUtil import getTable, NBITABLE, getConn
+
+
 class batchProcess:
     def __init__(self, uid):
         self.uid = uid
@@ -35,14 +40,12 @@ class batchProcess:
         ret['uploadTime'] = self.uploadTime
         ret['expireTime'] = self.expireTime
         ret['batchSize'] = self.batchSize
-        ret['status'] = 6   # 都在往后台存储了，那就是处理好了
+        ret['status'] = 6  # 都在往后台存储了，那就是处理好了
 
     def saveData(self):
         print("Add New [Batch Process Data] at UID={u}".format(u=self.uid))
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-        table = conn.nbi.BatchProcess
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.BatchProcess)
         ret = table.insert_one(self.getDict())
-        conn.close()
+        # conn.close()
         return ret
-
