@@ -17,6 +17,9 @@ from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
 # 批处理信息
+from NBIOnline.NBIOnline.dataManagement.dbUtil import getTable, NBITABLE, getConn
+
+
 class batchProcess:
     def __init__(self, uid):
         self.uid = uid
@@ -42,7 +45,6 @@ class batchProcess:
     def saveData(self):
         print("Add New [Batch Process Data] at UID={u}".format(u=self.uid))
         conn = getConnection()
-
         table = getTable(conn, NBITABLE.BatchProcess)
         ret = table.insert_one(self.getDict())
         # conn.close()

@@ -9,6 +9,9 @@ from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 # 加密获得token的方法
 # 过期时间设置为1个小时
+from ..dataManagement.dbUtil import getConn, getTable, NBITABLE
+
+
 def get_token(key, expire=3600):
     ts_str = str(time.time() + expire)
     ts_byte = ts_str.encode("utf-8")
