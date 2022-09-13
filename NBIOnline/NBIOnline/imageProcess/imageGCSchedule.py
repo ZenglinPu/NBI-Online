@@ -35,3 +35,4 @@ class GCTask:
 
     def shutdown(self):
         self.scheduler.shutdown()
+
