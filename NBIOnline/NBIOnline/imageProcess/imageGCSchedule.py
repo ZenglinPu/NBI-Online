@@ -7,8 +7,9 @@ from ..dataManagement.dbFunction import deleteAllExpiredImages
 
 # TODO: 担心删除有用数据，故尚未实际启动
 class GCTask:
-    def __init__(self):
+    def __init__(self, gc=False):
         super().__init__()
+        self.gc = gc
         self.job = None
         self.scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
 
@@ -16,8 +17,16 @@ class GCTask:
         # 删除过期图片及数据库中信息
         deleteAllExpiredImages()
 
+    def nothing(self):
+        pass
+
     def start(self, hours=24):
-        self.job = self.scheduler.add_job(self.GCImageData, trigger='interval', hours=hours, id='gc')
+        if self.gc == True:
+            self.job = self.scheduler.add_job(self.GCImageData, trigger='interval', hours=hours, id='gc')
+            print("Start image GC")
+        else:
+            self.job = self.scheduler.add_job(self.nothing, trigger='interval', hours=hours, id='gc')
+            print("Without image GC")
         self.scheduler.start()
 
     def delete(self):
@@ -26,13 +35,3 @@ class GCTask:
 
     def shutdown(self):
         self.scheduler.shutdown()
-
-
-gcTask = GCTask()
-gcTask.start(hours=2)
-
-print(1000)
-
-time.sleep(50)
-
-gcTask.shutdown()

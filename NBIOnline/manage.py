@@ -3,6 +3,7 @@
 import os
 import sys
 
+from NBIOnline.imageProcess.imageGCSchedule import GCTask
 
 def main():
     """Run administrative tasks."""
@@ -19,4 +20,7 @@ def main():
 
 
 if __name__ == '__main__':
+    gc_task = GCTask(gc=False)
+    gc_task.start()
     main()
+    gc_task.shutdown()
