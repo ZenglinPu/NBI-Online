@@ -6,18 +6,21 @@
           <el-upload
             class="upload-demo"
             drag
-            action="https://jsonplaceholder.typicode.com/posts/"
-            multiple>
+            action="/NBI/Batch/upload/compressPack/"
+            :headers="uploadPackageHeaders"
+            :multiple="false"
+            :limit="1"
+            >
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip">只能上传zip/rar文件</div>
           </el-upload>
         </div>
       </button>
+      <div class="aside-block-title">
+        批次名称：{{batchTitle}}
+      </div>
       <div class="aside-block">
-        <div class="aside-block-title">
-          批次名称：{{batchTitle}}
-        </div>
         <el-timeline style="height: 353px; margin-top: 15px">
           <el-timeline-item
             v-for="(activity, index) in activities"
@@ -138,7 +141,7 @@ export default {
   name: "MultiImageProcess",
   data() {
     return {
-      batchTitle: '玛卡巴卡',
+      batchTitle: '',
       activities: [{
         content: '上传压缩包',
         timestamp: '2022-09-03 20:46',
@@ -200,78 +203,25 @@ export default {
         blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
         greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
         whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }]
+      },]
     };
+  },
+  methods:{
+    // cookie
+    getCookie(objName){//获取指定名称的cookie的值
+      const arrStr = document.cookie.split("; ");
+      for(let i = 0; i < arrStr.length; i ++){
+        const temp = arrStr[i].split("=");
+        if(temp[0] === objName) return temp[1];
+      }
+      return null;
+    },
+    getToken(){
+      return this.getCookie("NBI_token");
+    },
+    getUID(){
+      return this.getCookie("NBI_UID");
+    },
   },
   computed: {
     url(){
@@ -281,6 +231,12 @@ export default {
       return [
         "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
       ]
+    },
+    uploadPackageHeaders(){
+      return {
+        "utoken": this.getToken(),
+        "uid": this.getUID(),
+      }
     }
   }
 
@@ -295,7 +251,7 @@ button {
 
 .aside-button {
   width: 100%;
-  height: 220px;
+  height: 40%;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -324,7 +280,7 @@ button {
 
 .aside-block {
   position: relative;
-  height: 428px;
+  height: 55%;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -332,12 +288,14 @@ button {
 }
 
 .aside-block-title {
-  width: 100%;
+  width: 70%;
+  margin-left: 15%;
   height: 60px;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   display: flex;
-  color: #9195a3;
+  color: #2e3857;
+  font-family: 幼圆,serif;
   font-weight: bold;
 }
 

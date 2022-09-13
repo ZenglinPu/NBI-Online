@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
 
 # 加密获得token的方法
 # 过期时间设置为1个小时
+from ..dataManagement.dbUtil import getConn, getTable, NBITABLE
+
+
 def get_token(key, expire=3600):
     ts_str = str(time.time() + expire)
     ts_byte = ts_str.encode("utf-8")
@@ -57,9 +60,8 @@ def valid_date(expireTime, nowTime):
 
 # 检查提交的token有效性
 def tokenCheck(uid, token):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.TokenInfo
+    conn = getConn()
+    table = getTable(conn, NBITABLE.TokenInfo)
     result = table.find({"UID": uid})
     conn.close()
     # 找不到，未登录
