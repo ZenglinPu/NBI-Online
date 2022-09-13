@@ -76,7 +76,7 @@ class User:
         conn = getConnection()
         table = getTable(conn, NBITABLE.UserInfo)
         ret = table.insert_one(self.getDict())
-        conn.close()
+        # conn.close()
         return ret
 
 
@@ -92,7 +92,7 @@ def getUnameByUID(uid):
     conn = getConnection()
     table = getTable(conn, NBITABLE.UserInfo)
     ret = table.find_one({'UID': uid})
-    conn.close()
+    # conn.close()
     if ret is not None:
         return ret.get("name")
     return "未登录"
@@ -102,7 +102,7 @@ def getUserInfoByUID(uid):
     conn = getConnection()
     table = getTable(conn, NBITABLE.UserInfo)
     ret = table.find_one({'UID': uid})
-    conn.close()
+    # conn.close()
     if ret is not None:
         return ret
     return None
@@ -113,7 +113,7 @@ def updateUname(uid, uname):
     table = getTable(conn, NBITABLE.UserInfo)
     newValue = {"$set": {"name": uname}}
     result = table.update_one({"UID": uid}, newValue)
-    conn.close()
+    # conn.close()
     return result
 
 
@@ -122,7 +122,7 @@ def updateAddInfo(uid, workPlace, department, competent):
     table = getTable(conn, NBITABLE.UserInfo)
     newValue = {"$set": {"workPlace": workPlace, "department": department, "competent": competent}}
     result = table.update_one({"UID": uid}, newValue)
-    conn.close()
+    # conn.close()
     return result
 
 
@@ -137,7 +137,7 @@ def addSumGenerate(uid):
         oldSum = int(table.find_one({"UID": uid})['TIMES_generate'])
         table.update_one({"UID": uid}, {"$set": {"TIMES_generate": oldSum - 1}})
     table.update_one({"UID": uid}, newValue)
-    conn.close()
+    # conn.close()
 
 
 # 根据邀请码查询用户信息，满足要求则给予奖励并返回true,失败返回false
@@ -164,7 +164,7 @@ def inviteCodeReward(uid, inviteCode):
     table.update_one({"UID": uid}, newValue)
 
     addSuperDay(targetUser, 30)
-    conn.close()
+    # conn.close()
     return 1
 
 
@@ -179,7 +179,7 @@ def addSuperDay(user, num):
         newExpiresTime = time.time() + num * 24 * 60 * 60
     newValue = {"$set": {"expiresTime": newExpiresTime, "TIMES_generate": 10}}
     table.update_one({"UID": user["UID"]}, newValue)
-    conn.close()
+    # conn.close()
 
 
 # 输入旧密码，更新为新密码，旧密码不对则返回false,对的则返回true,并且更新
@@ -191,5 +191,5 @@ def changePwd(uid, oldPwd, newPwd):
         return False
     newValue = {"$set": {"pwd": transToMD5(newPwd)}}
     table.update_one({"UID": uid}, newValue)
-    conn.close()
+    # conn.close()
     return True

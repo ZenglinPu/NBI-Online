@@ -1,6 +1,5 @@
 from datetime import datetime
 from ..userManagement.token import get_token  # 获取新随机token
-import pymongo
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
@@ -50,5 +49,4 @@ class UserToken:
             condition = {"UID": self.uid}
             table.replace_one(condition, tokenDict)
             pass
-        conn.close()
         return tokenDict.get("token")

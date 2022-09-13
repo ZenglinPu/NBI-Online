@@ -2,25 +2,17 @@
  <el-container>
     <el-aside width="350px">
       <button class="aside-button">
-        <div class="aside-plus">
-          <el-upload
-            class="upload-demo"
-            drag
-            action="/NBI/Batch/upload/compressPack/"
-            :headers="uploadPackageHeaders"
-            :multiple="false"
-            :limit="1"
-            >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传zip/rar文件</div>
-          </el-upload>
+        <div id="uploadPackageBtn" @click="chooseNewPackage()">
+            <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
+            <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
         </div>
-      </button>
-      <div class="aside-block-title">
+        <div style="height: 18%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只能上传zip/rar文件</div>
+        <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
+    </button>
+    <div class="aside-block-title">
         批次名称：{{batchTitle}}
       </div>
-      <div class="aside-block">
+    <div class="aside-block">
         <el-timeline style="height: 353px; margin-top: 15px">
           <el-timeline-item
             v-for="(activity, index) in activities"
@@ -222,6 +214,33 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
+    chooseNewPackage(){
+      this.$refs.compressPackageInput.click();
+    },
+    uploadNewPackage(){
+      let packageUploadForm = new FormData();
+      // 身份识别数据
+      packageUploadForm.append("uid", this.getUID());
+      packageUploadForm.append("token", this.getToken());
+      // 压缩包
+      packageUploadForm.append("package", this.$refs.compressPackageInput.files[0]);
+
+      this.$refs.uploadPackageIcon.className = "el-icon-loading";
+      this.$refs.uploadPackageFont.innerHTML = "上传中";
+
+      this.$axios.post("/NBI/Batch/upload/compressPack/",packageUploadForm,{
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response) => {
+        if (response.data === 1){
+          this.$message.error("账户信息错误，上传失败！");
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+        }
+        else{
+          console.log(response);
+        }
+      });
+    }
   },
   computed: {
     url(){
@@ -232,12 +251,6 @@ export default {
         "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
       ]
     },
-    uploadPackageHeaders(){
-      return {
-        "utoken": this.getToken(),
-        "uid": this.getUID(),
-      }
-    }
   }
 
 }
@@ -249,33 +262,38 @@ button {
 	outline: none;
 }
 
-.aside-button {
-  width: 100%;
-  height: 40%;
+#uploadPackageBtn{
+  display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  width: 96%;
+  margin-top: 3%;
+  height: 82%;
+  border: 2px dodgerblue dashed;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#uploadPackageBtn:hover{
+  border: 2px #004c94 dashed;
+  background-color: #ffffff;
+}
+
+.aside-button {
+  overflow: hidden;
+  width: 100%;
+  height: 35%;
   display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
   background-color: #fff;
-  /* cursor: pointer; */
-  transition: 0.15s ease;
-  /* border-image: linear-gradient(225deg, #7de1ff 0%, #6cc3de 100%); */
   border-right: solid 1px #e6e6e6;
   border-bottom: solid 1px #e6e6e6;
   position: relative;
-}
-
-.aside-plus .upload-demo >>> .el-upload-dragger {
-  width: 330px;
-  transition: 0.15s ease;
-}
-
-.aside-plus .upload-demo >>> .el-upload-dragger:hover .el-upload__text {
-  color: #9195a3;
-  transition: 0.15s ease;
-}
-
-.aside-plus .upload-demo >>> .el-upload__tip {
-  color: #9195a3;
 }
 
 .aside-block {

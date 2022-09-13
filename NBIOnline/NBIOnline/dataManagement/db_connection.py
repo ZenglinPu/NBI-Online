@@ -34,7 +34,6 @@ global_connection = None
 
 
 # DB连接的封装, 长连接
-
 def getConnection():
     global global_connection
     while global_connection is None:
