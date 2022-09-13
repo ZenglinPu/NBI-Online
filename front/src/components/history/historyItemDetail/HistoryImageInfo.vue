@@ -31,8 +31,11 @@
       </el-select>
     </el-form-item>
     <el-form-item label="浸润深度" prop="infiltration">
-      <el-input style="width: 310px" placeholder="仅粘膜下层需文本录入(单位μm)" :disabled="true" v-model="infoForm.submucosaDepth" class="input-with-select">
-        <el-select style="width: 108px" id="infiltrationSelector" v-model="infoForm.infiltration" slot="prepend" placeholder="请选择">
+      <el-input style="width: 310px" placeholder="仅粘膜下层需文本录入(单位μm)" :disabled="submucosaSelected"
+                v-model="infoForm.submucosaDepth"
+                class="input-with-select">
+        <el-select style="width: 108px" id="infiltrationSelector" v-model="infoForm.infiltration" slot="prepend"
+                   placeholder="请选择">
           <el-option label="粘膜上皮层" value="粘膜上皮层"></el-option>
           <el-option label="粘膜固有层" value="粘膜固有层"></el-option>
           <el-option label="粘膜肌层" value="粘膜肌层"></el-option>
@@ -56,7 +59,7 @@
                 v-model="infoForm.remark"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submitForm('infoForm')">立即创建</el-button>
+      <el-button type="primary" @click="submitForm('infoForm')">提交修改</el-button>
       <!-- <el-button @click="resetForm('infoForm')">重置</el-button> -->
     </el-form-item>
   </el-form>
@@ -78,7 +81,7 @@ export default {
         infiltration: '',//（单选，粘膜上皮层，粘膜固有层，粘膜肌层，粘膜下层（文本录入，单位μm），固有肌层）
         submucosaDepth: '',//粘膜下层深度
         cuttingEdge: true,//水平切缘（单选，阴性，阳性
-        remark: '备注xxxx',//备注
+        remark: '',//备注
       },
       preDiagnosisOptions: [{
         value: '腺癌', label: '腺癌'
@@ -140,43 +143,82 @@ export default {
       }
     };
   },
+  computed: {
+    submucosaSelected() {
+      return this.infoForm.infiltration !== "粘膜下层"
+    }
+  },
   methods: {
+    getCookie(objName) {//获取指定名称的cookie的值
+      const arrStr = document.cookie.split("; ");
+      for (let i = 0; i < arrStr.length; i++) {
+        const temp = arrStr[i].split("=");
+        if (temp[0] === objName) return temp[1];
+      }
+      return null;
+    },
+    getToken() {
+      return this.getCookie("NBI_token");
+    },
+    getUID() {
+      return this.getCookie("NBI_UID");
+    },
     submitForm(formName) {
       let config = {
         headers: {'Content-Type': 'multipart/form-data'}
       };
 
-
+      //处理诊断的表单
       let tmp = this.infoForm.preDiagnosis
       let preDiagnosis = ''
       tmp.forEach(elem => {
-        preDiagnosis = preDiagnosis + elem + '|'
+        preDiagnosis = preDiagnosis + elem + ','
       })
       tmp = this.infoForm.pathologic
       let pathologic = ''
       tmp.forEach(elem => {
-        pathologic = pathologic + elem + '|'
+        pathologic = pathologic + elem + ','
       })
-      console.log(pathologic, preDiagnosis)
+      tmp = this.infoForm.differentiation
+      let differentiation = ''
+      tmp.forEach(elem => {
+        differentiation = differentiation + elem + ','
+      })
+
+      //处理分化程度的表单
+      let infiltration = this.infoForm.infiltration
+      if (this.infoForm.infiltration === "粘膜下层") {
+        infiltration = this.infoForm.infiltration + this.infoForm.submucosaDepth;
+      }
 
       let uploadForm = new FormData();
       uploadForm.append("sampleName", this.infoForm.sampleName)
       uploadForm.append("partName", this.infoForm.partName)
       uploadForm.append("preDiagnosis", preDiagnosis)
       uploadForm.append("pathologic", pathologic)
-      //uploadForm.append("cuttingEdge", this.infoForm.cuttingEdge)
+      uploadForm.append("cuttingEdge", this.infoForm.cuttingEdge)
+      uploadForm.append("infiltration", infiltration)
+      uploadForm.append("differentiation", differentiation)
+      uploadForm.append("remark", this.infoForm.remark)
+      // 身份识别数据
+      uploadForm.append("uid", this.getUID());
+      uploadForm.append("token", this.getToken());
+      // 图片_id
+      uploadForm.append("_id", this.GID);
+
       // console.log(uploadForm)
       // console.log(this.infoForm)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$axios.post('HistoryDetail', uploadForm, config).then((response) => {
-            if (response.data === 2) {
+          this.$axios.post('HistoryDetail/modifyInfo/', uploadForm, config).then((response) => {
+            console.log("提交表单2", uploadForm.get("_id"), uploadForm.get("uid"), uploadForm.get("token"))
+            if (response.data === 1) {
               this.$message({
                 message: '登录状态错误！请重新登录。',
                 type: 'error'
               });
-            } else if (response.data === 1) {
+            } else if (response.data === 2) {
               this.$message({
                 message: '未找到对应图片信息',
                 type: 'warning'
@@ -191,14 +233,20 @@ export default {
           return false;
         }
       });
-    }
+    },
+
   },
   mounted() {
-    //console.log('this',this.GID)
-    this.$axios.get('HistoryDetail', {
-      params: {
-        GID: this.GID
-      }
+    let getItemInfoForm = new FormData();
+    // 身份识别数据
+    getItemInfoForm.append("uid", this.getUID());
+    getItemInfoForm.append("token", this.getToken());
+    // 图片_id
+    getItemInfoForm.append("gid", this.GID);
+
+    console.log("jiancha", getItemInfoForm.get('uid'), getItemInfoForm.get('token'))
+    this.$axios.post("/NBI/HistoryDetail/", getItemInfoForm, {
+      headers: {'Content-Type': 'multipart/form-data'}
     }).then((response) => {
       if (response.data === 2) {
         this.$message({
@@ -211,16 +259,35 @@ export default {
           type: 'warning'
         });
       } else {
+        console.log("图片详情后端", response.data)
         this.infoForm.sampleName = response.data.sampleName;
-        this.infoForm.partName = response.data.partName;
-        this.infoForm.preDiagnosis = response.data.preDiagnosis.split('|');
-        this.infoForm.pathologic = response.data.pathologic.split('|');
+        this.infoForm.partName = response.data.part;
+        let preDiagnosis = response.data.preDiagnosis;
+        let pathologic = response.data.pathologic;
+        let differentiation = response.data.differentiation;
+        if (preDiagnosis) {
+          preDiagnosis = preDiagnosis.split(',');
+          this.infoForm.preDiagnosis = preDiagnosis;
+        }
+        if (pathologic) {
+          pathologic = pathologic.split(',');
+          this.infoForm.preDiagnosis = preDiagnosis;
+        }
+        if (differentiation) {
+          differentiation = differentiation.split(',');
+          this.infoForm.differentiation = differentiation;
+        }
         this.infoForm.cuttingEdge = response.data.cuttingEdge - '1';
-        this.infoForm.differentiation = response.data.differentiation.split('|');
         this.infoForm.remark = response.data.remark;
+        // console.log("备注", this.infoForm.remark);
       }
     })
   },
+  updated() {
+    if (this.infoForm.infiltration !== "粘膜下层") {
+      this.infoForm.submucosaDepth = ''
+    }
+  }
 }
 </script>
 <style scoped>

@@ -56,7 +56,7 @@
       </div>
       <div id="imageAdjustPartContainer">
         <div style="width: 100%;height: 65%">
-          <singleImageInfoAdjustPart></singleImageInfoAdjustPart>
+          <singleImageInfoAdjustPart :GID="this.GID" ></singleImageInfoAdjustPart>
         </div>
         <div style="width: 100%;height: 35%">
           <singleImageProcess_imageAdjust></singleImageProcess_imageAdjust>
@@ -88,56 +88,6 @@ export default {
         src_white: "",
         srcList: [],
       },
-      infoForm: {
-        sampleName: '',
-        partName: '',//部位 胃、大肠小肠、食管
-        preDiagnosis: [],//术前诊断
-
-        pathologic: [],//病理诊断
-
-        differentiation: [],///分化程度Integer分化程度多选：‘0’：不适用 ‘1‘：低分化 ‘2’：中分化 ‘3‘：高分化 多选
-        //infiltration: '',（单选，粘膜上皮层，粘膜固有层，粘膜肌层，粘膜下层（文本录入，单位μm），固有肌层）
-        cuttingEdge: true,//水平切缘（单选，阴性，阳性
-        remark: '备注xxxx',//备注
-      },
-      preDiagnosisOptions: [{
-        value: '早癌', label: '早癌'
-      }, {
-        value: '炎症', label: '炎症'
-      }, {
-        value: '腺癌', label: '腺癌'
-      },
-        {
-          value: '胃癌', label: '胃癌'
-        }],
-      pathologicOptions: [{
-        value: '早癌', label: '早癌'
-      }, {
-        value: '炎症', label: '炎症'
-      }, {
-        value: '腺癌', label: '腺癌'
-      }, {
-        value: '胃癌', label: '胃癌'
-      }
-      ],
-      rules: {
-        sampleName: [
-          {required: true, message: '请输入标本名称', trigger: 'blur'},
-          {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
-        ],
-        partName: [
-          {required: true, message: '请选择标本部位', trigger: 'change'}
-        ],
-        preDiagnosis: [
-          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
-        ],
-        pathologic: [
-          {type: 'array', required: true, message: '请至少选择一个诊断', trigger: 'change'}
-        ],
-        differentiation: [
-          {type: 'array', required: true, message: '请至少选择一个分化程度', trigger: 'change'}
-        ],
-      }
     }
   },
   mounted() {

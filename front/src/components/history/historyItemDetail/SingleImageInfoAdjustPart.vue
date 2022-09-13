@@ -3,7 +3,7 @@
     <div class="imgPart_inner" style="height: 340px;margin-top: 10px;">
       <div style="width: 100%;height:100%;display:flex;justify-content: left;">
           <el-scrollbar id="additionInfoForm" style="height: 100%; padding-top: 10px;"> <!-- 滚动条 -->
-            <HistoryImageInfo></HistoryImageInfo>
+            <HistoryImageInfo :GID="this.GID"></HistoryImageInfo>
           </el-scrollbar><!-- /滚动条 -->
         <div id="mainControlPart">
           <div id="mainControlBtn">
@@ -105,6 +105,7 @@ import HistoryImageInfo from "@/components/history/historyItemDetail/HistoryImag
 export default {
   name: "singleImageInfoAdjustPart",
   components: {HistoryImageInfo},
+  props: ['GID'],
   data() {
     return {
       channelOffset: 0,

@@ -69,16 +69,11 @@ def historyFilter(request):
 # 修改信息
 def modifyInfo(request):
     if request.method == 'POST':
-        user = request.POST.get("uid")
-        token = request.POST.get("token")
+        user = request.POST.get('uid')
+        token = request.POST.get('token')
         # 检查登录状态
         if not tokenCheck(user, token):
-            # 1表示登录状态有问题
             return HttpResponse(1)
-        # 因为uid中存在特殊符号.
-        # 在进行图片的处理中应当替换掉
-        user = user.replace(".", "^")
-
         # 获取对应的PhotoInfo的_id
         id = request.POST.get("_id")
         # 获取更改的输入
@@ -86,17 +81,18 @@ def modifyInfo(request):
         partName = request.POST.get("partName")# 标本部位
         preDiagnosis = request.POST.get("preDiagnosis")# 术前诊断
         pathologic = request.POST.get("pathologic")# 病理诊断
-        differentiation = int(request.POST.get("differentiation"))# 分化程度
-        infiltration = int(request.POST.get("infiltration"))# 浸润深度
-        cuttingEdge = bool(request.POST.get("cuttingEdge"))# 水平切缘
+        differentiation = request.POST.get("differentiation")# 分化程度
+        infiltration = request.POST.get("infiltration")# 浸润深度
+        cuttingEdge = request.POST.get("cuttingEdge")# 水平切缘
         remark = request.POST.get("remark")# 备注
 
-        if sampleName is None or partName is None or preDiagnosis is None or pathologic is None or differentiation is None or infiltration is None:
-            # 返回2表示存在必填选项为空
-            return HttpResponse(2)
+        # if sampleName is None or partName is None or preDiagnosis is None or pathologic is None or differentiation is None or infiltration is None:
+        #     # 返回2表示存在必填选项为空
+        #     return HttpResponse(2)
         
         # 存储更改
         saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, infiltration, cuttingEdge, remark)
+        return HttpResponse(3)
 
 # 批次信息展示
 def batchDisplay(request):
