@@ -1,5 +1,6 @@
 import time
 import pymongo
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
 # '''
@@ -65,9 +66,8 @@ class imageData:
     # 创建新数据并保存
     def saveData(self):
         print("Add New [Single Image Data] at UID={u}".format(u=self.uid))
-        conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-        table = conn.nbi.PhotoInfo
+        conn = getConnection()
+        table = getTable(conn, NBITABLE.PhotoInfo)
         ret = table.insert_one(self.getDict())
         conn.close()
         return ret
@@ -75,9 +75,8 @@ class imageData:
 
 # 替换原有数据，依据_id，不能依据UID，这样会更新掉所有这个Uid下的数据，造成错误
 def updateImageData(_id, updateValue):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.PhotoInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.PhotoInfo)
     condition = {'_id': _id}
     newValue = {"$set": updateValue}
     result = table.update_one(condition, newValue)  # 执行数据库更新操作

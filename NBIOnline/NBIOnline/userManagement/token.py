@@ -4,6 +4,7 @@ import base64
 import pymongo
 import hmac
 from datetime import datetime, timedelta
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
 # 加密获得token的方法
@@ -22,9 +23,8 @@ def get_token(key, expire=3600):
 
 # 根据UID和token判断是否处于登录期间内
 def TokenCheckLogin(uid, token):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.TokenInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.TokenInfo)
     result = table.find({"UID": uid})
     conn.close()
     # 找不到该uid，未登录
@@ -60,7 +60,7 @@ def valid_date(expireTime, nowTime):
 
 # 检查提交的token有效性
 def tokenCheck(uid, token):
-    conn = getConn()
+    conn = getConnection()
     table = getTable(conn, NBITABLE.TokenInfo)
     result = table.find({"UID": uid})
     conn.close()
@@ -122,9 +122,8 @@ def tokenCheck(uid, token):
 
 # 使得某个uid下的token过期
 def logoutInToken(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.TokenInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.TokenInfo)
     newValue = {"$set": {"expiresTime": datetime.now()}}
     result = table.update_one({"UID": uid}, newValue)
     conn.close()

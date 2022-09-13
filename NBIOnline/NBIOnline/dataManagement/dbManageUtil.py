@@ -2,6 +2,7 @@ import os
 import time
 
 import pymongo
+from ..dataManagement.db_connection import getConnection
 
 
 # 管理数据库的函数，谨慎调用
@@ -9,8 +10,7 @@ import pymongo
 # system manager
 class NBIManager():
     def __init__(self, table):
-        self.__conn = pymongo.MongoClient(
-            'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+        self.__conn = getConnection()
         if table == "PhotoInfo":
             self.__table = self.__conn.nbi.PhotoInfo
         elif table == "UserInfo":

@@ -1,14 +1,13 @@
 # 用户等级权限管理相关操作
 import time
 
-import pymongo
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
 def getUserRankByUID(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table_PhotoInfo = conn.nbi.UserInfo
-    if table_PhotoInfo.find_one({"UID": uid})['expiresTime'] > time.time():
+    conn = getConnection()
+    table_UserInfo = getTable(conn, NBITABLE.UserInfo)
+    if table_UserInfo.find_one({"UID": uid})['expiresTime'] > time.time():
         conn.close()
         return 2
     conn.close()
@@ -16,11 +15,10 @@ def getUserRankByUID(uid):
 
 
 def checkUploadTime(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table_PhotoInfo = conn.nbi.UserInfo
+    conn = getConnection()
+    table_UserInfo = getTable(conn, NBITABLE.UserInfo)
     # print(table_PhotoInfo.find_one({"UID": uid})['TIMES_generate'])
-    if table_PhotoInfo.find_one({"UID": uid})['TIMES_generate'] <= 0:
+    if table_UserInfo.find_one({"UID": uid})['TIMES_generate'] <= 0:
         conn.close()
         return False
     conn.close()
