@@ -164,8 +164,6 @@ export default {
       return this.getCookie("NBI_UID");
     },
     submitForm(formName) {
-      // console.log(uploadForm)
-      // console.log(this.infoForm)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -174,14 +172,12 @@ export default {
           };
 
           //处理诊断的表单
-          // console.log("处理诊断的表单",this.infoForm)
           let tmp = this.infoForm.preDiagnosis
           let preDiagnosis =''
           tmp.forEach(elem => {
             preDiagnosis = preDiagnosis + elem + ','
           })
           preDiagnosis=preDiagnosis.slice(0,-1)
-          // console.log("preDiagnosis",preDiagnosis)
 
           tmp = this.infoForm.pathologic
           let pathologic=''
@@ -195,7 +191,6 @@ export default {
             differentiation = differentiation + elem + ','
           })
           differentiation=differentiation.slice(0,-1)
-          // console.log("differentiation",differentiation)
           //处理分化程度的表单
           let infiltration = this.infoForm.infiltration
           if (this.infoForm.infiltration === "粘膜下层") {
@@ -217,7 +212,6 @@ export default {
           // 图片_id
           uploadForm.append("_id", this.GID);
           this.$axios.post('HistoryDetail/modifyInfo/', uploadForm, config).then((response) => {
-            // console.log("提交表单2", uploadForm,uploadForm.get("_id"), uploadForm.get("uid"), uploadForm.get("token"))
             if (response.data === 1) {
               this.$message({
                 message: '登录状态错误！请重新登录。',
