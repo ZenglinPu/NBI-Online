@@ -9,7 +9,7 @@ class ConfigLoader:
         self.configs = None
         current_path = os.path.abspath(__file__)
         self.config_path = os.path.dirname(os.path.dirname(os.path.dirname(current_path))) + '/conf/nbi-config.yaml'
-        with open(self.config_path, 'r') as f:
+        with open(self.config_path, 'r', encoding='utf-8') as f:
             # configs: 含有配置参数键值对的字典
             self.configs = yaml.load(f, Loader=yaml.FullLoader)
 
