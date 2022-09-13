@@ -9,7 +9,6 @@
         <el-option label="大肠" value="大肠"></el-option>
         <el-option label="小肠" value="小肠"></el-option>
         <el-option label="食管" value="食管"></el-option>
-        <el-option label="其它" value="其它"></el-option>
       </el-select>
     </el-form-item>
 
@@ -164,55 +163,56 @@ export default {
       return this.getCookie("NBI_UID");
     },
     submitForm(formName) {
-      let config = {
-        headers: {'Content-Type': 'multipart/form-data'}
-      };
-
-      //处理诊断的表单
-      let tmp = this.infoForm.preDiagnosis
-      let preDiagnosis = ''
-      tmp.forEach(elem => {
-        preDiagnosis = preDiagnosis + elem + ','
-      })
-      tmp = this.infoForm.pathologic
-      let pathologic = ''
-      tmp.forEach(elem => {
-        pathologic = pathologic + elem + ','
-      })
-      tmp = this.infoForm.differentiation
-      let differentiation = ''
-      tmp.forEach(elem => {
-        differentiation = differentiation + elem + ','
-      })
-
-      //处理分化程度的表单
-      let infiltration = this.infoForm.infiltration
-      if (this.infoForm.infiltration === "粘膜下层") {
-        infiltration = this.infoForm.infiltration + this.infoForm.submucosaDepth;
-      }
-
-      let uploadForm = new FormData();
-      uploadForm.append("sampleName", this.infoForm.sampleName)
-      uploadForm.append("partName", this.infoForm.partName)
-      uploadForm.append("preDiagnosis", preDiagnosis)
-      uploadForm.append("pathologic", pathologic)
-      uploadForm.append("cuttingEdge", this.infoForm.cuttingEdge)
-      uploadForm.append("infiltration", infiltration)
-      uploadForm.append("differentiation", differentiation)
-      uploadForm.append("remark", this.infoForm.remark)
-      // 身份识别数据
-      uploadForm.append("uid", this.getUID());
-      uploadForm.append("token", this.getToken());
-      // 图片_id
-      uploadForm.append("_id", this.GID);
-
       // console.log(uploadForm)
       // console.log(this.infoForm)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          let config = {
+            headers: {'Content-Type': 'multipart/form-data'}
+          };
+
+          //处理诊断的表单
+          console.log("处理诊断的表单",this.infoForm)
+          let tmp = this.infoForm.preDiagnosis
+          let preDiagnosis =''
+          tmp.forEach(elem => {
+            preDiagnosis = preDiagnosis + elem + ','
+          })
+          console.log("preDiagnosis",preDiagnosis)
+          tmp = this.infoForm.pathologic
+          let pathologic=''
+          tmp.forEach(elem => {
+            pathologic = pathologic + elem + ','
+          })
+          tmp = this.infoForm.differentiation
+          let differentiation=''
+          tmp.forEach(elem => {
+            differentiation = differentiation + elem + ','
+          })
+          console.log("differentiation",differentiation)
+          //处理分化程度的表单
+          let infiltration = this.infoForm.infiltration
+          if (this.infoForm.infiltration === "粘膜下层") {
+            infiltration = this.infoForm.infiltration + this.infoForm.submucosaDepth;
+          }
+
+          let uploadForm = new FormData();
+          uploadForm.append("sampleName", this.infoForm.sampleName)
+          uploadForm.append("partName", this.infoForm.partName)
+          uploadForm.append("preDiagnosis", preDiagnosis)
+          uploadForm.append("pathologic", pathologic)
+          uploadForm.append("cuttingEdge", this.infoForm.cuttingEdge)
+          uploadForm.append("infiltration", infiltration)
+          uploadForm.append("differentiation", differentiation)
+          uploadForm.append("remark", this.infoForm.remark)
+          // 身份识别数据
+          uploadForm.append("uid", this.getUID());
+          uploadForm.append("token", this.getToken());
+          // 图片_id
+          uploadForm.append("_id", this.GID);
           this.$axios.post('HistoryDetail/modifyInfo/', uploadForm, config).then((response) => {
-            console.log("提交表单2", uploadForm.get("_id"), uploadForm.get("uid"), uploadForm.get("token"))
+            console.log("提交表单2", uploadForm,uploadForm.get("_id"), uploadForm.get("uid"), uploadForm.get("token"))
             if (response.data === 1) {
               this.$message({
                 message: '登录状态错误！请重新登录。',
@@ -244,7 +244,7 @@ export default {
     // 图片_id
     getItemInfoForm.append("gid", this.GID);
 
-    console.log("jiancha", getItemInfoForm.get('uid'), getItemInfoForm.get('token'))
+    // console.log("jiancha", getItemInfoForm.get('uid'), getItemInfoForm.get('token'))
     this.$axios.post("/NBI/HistoryDetail/", getItemInfoForm, {
       headers: {'Content-Type': 'multipart/form-data'}
     }).then((response) => {
@@ -271,15 +271,16 @@ export default {
         }
         if (pathologic) {
           pathologic = pathologic.split(',');
-          this.infoForm.preDiagnosis = preDiagnosis;
+          this.infoForm.pathologic = pathologic;
         }
         if (differentiation) {
           differentiation = differentiation.split(',');
           this.infoForm.differentiation = differentiation;
         }
-        this.infoForm.cuttingEdge = response.data.cuttingEdge - '1';
+        this.infoForm.cuttingEdge = response.data.cuttingEdge === "true";
         this.infoForm.remark = response.data.remark;
-        // console.log("备注", this.infoForm.remark);
+        this.infoForm.infiltration=response.data.infiltration
+        console.log("修改后infoForm", this.infoForm);
       }
     })
   },
