@@ -1,19 +1,22 @@
 <template>
  <el-container>
     <el-aside width="350px">
+      <div style="height: 5%; position: relative; background: #fff; border-right: solid 1px #e6e6e6;"></div>
       <button class="aside-button">
-        <div id="uploadPackageBtn" @click="chooseNewPackage()">
-            <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
-            <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
-        </div>
-        <div style="height: 18%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只能上传zip/rar文件</div>
-        <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
-    </button>
-    <div class="aside-block-title">
+          <div id="uploadPackageBtn" @click="chooseNewPackage()">
+              <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
+              <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
+          </div>
+          <div style="height: 18%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只能上传zip/rar文件</div>
+          <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
+      </button>
+      <div class="aside-block-title">
         批次名称：{{batchTitle}}
       </div>
-    <div class="aside-block">
-        <el-timeline style="height: 353px; margin-top: 15px">
+
+
+      <div class="aside-block">
+        <el-timeline style="margin-top: 55px">
           <el-timeline-item
             v-for="(activity, index) in activities"
             :key="index"
@@ -133,7 +136,7 @@ export default {
   name: "MultiImageProcess",
   data() {
     return {
-      batchTitle: '',
+      // batchTitle: '',
       activities: [{
         content: '上传压缩包',
         timestamp: '2022-09-03 20:46',
@@ -298,24 +301,24 @@ button {
 
 .aside-block {
   position: relative;
-  height: 55%;
-  justify-content: center;
   align-items: center;
   display: flex;
   flex-direction: column;
 }
 
-.aside-block-title {
-  width: 70%;
-  margin-left: 15%;
-  height: 60px;
-  justify-content: start;
+/* .aside-block-title {
+  width: 100%;
+  height: 5%;
+  justify-content: center;
   align-items: center;
   display: flex;
-  color: #2e3857;
-  font-family: 幼圆,serif;
+  color: #9195a3;
   font-weight: bold;
-}
+  background-color: #fff;
+  border-right: solid 1px #e6e6e6;
+  border-bottom: solid 1px #e6e6e6;
+  position: relative;
+} */
 
 .el-header {
   /* color: #fff; */
@@ -347,13 +350,17 @@ button {
   cursor: pointer;
   transition: 0.15s ease;
   border: transparent 2px solid;
-  border-radius: 15px;
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
+  /* background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box; */
   /* background-image: linear-gradient(#fff, #fff), linear-gradient(315deg, #6cc3de 0%, #767ff6 100%); */
   /* color: #6c8ede; */
-  font-weight: bold;
-  box-shadow: 0px 0px 2px #6c8ede inset;
+  /* font-weight: bold; */
+  box-shadow: 0px 0px 2px #409eff inset;
+  border-radius: 3px;
+  background-color: #409eff;
+  color: white;
+  transition: 0.3s ease;
+  overflow: hidden;
 }
 
 .header-button:hover {

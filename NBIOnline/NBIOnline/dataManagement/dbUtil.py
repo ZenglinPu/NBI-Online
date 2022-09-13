@@ -3,7 +3,6 @@ from enum import Enum
 import pymongo
 from ..configLoader import nbi_conf
 
-
 # 用于管理mongodb的链接工具
 
 class NBITABLE(Enum):
@@ -31,21 +30,8 @@ def getTable(conn, table):
         return None
 
 
-global_connection = None
-
-
-# DB连接的封装, 长连接
-def getConnection():
-    global global_connection
-    conf = nbi_conf.configs
-    while global_connection is None:
-        try:
-            if global_connection is not None:
-                global_connection.close()
-            global_connection = pymongo.MongoClient(
+def getConn():
+    conf = nbi_conf
+    return pymongo.MongoClient(
                 'mongodb://{}:{}@{}:{}/?authSource={}'.format(conf['db_user'], conf['db_password'], conf['db_address'], conf['db_port'],
                                                               conf['db_authsource']))
-        except Exception as e:
-            global_connection = None
-
-    return global_connection

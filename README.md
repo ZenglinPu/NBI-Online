@@ -43,6 +43,7 @@ npm install axios
 
 #### 1、项目结构
   - NBI-Online：项目文件夹
+    - conf：外部配置参数文件夹，配置参数以yaml格式存储
     - front：前端文件夹，基于Vue实现
       - dist：自动生成文件，在完全开启后端服务器上部署时，需使用npm run build生成
       - public：html文件
