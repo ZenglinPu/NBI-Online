@@ -1,5 +1,7 @@
 import json
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from ..userManagement.token import tokenCheck
 from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter, saveModification, getBatchHistory
 
@@ -68,6 +70,7 @@ def historyFilter(request):
         return HttpResponse(ret, content_type='application/json')
 
 # 修改信息
+@csrf_exempt
 def modifyInfo(request):
     if request.method == 'POST':
         user = request.POST.get('uid')
