@@ -1,7 +1,7 @@
 from enum import Enum
 
 import pymongo
-
+from ..configLoader import nbi_conf
 
 # 用于管理mongodb的链接工具
 
@@ -31,5 +31,7 @@ def getTable(conn, table):
 
 
 def getConn():
+    conf = nbi_conf
     return pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
+                'mongodb://{}:{}@{}:{}/?authSource={}'.format(conf['db_user'], conf['db_password'], conf['db_address'], conf['db_port'],
+                                                              conf['db_authsource']))
