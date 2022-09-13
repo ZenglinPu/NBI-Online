@@ -22,15 +22,15 @@ const router = new vueRouter({
             component:SingleImage,
         },
         {
-            path:"/ImageProcess",
+            path:"/imageProcess",
             component:SingleImage,
         },
         {
-            path:"/ImageProcess/SingleImage",
+            path:"/imageProcess/SingleImage",
             component:SingleImage,
         },
         {
-            path:"/ImageProcess/MultiImage",
+            path:"/imageProcess/MultiImage",
             component:MultiImage,
         },
         {
