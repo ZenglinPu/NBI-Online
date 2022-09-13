@@ -30,7 +30,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="浸润深度" prop="infiltration">
-      <el-input style="width: 310px" placeholder="仅粘膜下层需文本录入(单位μm)" :disabled="submucosaSelected"
+      <el-input style="width: 320px" placeholder="仅粘膜下层需文本录入" :disabled="submucosaSelected"
                 v-model="infoForm.submucosaDepth"
                 class="input-with-select">
         <el-select style="width: 108px" id="infiltrationSelector" v-model="infoForm.infiltration" slot="prepend"
@@ -40,6 +40,7 @@
           <el-option label="粘膜肌层" value="粘膜肌层"></el-option>
           <el-option label="粘膜下层" value="粘膜下层"></el-option>
         </el-select>
+        <template slot="append">μm</template>
       </el-input>
     </el-form-item>
     <el-form-item label="分化程度" prop="differentiation">
@@ -163,8 +164,6 @@ export default {
       return this.getCookie("NBI_UID");
     },
     submitForm(formName) {
-      // console.log(uploadForm)
-      // console.log(this.infoForm)
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -173,24 +172,25 @@ export default {
           };
 
           //处理诊断的表单
-          console.log("处理诊断的表单",this.infoForm)
           let tmp = this.infoForm.preDiagnosis
           let preDiagnosis =''
           tmp.forEach(elem => {
             preDiagnosis = preDiagnosis + elem + ','
           })
-          console.log("preDiagnosis",preDiagnosis)
+          preDiagnosis=preDiagnosis.slice(0,-1)
+
           tmp = this.infoForm.pathologic
           let pathologic=''
           tmp.forEach(elem => {
             pathologic = pathologic + elem + ','
           })
+          pathologic=pathologic.slice(0,-1)
           tmp = this.infoForm.differentiation
           let differentiation=''
           tmp.forEach(elem => {
             differentiation = differentiation + elem + ','
           })
-          console.log("differentiation",differentiation)
+          differentiation=differentiation.slice(0,-1)
           //处理分化程度的表单
           let infiltration = this.infoForm.infiltration
           if (this.infoForm.infiltration === "粘膜下层") {
@@ -212,7 +212,6 @@ export default {
           // 图片_id
           uploadForm.append("_id", this.GID);
           this.$axios.post('HistoryDetail/modifyInfo/', uploadForm, config).then((response) => {
-            console.log("提交表单2", uploadForm,uploadForm.get("_id"), uploadForm.get("uid"), uploadForm.get("token"))
             if (response.data === 1) {
               this.$message({
                 message: '登录状态错误！请重新登录。',
@@ -244,7 +243,6 @@ export default {
     // 图片_id
     getItemInfoForm.append("gid", this.GID);
 
-    // console.log("jiancha", getItemInfoForm.get('uid'), getItemInfoForm.get('token'))
     this.$axios.post("/NBI/HistoryDetail/", getItemInfoForm, {
       headers: {'Content-Type': 'multipart/form-data'}
     }).then((response) => {
@@ -279,7 +277,14 @@ export default {
         }
         this.infoForm.cuttingEdge = response.data.cuttingEdge === "true";
         this.infoForm.remark = response.data.remark;
-        this.infoForm.infiltration=response.data.infiltration
+
+        let tmp =response.data.infiltration
+        if(tmp.slice(0,4)==="粘膜下层"){
+          this.infoForm.submucosaDepth=tmp.slice(4)
+          this.infoForm.infiltration="粘膜下层"
+        }else{
+          this.infoForm.infiltration=response.data.infiltration
+        }
         console.log("修改后infoForm", this.infoForm);
       }
     })
