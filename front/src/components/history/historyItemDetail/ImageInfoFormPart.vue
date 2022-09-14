@@ -131,6 +131,7 @@ export default {
       this.fromAdjust.luminosityOffset = data.luminosityOffset;
       this.fromAdjust.saturationOffset = data.saturationOffset;
     });
+    this.getLastAdjustArg()
   },
   beforeDestroy() {
     // this.$bus.$off("getUploadedInfo");
@@ -238,6 +239,7 @@ export default {
       let getLastAdjustArgForm= new FormData();
       getLastAdjustArgForm.append("token", this.getToken());
       getLastAdjustArgForm.append("user", this.getUID());
+      getLastAdjustArgForm.append("gid", this.GID);
       this.$axios.post("/NBI/Image/getLastAdjustArg/",getLastAdjustArgForm, config).then((response) => {
         if (response.data === 1) {
           this.$message({
@@ -246,8 +248,12 @@ export default {
             type: 'error'
           });
         } else {
-          this.channelOffset=response.data
-          console.log("getLastAdjustArgForm中拿到的数据",response.data)
+          console.log("getLastAdjustArg得到的数据是",response.data)
+          this.channelOffset=response.data.channelOffset;
+          this.brightnessOffset=response.data.light;
+          this.fromAdjust.contrastOffset=response.data.contrast;
+          this.fromAdjust.saturationOffset=response.data.saturation
+
         }
       });
     }

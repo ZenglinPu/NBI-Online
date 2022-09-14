@@ -17,6 +17,7 @@ urlpatterns = [
     path(r'NBI/Image/upload/', uploadImage, name='uploadImage'),
     path(r'NBI/Image/getResult/', updateInputAndGetNBI, name='inputUpdate'),
     path(r'NBI/Image/chooseLastImage/', chooseLastImage, name='chooseLastImage'),
+    path(r'NBI/Image/getLastAdjustArg/',getLastAdjustArg, name='getLastAdjustArg'),
 
     # """User"""
     path(r"NBI/User/register/sendEmail", sendValidCodeEmail, name="validCodeEmail"),
@@ -37,7 +38,7 @@ urlpatterns = [
     path(r'NBI/History/deleteImage/', deleteHistoryImage, name="deleteOneImage"),
     path(r'NBI/History/getHistoryWithFilter/', historyFilter),
     path(r'NBI/History/batchDisplay/', batchDisplay, name='batchDisplay'),
-    path(r'NBI/History/getLastAdjustArg/',getLastAdjustArg, name='getLastAdjustArg'),
+
 
     # """Batch Processing"""
     path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
