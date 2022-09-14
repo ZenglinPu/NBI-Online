@@ -2,9 +2,12 @@
  <el-container>
     <el-aside width="350px">
       <div class="aside-button">
-        <div id="uploadPackageBtn" @click="chooseNewPackage()">
+        <div v-show="!isUploaded" class="uploadPackageBtn" @click="chooseNewPackage()">
           <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
           <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
+        </div>
+        <div v-show="isUploaded" class="uploadPackageBtn">
+          <img style="height: 45%" src="/static/img/packageIcon.png">
         </div>
         <div style="height: 10%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只支持上传zip文件</div>
         <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
@@ -141,14 +144,18 @@ export default {
   data() {
     return {
       batchTitle: '',
+      batchID: '',
+      isUploaded: false,
       activities: [
       {
         content: '等待上传',
         size: 'large',
         type: 'primary',
-        icon: 'el-icon-check',
-        color: '#0bbd87'
-        // color: '#0bbd87'
+        icon: 'el-icon-close',
+        // icon: 'el-icon-check',
+        color: '#ff9854',
+        // color: '#0bbd87',
+        // color: '#0bbd87',
       }, {
         content: '上传压缩包',
         timestamp: '',
@@ -225,12 +232,90 @@ export default {
     chooseNewPackage(){
       this.$refs.compressPackageInput.click();
     },
+    startCheckBatchStatus(){
+      setInterval(()=>{
+          let statusCheckForm = new FormData();
+          // 身份识别数据
+          statusCheckForm.append("uid", this.getUID());
+          statusCheckForm.append("token", this.getToken());
+          statusCheckForm.append("batchID", this.batchID);
+          this.$axios.post("/NBI/Batch/checkStatus/",statusCheckForm,{
+             headers: {'Content-Type': 'multipart/form-data'}
+          }).then((response) => {
+            if (response.data.status === 1){
+              // 上传中
+              this.activities[1].color = "#ff9854";
+              this.activities[1].icon = 'el-icon-loading';
+            }
+            if (response.data.status === 2){
+              // 上传完成，检查中
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#ff9854";
+              this.activities[2].icon = 'el-icon-loading';
+            }
+            if (response.data.status === 3){
+              // 检查失败
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#ff9854";
+              this.activities[2].icon = 'el-icon-close';
+              this.activities[2].content = "检查失败，压缩包不符合要求";
+            }
+            if (response.data.status === 4 || response.data.status === 5){
+              // 检查通过，处理中
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#0bbd87";
+              this.activities[2].icon = 'el-icon-check';
+              this.activities[2].timestamp = response.data.checkTime;
+
+              this.activities[3].color = "#ff9854";
+              this.activities[3].icon = 'el-icon-loading';
+              this.activities[3].content = "处理图片组("+response.data.processedNum+"/"+response.data.batchSize+")";
+            }
+            if (response.data.status === 6){
+              // 处理完成
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#0bbd87";
+              this.activities[2].icon = 'el-icon-check';
+              this.activities[2].timestamp = response.data.checkTime;
+
+              this.activities[3].color = "#0bbd87";
+              this.activities[3].icon = 'el-icon-check';
+              this.activities[3].content = "处理图片组("+response.data.processedNum+"/"+response.data.batchSize+")";
+
+              this.activities[4].color = "#0bbd87";
+              this.activities[4].icon = "el-icon-check";
+            }
+          })
+      }, 5000);
+    },
     uploadNewPackage(){
       let packageUploadForm = new FormData();
       // 身份识别数据
       packageUploadForm.append("uid", this.getUID());
       packageUploadForm.append("token", this.getToken());
       // 压缩包
+      if (this.$refs.compressPackageInput.files[0].name.split('.')[1] !== "zip"){
+        this.$message({
+            showClose: true,
+            message: '仅支持上传zip格式的压缩文件',
+            type: 'error'
+          });
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+          return;
+      }
       packageUploadForm.append("package", this.$refs.compressPackageInput.files[0]);
 
       this.$refs.uploadPackageIcon.className = "el-icon-loading";
@@ -240,15 +325,34 @@ export default {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
-          this.$message.error("账户信息错误，上传失败！");
+          this.$message({
+            showClose: true,
+            message: '账户信息错误，上传失败！',
+            type: 'error'
+          });
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+        }
+        if (response.data === 2){
+          this.$message({
+            showClose: true,
+            message: '未能成功获取压缩包数据！',
+            type: 'error'
+          });
           this.$refs.uploadPackageIcon.className = "el-icon-upload";
           this.$refs.uploadPackageFont.innerHTML = "点击上传";
         }
         else{
-          console.log(response);
+          // console.log(response.data);
+          this.batchTitle = response.data.batchName;
+          this.batchID = response.data.batchID
+          this.isUploaded = true;
+          this.activities[0].icon = "el-icon-check";
+          this.activities[0].color = "#0bbd87";
+          this.startCheckBatchStatus();
         }
       });
-    }
+    },
   },
   computed: {
     url(){
@@ -270,7 +374,7 @@ button {
 	outline: none;
 }
 
-#uploadPackageBtn{
+.uploadPackageBtn{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -285,7 +389,7 @@ button {
   transition: 0.3s ease;
 }
 
-#uploadPackageBtn:hover{
+.uploadPackageBtn:hover{
   border: 2px #004c94 dashed;
   background-color: #ffffff;
 }

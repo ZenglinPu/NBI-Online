@@ -299,3 +299,19 @@ def getBatchHistory(user, currentPage, pageCount):
     ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
     # conn.close()
     return ret
+
+
+# 根据_id查询一个批次的状态信息，包括当前的处理状态，以及一些时间戳
+def getBatchStatusByID(_id):
+    conn = getConnection()
+    table_batch = getTable(conn, NBITABLE.BatchProcess)
+    info = table_batch.find_one({'_id': _id})
+    ret = {
+        'status': info.get('status'),
+        'uploadTime': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(info.get('uploadTime'))),
+        'checkTime': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(info.get('checkTime'))),
+        'finishTime': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(info.get('finishTime'))),
+        'batchSize': info.get('batchSize'),
+        'processedNum': info.get('processedNum'),
+    }
+    return ret

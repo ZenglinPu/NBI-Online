@@ -40,6 +40,6 @@ urlpatterns = [
 
     # """Batch Processing"""
     path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
-    path(r"NBI/Batch/checkStatus", getBatchStatus, name="get batch status by batch id"),
-    path(r"NBI/Batch/getInitImage", getInitImageInfo, name="get batch info after passing package check"),
+    path(r"NBI/Batch/checkStatus/", getBatchStatus, name="get batch status by batch id"),
+    path(r"NBI/Batch/getOriginImage/", getInitImageInfo, name="get batch info after passing package check"),
 ]
