@@ -132,10 +132,20 @@ export default {
       this.fromAdjust.saturationOffset = data.saturationOffset;
     });
     this.getLastAdjustArg()
+    this.$bus.$on("sendLastArg",()=>{
+      const toSend = {
+        "contrastOffset": this.fromAdjust.contrastOffset,
+        "luminosityOffset": this.fromAdjust.luminosityOffset,
+        "saturationOffset": this.fromAdjust.saturationOffset,
+      };
+      //发送数据到send
+      this.$bus.$emit("getlastArg", toSend);
+    })
   },
   beforeDestroy() {
     // this.$bus.$off("getUploadedInfo");
     this.$bus.$off("getAdjustImageInfo");
+    this.$bus.$off("sendLastArg");
   },
   methods: {
     // cookie
@@ -238,7 +248,7 @@ export default {
       };
       let getLastAdjustArgForm= new FormData();
       getLastAdjustArgForm.append("token", this.getToken());
-      getLastAdjustArgForm.append("user", this.getUID());
+      getLastAdjustArgForm.append("uid", this.getUID());
       getLastAdjustArgForm.append("gid", this.GID);
       this.$axios.post("/NBI/Image/getLastAdjustArg/",getLastAdjustArgForm, config).then((response) => {
         if (response.data === 1) {
@@ -252,7 +262,8 @@ export default {
           this.channelOffset=response.data.channelOffset;
           this.brightnessOffset=response.data.light;
           this.fromAdjust.contrastOffset=response.data.contrast;
-          this.fromAdjust.saturationOffset=response.data.saturation
+          this.fromAdjust.saturationOffset=response.data.saturation;
+          this.fromAdjust.luminosityOffset=response.data.light;
 
         }
       });
