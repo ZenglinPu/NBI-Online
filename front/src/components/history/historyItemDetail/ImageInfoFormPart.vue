@@ -117,7 +117,6 @@ export default {
         saturationOffset: 0,
       },
       recordRealResult: "",
-      isShowResult: false,
       imageResultSrc: "",
     }
   },
@@ -157,7 +156,7 @@ export default {
     //   // 发送信号给send让他调用我的事件，传输数据
     //   this.$bus.$emit("sendUploadedInfoToGet");
     // },
-    //获取下方对比度等信息
+    //获取对比度等信息
     getAdjustImageInfo() {
       this.$bus.$emit("sendAdjustImageInfo");
     },
@@ -232,6 +231,26 @@ export default {
       };
       this.$bus.$emit("getAdjustImage", toSend)
     },
+    getLastAdjustArg(){
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      };
+      let getLastAdjustArgForm= new FormData();
+      getLastAdjustArgForm.append("token", this.getToken());
+      getLastAdjustArgForm.append("user", this.getUID());
+      this.$axios.post("/NBI/Image/getLastAdjustArg/",getLastAdjustArgForm, config).then((response) => {
+        if (response.data === 1) {
+          this.$message({
+            showClose: true,
+            message: '登录状态错误！',
+            type: 'error'
+          });
+        } else {
+          this.channelOffset=response
+          console.log("getLastAdjustArgForm中拿到的数据",response.data)
+        }
+      });
+    }
   }
 }
 </script>

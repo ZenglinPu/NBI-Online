@@ -261,3 +261,13 @@ def historyImgInfo(request):
         return HttpResponse(ret, content_type="application/json")
     else:
         return HttpResponse(2)
+
+@csrf_exempt
+def getLastAdjustArg(request):
+    if request.method == "POST":
+        user = request.POST.get("uid")
+        token = request.POST.get("token")
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
