@@ -30,7 +30,6 @@ def batchUpload_compress(request):
 
     # 开始配对处理检查，同时更新数据库
 
-
     return HttpResponse(3)
 
 

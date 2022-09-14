@@ -1,33 +1,37 @@
 <template>
  <el-container>
     <el-aside width="350px">
-      <div style="height: 5%; position: relative; background: #fff; border-right: solid 1px #e6e6e6;"></div>
-      <button class="aside-button">
-          <div id="uploadPackageBtn" @click="chooseNewPackage()">
-              <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
-              <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
-          </div>
-          <div style="height: 18%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只能上传zip/rar文件</div>
-          <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
-      </button>
-      <div class="aside-block-title">
-        批次名称：{{batchTitle}}
+      <div class="aside-button">
+        <div id="uploadPackageBtn" @click="chooseNewPackage()">
+          <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
+          <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
+        </div>
+        <div style="height: 10%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只支持上传zip文件</div>
+        <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
+        <div style="width: 80%;height: 10%;margin-bottom: 10px; font-family: 幼圆,serif; display: flex;align-items: center;justify-content: start;font-weight: bold">
+          批次名称：{{batchTitle}}
+        </div>
       </div>
 
-
       <div class="aside-block">
-        <el-timeline style="margin-top: 55px">
-          <el-timeline-item
-            v-for="(activity, index) in activities"
-            :key="index"
-            :icon="activity.icon"
-            :type="activity.type"
-            :color="activity.color"
-            :size="activity.size"
-            :timestamp="activity.timestamp">
-            {{activity.content}}
-          </el-timeline-item>
-        </el-timeline>
+        <div style="width: 80%;height: 18%; font-family: 幼圆,serif; display: flex;align-items: center;justify-content: start;font-weight: bold">
+          批次状态：
+        </div>
+        <div style="width: 80%;height: 82%; display: flex;justify-content: start;align-items: center">
+          <el-timeline style="font-family: 幼圆,serif">
+            <el-timeline-item
+              v-for="(activity, index) in activities"
+              :key="index"
+              :icon="activity.icon"
+              :type="activity.type"
+              :color="activity.color"
+              :size="activity.size"
+              :timestamp="activity.timestamp">
+              &emsp;{{activity.content}}
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+
       </div>
     </el-aside>
     <el-container>
@@ -136,42 +140,43 @@ export default {
   name: "MultiImageProcess",
   data() {
     return {
-      // batchTitle: '',
-      activities: [{
-        content: '上传压缩包',
-        timestamp: '2022-09-03 20:46',
+      batchTitle: '',
+      activities: [
+      {
+        content: '等待上传',
         size: 'large',
         type: 'primary',
         icon: 'el-icon-check',
         color: '#0bbd87'
+        // color: '#0bbd87'
+      }, {
+        content: '上传压缩包',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        color: '#ff4747'
       }, {
         content: '检查压缩包',
-        timestamp: '2022-09-03 20:46',
+        timestamp: '',
         size: 'large',
         type: 'primary',
-        icon: 'el-icon-check',
-        color: '#0bbd87'
+        icon: 'el-icon-close',
+        color: '#ff4747'
       },{
-        content: '处理图片组（18/18）',
-        timestamp: '2022-09-03 20:46',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-check',
-        color: '#0bbd87'
-      }, {
-        content: '打包处理结果',
+        content: '处理图片组',
         timestamp: '',
         size: 'large',
         type: 'primary',
-        icon: 'el-icon-loading',
+        icon: 'el-icon-close',
+        color: '#ff4747'
+      }, {
+        content: '处理完成',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
         color: '#ff9854'
-      }, {
-        content: '',
-        timestamp: '',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-more',
-        color: '#808080'
       }],
       tableData: [{
         name: '王小虎',
@@ -288,7 +293,7 @@ button {
 .aside-button {
   overflow: hidden;
   width: 100%;
-  height: 35%;
+  height: 45%;
   display: flex;
   justify-content: start;
   align-items: center;
@@ -300,34 +305,14 @@ button {
 }
 
 .aside-block {
-  position: relative;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-}
-
-/* .aside-block-title {
+  overflow: hidden;
   width: 100%;
-  height: 5%;
-  justify-content: center;
-  align-items: center;
+  height: 55%;
   display: flex;
-  color: #9195a3;
-  font-weight: bold;
-  background-color: #fff;
-  border-right: solid 1px #e6e6e6;
-  border-bottom: solid 1px #e6e6e6;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
   position: relative;
-} */
-
-.el-header {
-  /* color: #fff; */
-  text-align: center;
-  height: 75px !important;
-  /* background-image: linear-gradient(135deg, #6cc3de 0%, #767ff6 100%); */
-  /* border: #fff solid 7px; */
-  border: #fff solid 7px;
-  /* box-shadow: 0px 0px 8px #fff inset; */
 }
 
 .el-header .header-title {
