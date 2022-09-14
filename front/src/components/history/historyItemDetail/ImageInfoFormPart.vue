@@ -246,7 +246,7 @@ export default {
             type: 'error'
           });
         } else {
-          this.channelOffset=response
+          this.channelOffset=response.data
           console.log("getLastAdjustArgForm中拿到的数据",response.data)
         }
       });

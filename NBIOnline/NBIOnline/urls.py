@@ -6,7 +6,7 @@ from .batchProcessing.batchRequest import batchUpload_compress, getBatchStatus, 
 from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
-from .imageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo
+from .imageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo,getLastAdjustArg
 from .historyManagement.history import historyDisplay, deleteHistoryImage, historyFilter, modifyInfo, batchDisplay
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     path(r'NBI/History/deleteImage/', deleteHistoryImage, name="deleteOneImage"),
     path(r'NBI/History/getHistoryWithFilter/', historyFilter),
     path(r'NBI/History/batchDisplay/', batchDisplay, name='batchDisplay'),
+    path(r'NBI/History/getLastAdjustArg/',getLastAdjustArg, name='getLastAdjustArg'),
 
     # """Batch Processing"""
     path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
