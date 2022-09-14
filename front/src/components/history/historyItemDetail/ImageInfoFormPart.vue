@@ -1,34 +1,36 @@
 <template>
   <div id="imgShowPart">
-    <div class="imgPart_inner" style="height: 340px;margin-top: 10px;">
+    <div class="imgPart_inner" style="height: 340px;margin-top: 5px;">
       <div style="width: 100%;height:100%;display:flex;justify-content: left;">
-          <el-scrollbar id="additionInfoForm" style="height: 100%; padding-top: 10px;"> <!-- 滚动条 -->
-            <HistoryImageInfo :GID="this.GID"></HistoryImageInfo>
-          </el-scrollbar><!-- /滚动条 -->
+        <el-scrollbar id="additionInfoForm" style="height: 100%; padding-top: 10px;">
+          <!-- 滚动条 -->
+          <HistoryImageInfo :GID="this.GID"></HistoryImageInfo>
+        </el-scrollbar><!-- /滚动条 -->
         <div id="mainControlPart">
+          <div id="generateBtn">
+            <el-popover placement="top-start" width="100" trigger="hover" content="可设置对比度、亮度等信息调整图片">
+              <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
+                icon="el-icon-link" circle></el-button>
+            </el-popover>
+            <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
+            <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">调整图片</button>
+          </div>
           <div id="mainControlBtn">
             <div
-                style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
-              <el-popover
-                  placement="top-start"
-                  width="100"
-                  trigger="hover"
-                  content="使用后台算法自动调整输入图片强度，避免因为输入图片亮度不统一而造成的色彩偏移问题。">
+              style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+              <el-popover placement="top-start" width="100" trigger="hover"
+                content="使用后台算法自动调整输入图片强度，避免因为输入图片亮度不统一而造成的色彩偏移问题。">
                 <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                           icon="el-icon-link" circle></el-button>
+                  icon="el-icon-link" circle></el-button>
               </el-popover>
               <p style="font-family: 幼圆,serif;">自动调整通道</p>
               <input type="checkbox" ref="isAutoChannel">
             </div>
             <div
-                style="margin-top: 25px;font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
-              <el-popover
-                  placement="top-start"
-                  width="100"
-                  trigger="hover"
-                  content="自动调整最终生成图片的亮度，更适合观察">
+              style="margin-top: 25px;font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+              <el-popover placement="top-start" width="100" trigger="hover" content="自动调整最终生成图片的亮度，更适合观察">
                 <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                           icon="el-icon-link" circle></el-button>
+                  icon="el-icon-link" circle></el-button>
               </el-popover>
               <p style="font-family: 幼圆,serif;">自动调整亮度</p>
               <input type="checkbox" ref="isAutoBrightness">
@@ -37,47 +39,43 @@
           <div id="mainControlRange">
             <div class="mainControlRange_container">
               <div
-                  style="width: 85%;height: 30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
+                style="width: 85%;height: 30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
                 <p style="font-family: 幼圆,serif;">通道偏移调整：</p>
                 <div style="width: 30px;height: 100%;display: flex;justify-content: start;align-items: center">
                   <p style="color: #2244CC">{{ channelOffset }}</p>
                 </div>
-                <el-popover
-                    placement="top-start"
-                    width="100"
-                    trigger="hover"
-                    content="通道偏移，手动调整输入图片强度，在自动调整的基础上可以进一步修改。">
+                <el-popover placement="top-start" width="100" trigger="hover"
+                  content="通道偏移，手动调整输入图片强度，在自动调整的基础上可以进一步修改。">
                   <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                             icon="el-icon-link" circle></el-button>
+                    icon="el-icon-link" circle></el-button>
                 </el-popover>
               </div>
               <div style="width:85%; height: 50%;display: flex;flex-direction: column;">
                 <div style="width:100%; height: 30%;display: flex;flex-direction: row;">
-                  <p style="height: 100%;font-size: small;width: 50%;text-align: left;color: rgb(255, 33, 33);font-family: Arial, Helvetica, sans-serif;">
+                  <p
+                    style="height: 100%;font-size: small;width: 50%;text-align: left;color: rgb(255, 33, 33);font-family: Arial, Helvetica, sans-serif;">
                     红色增强</p>
-                  <p style="height: 100%;font-size: small;width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">
+                  <p
+                    style="height: 100%;font-size: small;width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">
                     青色增强</p>
                 </div>
                 <div
-                    style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
+                  style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
                   <input type="range" id="channelAdjustRange" min="-30" max="30" v-model="channelOffset">
                 </div>
               </div>
             </div>
             <div class="mainControlRange_container">
               <div
-                  style="width: 85%;height:30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
+                style="width: 85%;height:30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
                 <p style="font-family: 幼圆,serif;">亮度偏移调整：</p>
                 <div style="width: 30px;height: 100%;display: flex;justify-content: start;align-items: center">
                   <p style="color: #2244CC">{{ brightnessOffset }}</p>
                 </div>
-                <el-popover
-                    placement="top-start"
-                    width="100"
-                    trigger="hover"
-                    content="亮度偏移，调整最终生成图片的亮度，在自动调整的基础上可以进一步修改。">
+                <el-popover placement="top-start" width="100" trigger="hover"
+                  content="亮度偏移，调整最终生成图片的亮度，在自动调整的基础上可以进一步修改。">
                   <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                             icon="el-icon-link" circle></el-button>
+                    icon="el-icon-link" circle></el-button>
                 </el-popover>
               </div>
               <div style="width:85%; height: 50%;display: flex;flex-direction: column;">
@@ -86,9 +84,9 @@
                   <p style="width: 50%;text-align: right;font-family: Arial, Helvetica, sans-serif;">提高亮度</p>
                 </div>
                 <div
-                    style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
+                  style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
                   <input type="range" id="brightnessAdjustRange" class="checke" min="-80" max="80"
-                         v-model="brightnessOffset">
+                    v-model="brightnessOffset">
                 </div>
               </div>
             </div>
@@ -103,15 +101,15 @@
 import HistoryImageInfo from "@/components/history/historyItemDetail/HistoryImageInfo";
 
 export default {
-  name: "singleImageInfoAdjustPart",
-  components: {HistoryImageInfo},
+  name: "ImageInfoFormPart",
+  components: { HistoryImageInfo },
   props: ['GID'],
   data() {
     return {
       channelOffset: 0,
       brightnessOffset: 0,
       isGenerating: false,
-      isUploaded_fromSend: false,
+      isUploaded_fromSend: true,
       fromAdjust: {
         isOpen: false,
         contrastOffset: 0,
@@ -124,9 +122,10 @@ export default {
     }
   },
   mounted() {
-    this.$bus.$on("getUploadedInfo", (data) => {
-      this.isUploaded_fromSend = data;
-    });
+    //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
+    // this.$bus.$on("getUploadedInfo", (data) => {
+    //   this.isUploaded_fromSend = data;
+    // });
     this.$bus.$on("getAdjustImageInfo", (data) => {
       this.fromAdjust.isOpen = data.isOpen;
       this.fromAdjust.contrastOffset = data.contrastOffset;
@@ -135,7 +134,7 @@ export default {
     });
   },
   beforeDestroy() {
-    this.$bus.$off("getUploadedInfo");
+    // this.$bus.$off("getUploadedInfo");
     this.$bus.$off("getAdjustImageInfo");
   },
   methods: {
@@ -154,15 +153,16 @@ export default {
     getUID() {
       return this.getCookie("NBI_UID");
     },
-    checkUploaded() {
-      // 发送信号给send让他调用我的事件，传输数据
-      this.$bus.$emit("sendUploadedInfoToGet");
-    },
+    // checkUploaded() {
+    //   // 发送信号给send让他调用我的事件，传输数据
+    //   this.$bus.$emit("sendUploadedInfoToGet");
+    // },
+    //获取下方对比度等信息
     getAdjustImageInfo() {
       this.$bus.$emit("sendAdjustImageInfo");
     },
     getResultImage() {
-      this.checkUploaded();
+      // this.checkUploaded();
       if (!this.isUploaded_fromSend) {
         this.$message({
           showClose: true,
@@ -196,7 +196,7 @@ export default {
         getResultForm.append("mode", "full");
       }
       let config = {
-        headers: {'Content-Type': 'multipart/form-data'}
+        headers: { 'Content-Type': 'multipart/form-data' }
       };
       this.$axios.post("/NBI/Image/getResult/", getResultForm, config).then((response) => {
         if (response.data === 1) {
@@ -205,7 +205,7 @@ export default {
             message: '登录状态错误！',
             type: 'error'
           });
-          this.$bus.$emit("changeStatus", {status: false, uname: ''});
+          this.$bus.$emit("changeStatus", { status: false, uname: '' });
         } else if (response.data === 2) {
           this.$message({
             showClose: true,
@@ -219,56 +219,27 @@ export default {
             type: 'error'
           });
         } else {
-          this.showResultImage(response.data);
+          this.updatePageNBIImage(response.data);
+          console.log("ImageInfoForm中拿到的数据",response.data)
         }
         this.isGenerating = false;
       });
     },
-    downloadResult() {
-      // 检查是否存在生成图片
-      if (this.recordRealResult === "") {
-        this.$message({
-          showClose: true,
-          message: '请先点击生成图片！',
-          type: 'error'
-        });
-        return -1;
-      }
-      if (this.recordRealResult === -1) {
-        this.$message({
-          showClose: true,
-          message: '您不是高级用户，仅有高级用户享有下载无压缩图片的权力',
-          type: 'error'
-        });
-        this.$bus.$emit('showNoDownloadInfo');
-        return -1;
-      }
-      this.$message({
-        showClose: true,
-        message: '已开始下载。',
-        type: 'success',
-      });
-      this.downloadImage("/static/Data/NBI/" + this.recordRealResult, "resultNBI.jpg");
-    },
-    downloadImage(imgSrc, fileName) {
-      let alink = document.createElement("a");
-      alink.href = imgSrc;
-      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
-      alink.click();
-    },
-    showResultImage(data) {
-      this.isShowResult = true;
-      this.imageResultSrc = "/static/Data/Temp/" + data.showImage;
-      this.recordRealResult = data.resultImage;
+    updatePageNBIImage(data) {
+      this.imageResultSrc=data.resultImage;
+      const toSend = {
+        "imageNBIName": data.resultImage,
+      };
+      this.$bus.$emit("getAdjustImage", toSend)
     },
   }
 }
 </script>
 
 <style scoped>
-
 #brightnessAdjustRange {
-  background-image: linear-gradient(to right, rgb(0, 0, 0, 1), rgba(160, 160, 160, 0.2));;
+  background-image: linear-gradient(to right, rgb(0, 0, 0, 1), rgba(160, 160, 160, 0.2));
+  ;
   border-radius: 10px;
   width: 100%;
   -webkit-appearance: none;
@@ -276,7 +247,8 @@ export default {
 }
 
 #channelAdjustRange {
-  background-image: linear-gradient(to right, rgb(183, 0, 0), rgb(0, 234, 255));;
+  background-image: linear-gradient(to right, rgb(183, 0, 0), rgb(0, 234, 255));
+  ;
   border-radius: 10px;
   width: 100%;
   -webkit-appearance: none;
@@ -317,6 +289,16 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
+#generateBtn {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  /*flex-direction: column;*/
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px grey solid;
+}
+
 #mainControlBtn {
   width: 100%;
   height: 25%;
@@ -329,12 +311,13 @@ input[type="checkbox"] {
 
 #mainControlRange {
   width: 100%;
-  height: 75%;
+  height: 60%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
 }
+
 
 #additionInfoForm {
   width: 70%;
@@ -360,4 +343,20 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+#getResultImage {
+  height: 70%;
+  width: 50%;
+  margin-left: 3%;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: #409eff;
+  color: white;
+  transition: 0.3s ease;
+  overflow: hidden;
+}
+
+#getResultImage:hover {
+  background-color: rgba(56, 56, 56, 0.78);
+  color: #edecd6;
+}
 </style>
