@@ -224,7 +224,7 @@ export default {
               });
             } else {
               alert('submit!');
-              console.log(response.data)
+              // console.log(response.data)
             }
           });
         } else {
@@ -257,7 +257,7 @@ export default {
           type: 'warning'
         });
       } else {
-        console.log("图片详情后端", response.data)
+        // console.log("图片详情后端", response.data)
         this.infoForm.sampleName = response.data.sampleName;
         this.infoForm.partName = response.data.part;
         let preDiagnosis = response.data.preDiagnosis;
@@ -285,7 +285,7 @@ export default {
         }else{
           this.infoForm.infiltration=response.data.infiltration
         }
-        console.log("修改后infoForm", this.infoForm);
+        // console.log("修改后infoForm", this.infoForm);
       }
     })
   },

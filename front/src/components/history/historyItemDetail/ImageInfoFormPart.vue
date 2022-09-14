@@ -117,7 +117,6 @@ export default {
         saturationOffset: 0,
       },
       recordRealResult: "",
-      isShowResult: false,
       imageResultSrc: "",
     }
   },
@@ -132,10 +131,21 @@ export default {
       this.fromAdjust.luminosityOffset = data.luminosityOffset;
       this.fromAdjust.saturationOffset = data.saturationOffset;
     });
+    this.getLastAdjustArg()
+    this.$bus.$on("sendLastArg",()=>{
+      const toSend = {
+        "contrastOffset": this.fromAdjust.contrastOffset,
+        "luminosityOffset": this.fromAdjust.luminosityOffset,
+        "saturationOffset": this.fromAdjust.saturationOffset,
+      };
+      //发送数据到send
+      this.$bus.$emit("getlastArg", toSend);
+    })
   },
   beforeDestroy() {
     // this.$bus.$off("getUploadedInfo");
     this.$bus.$off("getAdjustImageInfo");
+    this.$bus.$off("sendLastArg");
   },
   methods: {
     // cookie
@@ -157,7 +167,7 @@ export default {
     //   // 发送信号给send让他调用我的事件，传输数据
     //   this.$bus.$emit("sendUploadedInfoToGet");
     // },
-    //获取下方对比度等信息
+    //获取对比度等信息
     getAdjustImageInfo() {
       this.$bus.$emit("sendAdjustImageInfo");
     },
@@ -232,6 +242,32 @@ export default {
       };
       this.$bus.$emit("getAdjustImage", toSend)
     },
+    getLastAdjustArg(){
+      let config = {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      };
+      let getLastAdjustArgForm= new FormData();
+      getLastAdjustArgForm.append("token", this.getToken());
+      getLastAdjustArgForm.append("uid", this.getUID());
+      getLastAdjustArgForm.append("gid", this.GID);
+      this.$axios.post("/NBI/Image/getLastAdjustArg/",getLastAdjustArgForm, config).then((response) => {
+        if (response.data === 1) {
+          this.$message({
+            showClose: true,
+            message: '登录状态错误！',
+            type: 'error'
+          });
+        } else {
+          console.log("getLastAdjustArg得到的数据是",response.data)
+          this.channelOffset=response.data.channelOffset;
+          this.brightnessOffset=response.data.light;
+          this.fromAdjust.contrastOffset=response.data.contrast;
+          this.fromAdjust.saturationOffset=response.data.saturation;
+          this.fromAdjust.luminosityOffset=response.data.light;
+
+        }
+      });
+    }
   }
 }
 </script>

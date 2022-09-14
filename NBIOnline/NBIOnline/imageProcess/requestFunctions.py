@@ -261,3 +261,27 @@ def historyImgInfo(request):
         return HttpResponse(ret, content_type="application/json")
     else:
         return HttpResponse(2)
+
+@csrf_exempt
+def getLastAdjustArg(request):
+    if request.method == "POST":
+        user = request.POST.get("uid")
+        token = request.POST.get("token")
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+
+        gid = request.POST.get("gid")
+        imageInfo, imageAdditionInfo = getAllImageInfoBy_id(gid)
+        ret = {
+            "contrast": int(imageInfo.get("contrast")),
+            "light": int(imageInfo.get("light")),
+            "saturation": int(imageInfo.get("saturation")),
+            "channelOffset": int(imageInfo.get("channelOffset"))
+        }
+        ret = json.dumps(ret)
+        return HttpResponse(ret, content_type="application/json")
+    else:
+        # 请求方式错误
+        return HttpResponse(2)
