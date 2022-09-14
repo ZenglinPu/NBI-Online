@@ -333,7 +333,7 @@ export default {
           this.$refs.uploadPackageIcon.className = "el-icon-upload";
           this.$refs.uploadPackageFont.innerHTML = "点击上传";
         }
-        if (response.data === 2){
+        else if (response.data === 2){
           this.$message({
             showClose: true,
             message: '未能成功获取压缩包数据！',
@@ -349,6 +349,9 @@ export default {
           this.isUploaded = true;
           this.activities[0].icon = "el-icon-check";
           this.activities[0].color = "#0bbd87";
+          this.activities[1].icon = "el-icon-loading";
+          this.activities[1].color = "#ff9854";
+
           this.startCheckBatchStatus();
         }
       });

@@ -315,3 +315,9 @@ def getBatchStatusByID(_id):
         'processedNum': info.get('processedNum'),
     }
     return ret
+
+
+# 根据_id查询一个批次所有原始图片，由于很多原始图片很大，这一步可能会很慢
+# 注意，这一步需要在检查完成之后进行，在这一步完成之后才能确保图片都成组，并且已经生成了压缩图片
+def getOriginImage(_id):
+    pass
