@@ -1,7 +1,5 @@
-from doctest import FAIL_FAST
 import time
 import base64
-import pymongo
 import hmac
 from datetime import datetime, timedelta
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
@@ -9,9 +7,6 @@ from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 # 加密获得token的方法
 # 过期时间设置为1个小时
-from ..dataManagement.dbUtil import getConn, getTable, NBITABLE
-
-
 def get_token(key, expire=3600):
     ts_str = str(time.time() + expire)
     ts_byte = ts_str.encode("utf-8")
@@ -63,9 +58,9 @@ def tokenCheck(uid, token):
     conn = getConnection()
     table = getTable(conn, NBITABLE.TokenInfo)
     result = table.find({"UID": uid})
-    conn.close()
     # 找不到，未登录
     if result.count() == 0 or token is None or uid is None:
+        # print("token not found")
         return False
 
     for r in result:
@@ -73,11 +68,18 @@ def tokenCheck(uid, token):
         recordToken = r.get("token")
         # print(recordToken,len(recordToken),token, len(token))
         if not recordToken == token + "=" * (len(recordToken) - len(token)):
+            # print(recordToken)
+            # print(token + "=" * (len(recordToken) - len(token)))
+            # print("token not match")
             return False
         # 判断是否过期
         expiresTime = r.get("expiresTime")
         if not valid_date(expiresTime, datetime.now()):
+            # print("token expires")
             return False
+    # print(recordToken)
+    # print(token + "=" * (len(recordToken) - len(token)))
+    # print("token check pass")
     return True
 
 

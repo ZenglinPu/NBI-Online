@@ -35,7 +35,6 @@ global_connection = None
 
 
 # DB连接的封装, 长连接
-
 def getConnection():
     global global_connection
     conf = nbi_conf.configs

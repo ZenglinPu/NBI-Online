@@ -18,6 +18,7 @@ def compressImage(image, name, rate):
     return cname
 
 
+# 输入django传过来的temp文件，处理并存储
 def storeInputImage(image_blue, image_green, image_white):
     # 将非jpg格式的数据转换成jpg存储
     # jpg格式压缩存储
@@ -182,6 +183,19 @@ def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset
 # 将RAW格式的输入数据转化为jpg储存
 def raw2jpg(image, imageType, name):
     rawImage = rawpy.imread(image.temporary_file_path())
+    thumb = rawImage.extract_thumb()
+    savePath = ""
+    if thumb.format == rawpy.ThumbFormat.JPEG:
+        if imageType == "Blue":
+            savePath = "../NBIOnline/static/Data/Blue/" + name
+        elif imageType == "Green":
+            savePath = "../NBIOnline/static/Data/Green/" + name
+        with open(savePath, 'wb') as f:
+            f.write(thumb.data)
+
+
+def raw2jpg_file(image, imageType, name):
+    rawImage = rawpy.imread(image)
     thumb = rawImage.extract_thumb()
     savePath = ""
     if thumb.format == rawpy.ThumbFormat.JPEG:

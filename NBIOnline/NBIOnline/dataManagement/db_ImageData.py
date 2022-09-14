@@ -1,5 +1,4 @@
 import time
-import pymongo
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 from ..configLoader import nbi_conf
 

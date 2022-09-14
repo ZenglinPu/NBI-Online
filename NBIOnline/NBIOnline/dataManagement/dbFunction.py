@@ -241,18 +241,27 @@ def similar_diff_ratio(str1, str2):
 def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, infiltration, cuttingEdge, remark):
     conn = getConnection()
     table_PhotoAdditionInfo = getTable(conn, NBITABLE.PhotoAdditionInfo)
-    table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {
-        "sampleName": sampleName,
-        "partName": partName,
-        "preDiagnosis": preDiagnosis,
-        "pathologic": pathologic,
-        "differentiation": differentiation,
-        "infiltration": infiltration,
-        "cuttingEdge": cuttingEdge,
-    }})
+    print(table_PhotoAdditionInfo)
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"sampleName": sampleName}})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"part": partName}})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"preDiagnosis": preDiagnosis}})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"pathologic": pathologic}})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"differentiation": differentiation}})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"infiltration": infiltration}})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"cuttingEdge": cuttingEdge}})
+
+    # table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {
+    #     "sampleName": sampleName,
+    #     "partName": partName,
+    #     "preDiagnosis": preDiagnosis,
+    #     "pathologic": pathologic,
+    #     "differentiation": differentiation,
+    #     "infiltration": infiltration,
+    #     "cuttingEdge": cuttingEdge,
+    # }})
     # 如果备注为空就不修改
     if remark is not None:
-        table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {"remark": remark}})
+        table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"remark": remark}})
     # conn.close()
 
 
@@ -290,3 +299,25 @@ def getBatchHistory(user, currentPage, pageCount):
     ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
     # conn.close()
     return ret
+
+
+# 根据_id查询一个批次的状态信息，包括当前的处理状态，以及一些时间戳
+def getBatchStatusByID(_id):
+    conn = getConnection()
+    table_batch = getTable(conn, NBITABLE.BatchProcess)
+    info = table_batch.find_one({'_id': _id})
+    ret = {
+        'status': info.get('status'),
+        'uploadTime': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(info.get('uploadTime'))),
+        'checkTime': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(info.get('checkTime'))),
+        'finishTime': time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(info.get('finishTime'))),
+        'batchSize': info.get('batchSize'),
+        'processedNum': info.get('processedNum'),
+    }
+    return ret
+
+
+# 根据_id查询一个批次所有原始图片，由于很多原始图片很大，这一步可能会很慢
+# 注意，这一步需要在检查完成之后进行，在这一步完成之后才能确保图片都成组，并且已经生成了压缩图片
+def getOriginImage(_id):
+    pass

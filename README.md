@@ -66,6 +66,7 @@ npm install axios
           - NBI：最终生成的NBI图片（无压缩）
           - Temp：供前端展示的高压缩图片
           - White：白色光源下的标本图片，**TODO**尝试使用这个图片来自动矫正通道强度
+          - Batch：刚刚解压缩的图片临时存放地，经过检查后图片不会存放在这里 **TODO**尝试在检查的时候将图片自动识别成组
         - js
      
 #### 2、数据库表
@@ -144,8 +145,13 @@ npm install axios
 | 字段名         | 类型    | 含义                 |
 | -------------- | ------- | ------------------------------------------------------------------------|
 | UID            | String  | 图片提交者的UID                                                           |
-| uploadTime     | Time    | 这一批次的上传时间                                                         |
+| batchName      | String  | 批次的名称                                                                |
+| srcFolderName  | String  | 存放原始图片数据的文件夹名称，其组成为{batchName}_{uid}{rand}                  |
+| uploadTime     | Time    | 这一批次的上传完成的时间                                                    |
+| checkTime      | Time    | 这一批次的解压缩、检查完成（通过或不通过）的时间                                 |
+| finishTime     | Time    | 这一批次的处理完成（处理错误）时间                                            |
 | expireTime     | Time    | 这一批次的过期时间                                                         |
-| imgList        | String  | 这一批次所有图片的_id，字符串形式，中间用|分割，其中每条数据是元组的形式             |
+| imgList        | String  | 这一批次所有图片的_id，字符串形式，中间用','分割，其中每条数据是元组的形式           |
 | batchSize      | Integer | 这一批次的图片组数                                                         |
-| status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成；7-处理失败|
+| processedNum   | Integer | 这一批次已经处理的图片组数                                                   |
+| status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成  |

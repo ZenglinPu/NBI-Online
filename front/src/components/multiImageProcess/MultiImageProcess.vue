@@ -1,37 +1,40 @@
 <template>
  <el-container>
     <el-aside width="350px">
-      <div style="height: 5%; position: relative; background: #fff; border-right: solid 1px #e6e6e6;"></div>
-      <button class="aside-button">
-        <div class="aside-plus">
-          <el-upload
-            class="upload-demo"
-            drag
-            action="/NBI/Batch/upload/compressPack/"
-            :headers="uploadPackageHeaders"
-            >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传zip/rar文件</div>
-          </el-upload>
+      <div class="aside-button">
+        <div v-show="!isUploaded" class="uploadPackageBtn" @click="chooseNewPackage()">
+          <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
+          <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
         </div>
-      </button>
-      <!-- <div class="aside-block-title">
-        批次名称：{{batchTitle}}
-      </div> -->
+        <div v-show="isUploaded" class="uploadPackageBtn">
+          <img style="height: 45%" src="/static/img/packageIcon.png">
+        </div>
+        <div style="height: 10%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只支持上传zip文件</div>
+        <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
+        <div style="width: 80%;height: 10%;margin-bottom: 10px; font-family: 幼圆,serif; display: flex;align-items: center;justify-content: start;font-weight: bold">
+          批次名称：{{batchTitle}}
+        </div>
+      </div>
+
       <div class="aside-block">
-        <el-timeline style="margin-top: 55px">
-          <el-timeline-item
-            v-for="(activity, index) in activities"
-            :key="index"
-            :icon="activity.icon"
-            :type="activity.type"
-            :color="activity.color"
-            :size="activity.size"
-            :timestamp="activity.timestamp">
-            {{activity.content}}
-          </el-timeline-item>
-        </el-timeline>
+        <div style="width: 80%;height: 18%; font-family: 幼圆,serif; display: flex;align-items: center;justify-content: start;font-weight: bold">
+          批次状态：
+        </div>
+        <div style="width: 80%;height: 82%; display: flex;justify-content: start;align-items: center">
+          <el-timeline style="font-family: 幼圆,serif">
+            <el-timeline-item
+              v-for="(activity, index) in activities"
+              :key="index"
+              :icon="activity.icon"
+              :type="activity.type"
+              :color="activity.color"
+              :size="activity.size"
+              :timestamp="activity.timestamp">
+              &emsp;{{activity.content}}
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+
       </div>
     </el-aside>
     <el-container>
@@ -140,42 +143,47 @@ export default {
   name: "MultiImageProcess",
   data() {
     return {
-      // batchTitle: '',
-      activities: [{
-        content: '上传压缩包',
-        timestamp: '2022-09-03 20:46',
+      batchTitle: '',
+      batchID: '',
+      isUploaded: false,
+      activities: [
+      {
+        content: '等待上传',
         size: 'large',
         type: 'primary',
-        icon: 'el-icon-check',
-        color: '#0bbd87'
+        icon: 'el-icon-close',
+        // icon: 'el-icon-check',
+        color: '#ff9854',
+        // color: '#0bbd87',
+        // color: '#0bbd87',
+      }, {
+        content: '上传压缩包',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        color: '#ff4747'
       }, {
         content: '检查压缩包',
-        timestamp: '2022-09-03 20:46',
+        timestamp: '',
         size: 'large',
         type: 'primary',
-        icon: 'el-icon-check',
-        color: '#0bbd87'
+        icon: 'el-icon-close',
+        color: '#ff4747'
       },{
-        content: '处理图片组（18/18）',
-        timestamp: '2022-09-03 20:46',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-check',
-        color: '#0bbd87'
-      }, {
-        content: '打包处理结果',
+        content: '处理图片组',
         timestamp: '',
         size: 'large',
         type: 'primary',
-        icon: 'el-icon-loading',
+        icon: 'el-icon-close',
+        color: '#ff4747'
+      }, {
+        content: '处理完成',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
         color: '#ff9854'
-      }, {
-        content: '',
-        timestamp: '',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-more',
-        color: '#808080'
       }],
       tableData: [{
         name: '王小虎',
@@ -221,6 +229,133 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
+    chooseNewPackage(){
+      this.$refs.compressPackageInput.click();
+    },
+    startCheckBatchStatus(){
+      setInterval(()=>{
+          let statusCheckForm = new FormData();
+          // 身份识别数据
+          statusCheckForm.append("uid", this.getUID());
+          statusCheckForm.append("token", this.getToken());
+          statusCheckForm.append("batchID", this.batchID);
+          this.$axios.post("/NBI/Batch/checkStatus/",statusCheckForm,{
+             headers: {'Content-Type': 'multipart/form-data'}
+          }).then((response) => {
+            if (response.data.status === 1){
+              // 上传中
+              this.activities[1].color = "#ff9854";
+              this.activities[1].icon = 'el-icon-loading';
+            }
+            if (response.data.status === 2){
+              // 上传完成，检查中
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#ff9854";
+              this.activities[2].icon = 'el-icon-loading';
+            }
+            if (response.data.status === 3){
+              // 检查失败
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#ff9854";
+              this.activities[2].icon = 'el-icon-close';
+              this.activities[2].content = "检查失败，压缩包不符合要求";
+            }
+            if (response.data.status === 4 || response.data.status === 5){
+              // 检查通过，处理中
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#0bbd87";
+              this.activities[2].icon = 'el-icon-check';
+              this.activities[2].timestamp = response.data.checkTime;
+
+              this.activities[3].color = "#ff9854";
+              this.activities[3].icon = 'el-icon-loading';
+              this.activities[3].content = "处理图片组("+response.data.processedNum+"/"+response.data.batchSize+")";
+            }
+            if (response.data.status === 6){
+              // 处理完成
+              this.activities[1].color = "#0bbd87";
+              this.activities[1].icon = 'el-icon-check';
+              this.activities[1].timestamp = response.data.uploadTime;
+
+              this.activities[2].color = "#0bbd87";
+              this.activities[2].icon = 'el-icon-check';
+              this.activities[2].timestamp = response.data.checkTime;
+
+              this.activities[3].color = "#0bbd87";
+              this.activities[3].icon = 'el-icon-check';
+              this.activities[3].content = "处理图片组("+response.data.processedNum+"/"+response.data.batchSize+")";
+
+              this.activities[4].color = "#0bbd87";
+              this.activities[4].icon = "el-icon-check";
+            }
+          })
+      }, 5000);
+    },
+    uploadNewPackage(){
+      let packageUploadForm = new FormData();
+      // 身份识别数据
+      packageUploadForm.append("uid", this.getUID());
+      packageUploadForm.append("token", this.getToken());
+      // 压缩包
+      if (this.$refs.compressPackageInput.files[0].name.split('.')[1] !== "zip"){
+        this.$message({
+            showClose: true,
+            message: '仅支持上传zip格式的压缩文件',
+            type: 'error'
+          });
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+          return;
+      }
+      packageUploadForm.append("package", this.$refs.compressPackageInput.files[0]);
+
+      this.$refs.uploadPackageIcon.className = "el-icon-loading";
+      this.$refs.uploadPackageFont.innerHTML = "上传中";
+
+      this.$axios.post("/NBI/Batch/upload/compressPack/",packageUploadForm,{
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response) => {
+        if (response.data === 1){
+          this.$message({
+            showClose: true,
+            message: '账户信息错误，上传失败！',
+            type: 'error'
+          });
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+        }
+        else if (response.data === 2){
+          this.$message({
+            showClose: true,
+            message: '未能成功获取压缩包数据！',
+            type: 'error'
+          });
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+        }
+        else{
+          // console.log(response.data);
+          this.batchTitle = response.data.batchName;
+          this.batchID = response.data.batchID
+          this.isUploaded = true;
+          this.activities[0].icon = "el-icon-check";
+          this.activities[0].color = "#0bbd87";
+          this.activities[1].icon = "el-icon-loading";
+          this.activities[1].color = "#ff9854";
+
+          this.startCheckBatchStatus();
+        }
+      });
+    },
   },
   computed: {
     url(){
@@ -231,12 +366,6 @@ export default {
         "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
       ]
     },
-    uploadPackageHeaders(){
-      return {
-        "utoken": this.getToken(),
-        "uid": this.getUID(),
-      }
-    }
   }
 
 }
@@ -248,64 +377,49 @@ button {
 	outline: none;
 }
 
-.aside-button {
-  width: 100%;
-  height: 40%;
-  justify-content: center;
-  /* align-items: center; */
+.uploadPackageBtn{
   display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 96%;
+  margin-top: 3%;
+  height: 82%;
+  border: 2px dodgerblue dashed;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.uploadPackageBtn:hover{
+  border: 2px #004c94 dashed;
+  background-color: #ffffff;
+}
+
+.aside-button {
+  overflow: hidden;
+  width: 100%;
+  height: 45%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
   background-color: #fff;
-  /* cursor: pointer; */
-  transition: 0.15s ease;
-  /* border-image: linear-gradient(225deg, #7de1ff 0%, #6cc3de 100%); */
   border-right: solid 1px #e6e6e6;
   border-bottom: solid 1px #e6e6e6;
   position: relative;
-}
-
-.aside-plus .upload-demo >>> .el-upload-dragger {
-  width: 330px;
-  transition: 0.15s ease;
-}
-
-.aside-plus .upload-demo >>> .el-upload-dragger:hover .el-upload__text {
-  color: #9195a3;
-  transition: 0.15s ease;
-}
-
-.aside-plus .upload-demo >>> .el-upload__tip {
-  color: #9195a3;
 }
 
 .aside-block {
-  position: relative;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-}
-
-/* .aside-block-title {
+  overflow: hidden;
   width: 100%;
-  height: 5%;
-  justify-content: center;
-  align-items: center;
+  height: 55%;
   display: flex;
-  color: #9195a3;
-  font-weight: bold;
-  background-color: #fff;
-  border-right: solid 1px #e6e6e6;
-  border-bottom: solid 1px #e6e6e6;
+  justify-content: start;
+  align-items: center;
+  flex-direction: column;
   position: relative;
-} */
-
-.el-header {
-  /* color: #fff; */
-  text-align: center;
-  height: 75px !important;
-  /* background-image: linear-gradient(135deg, #6cc3de 0%, #767ff6 100%); */
-  /* border: #fff solid 7px; */
-  border: #fff solid 7px;
-  /* box-shadow: 0px 0px 8px #fff inset; */
 }
 
 .el-header .header-title {
