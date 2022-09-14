@@ -27,10 +27,12 @@ const router = new vueRouter({
         },
         {
             path:"/imageProcess/SingleImage",
+            name:"SingleImage",
             component:SingleImage,
         },
         {
             path:"/imageProcess/MultiImage",
+            name:"MultiImage",
             component:MultiImage,
         },
         {

@@ -13,7 +13,7 @@ from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 # | checkTime      | Time    | 这一批次的解压缩、检查完成（通过或不通过）的时间                                 |
 # | finishTime     | Time    | 这一批次的处理完成（处理错误）时间                                            |
 # | expireTime     | Time    | 这一批次的过期时间                                                         |
-# | imgList        | String  | 这一批次所有图片的_id，字符串形式，中间用','分割，其中每条数据是元组的形式           |
+# | imgList        | String  | 这一批次所有图片的_id，字符串形式，中间用'|'分割，其中每条数据是元组的形式           |
 # | batchSize      | Integer | 这一批次的图片组数                                                         |
 # | processedNum   | Integer | 这一批次已经处理的图片组数                                                   |
 # | status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成  |
@@ -61,3 +61,13 @@ class batchProcess:
         ret = table.insert_one(self.getDict())
         # conn.close()
         return ret
+
+
+# 提供一个字典和_id，更新batchProcess
+def updateBatchInfo(_id, newValue):
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.BatchProcess)
+    condition = {'_id': _id}
+    newValue = {"$set": newValue}
+    result = table.update_one(condition, newValue)  # 执行数据库更新操作
+    return result

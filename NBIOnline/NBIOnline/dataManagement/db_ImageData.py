@@ -1,7 +1,6 @@
 import time
-import pymongo
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
-
+from ..configLoader import nbi_conf
 
 # '''
 # 图片生成信息表：PhotoInfo
@@ -36,7 +35,7 @@ class imageData:
         self.image_compress = image_compress
         self.uploadTime = time.time()
         self.lastChangeTime = lastChangeTime
-        self.expireTime = self.uploadTime + 24 * 60 * 60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后
+        self.expireTime = self.uploadTime + nbi_conf.configs['gc_unprocessed_image_expire_time'] * 60 * 60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后 (可在配置文件中更改
         self.isAutoBrightness = isAutoBrightness
         self.isGenerated = False
         self.contrast = None
