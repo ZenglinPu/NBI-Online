@@ -1,11 +1,23 @@
 <template>
   <div id="imgShowPart">
-    <div class="imgPart_inner" style="height: 340px;margin-top: 10px;">
+    <div class="imgPart_inner" style="height: 340px;margin-top: 5px;">
       <div style="width: 100%;height:100%;display:flex;justify-content: left;">
-          <el-scrollbar id="additionInfoForm" style="height: 100%; padding-top: 10px;"> <!-- 滚动条 -->
-            <HistoryImageInfo :GID="this.GID"></HistoryImageInfo>
-          </el-scrollbar><!-- /滚动条 -->
+        <el-scrollbar id="additionInfoForm" style="height: 100%; padding-top: 10px;"> <!-- 滚动条 -->
+          <HistoryImageInfo :GID="this.GID"></HistoryImageInfo>
+        </el-scrollbar><!-- /滚动条 -->
         <div id="mainControlPart">
+          <div id="generateBtn">
+            <el-popover
+                placement="top-start"
+                width="100"
+                trigger="hover"
+                content="可设置对比度、亮度等信息调整图片">
+              <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
+                         icon="el-icon-link" circle></el-button>
+            </el-popover>
+            <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
+            <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">调整图片</button>
+          </div>
           <div id="mainControlBtn">
             <div
                 style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
@@ -111,7 +123,7 @@ export default {
       channelOffset: 0,
       brightnessOffset: 0,
       isGenerating: false,
-      isUploaded_fromSend: false,
+      isUploaded_fromSend: true,
       fromAdjust: {
         isOpen: false,
         contrastOffset: 0,
@@ -317,6 +329,16 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
+#generateBtn {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  /*flex-direction: column;*/
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px grey solid;
+}
+
 #mainControlBtn {
   width: 100%;
   height: 25%;
@@ -329,12 +351,13 @@ input[type="checkbox"] {
 
 #mainControlRange {
   width: 100%;
-  height: 75%;
+  height: 60%;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
 }
+
 
 #additionInfoForm {
   width: 70%;
@@ -360,4 +383,20 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+#getResultImage {
+  height: 70%;
+  width: 50%;
+  margin-left: 3%;
+  cursor: pointer;
+  border-radius: 3px;
+  background-color: #409eff;
+  color: white;
+  transition: 0.3s ease;
+  overflow: hidden;
+}
+
+#getResultImage:hover {
+  background-color: rgba(56, 56, 56, 0.78);
+  color: #edecd6;
+}
 </style>
