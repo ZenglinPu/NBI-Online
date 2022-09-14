@@ -115,7 +115,7 @@
 import HistoryImageInfo from "@/components/history/historyItemDetail/HistoryImageInfo";
 
 export default {
-  name: "singleImageInfoAdjustPart",
+  name: "ImageInfoFormPart",
   components: {HistoryImageInfo},
   props: ['GID'],
   data() {
@@ -136,9 +136,10 @@ export default {
     }
   },
   mounted() {
-    this.$bus.$on("getUploadedInfo", (data) => {
-      this.isUploaded_fromSend = data;
-    });
+    //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
+    // this.$bus.$on("getUploadedInfo", (data) => {
+    //   this.isUploaded_fromSend = data;
+    // });
     this.$bus.$on("getAdjustImageInfo", (data) => {
       this.fromAdjust.isOpen = data.isOpen;
       this.fromAdjust.contrastOffset = data.contrastOffset;
@@ -147,7 +148,7 @@ export default {
     });
   },
   beforeDestroy() {
-    this.$bus.$off("getUploadedInfo");
+    // this.$bus.$off("getUploadedInfo");
     this.$bus.$off("getAdjustImageInfo");
   },
   methods: {
@@ -166,15 +167,16 @@ export default {
     getUID() {
       return this.getCookie("NBI_UID");
     },
-    checkUploaded() {
-      // 发送信号给send让他调用我的事件，传输数据
-      this.$bus.$emit("sendUploadedInfoToGet");
-    },
+    // checkUploaded() {
+    //   // 发送信号给send让他调用我的事件，传输数据
+    //   this.$bus.$emit("sendUploadedInfoToGet");
+    // },
+    //获取下方对比度等信息
     getAdjustImageInfo() {
       this.$bus.$emit("sendAdjustImageInfo");
     },
     getResultImage() {
-      this.checkUploaded();
+      // this.checkUploaded();
       if (!this.isUploaded_fromSend) {
         this.$message({
           showClose: true,
@@ -231,47 +233,18 @@ export default {
             type: 'error'
           });
         } else {
-          this.showResultImage(response.data);
+          this.updatePageNBIImage(response.data);
         }
         this.isGenerating = false;
       });
     },
-    downloadResult() {
-      // 检查是否存在生成图片
-      if (this.recordRealResult === "") {
-        this.$message({
-          showClose: true,
-          message: '请先点击生成图片！',
-          type: 'error'
-        });
-        return -1;
-      }
-      if (this.recordRealResult === -1) {
-        this.$message({
-          showClose: true,
-          message: '您不是高级用户，仅有高级用户享有下载无压缩图片的权力',
-          type: 'error'
-        });
-        this.$bus.$emit('showNoDownloadInfo');
-        return -1;
-      }
-      this.$message({
-        showClose: true,
-        message: '已开始下载。',
-        type: 'success',
-      });
-      this.downloadImage("/static/Data/NBI/" + this.recordRealResult, "resultNBI.jpg");
-    },
-    downloadImage(imgSrc, fileName) {
-      let alink = document.createElement("a");
-      alink.href = imgSrc;
-      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
-      alink.click();
-    },
-    showResultImage(data) {
-      this.isShowResult = true;
-      this.imageResultSrc = "/static/Data/Temp/" + data.showImage;
-      this.recordRealResult = data.resultImage;
+    updatePageNBIImage(data) {
+      this.imageResultSrc=data.resultImage;
+      const toSend = {
+        "imageNBIName": data.resultImage,
+      };
+      console.log("ImageInfoForm拿到新图的url",data.resultImage)
+      this.$bus.$emit("getAdjustImage",toSend)
     },
   }
 }
