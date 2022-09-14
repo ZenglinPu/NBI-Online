@@ -56,10 +56,10 @@
       </div>
       <div id="imageAdjustPartContainer">
         <div style="width: 100%;height: 65%">
-          <singleImageInfoAdjustPart :GID="this.GID" ></singleImageInfoAdjustPart>
+          <ImageInfoFormPart :GID="this.GID" ></ImageInfoFormPart>
         </div>
         <div style="width: 100%;height: 35%">
-          <singleImageProcess_imageAdjust></singleImageProcess_imageAdjust>
+          <ImageAdjust></ImageAdjust>
         </div>
       </div>
     </div>
@@ -67,13 +67,13 @@
 </template>
 
 <script>
-import singleImageProcess_imageAdjust from "@/components/singleImageProcess/singleImageProcess_imageAdjust";
-import singleImageInfoAdjustPart from "@/components/history/historyItemDetail/SingleImageInfoAdjustPart";
+import ImageInfoFormPart from "@/components/history/historyItemDetail/ImageInfoFormPart";
+import ImageAdjust from "@/components/history/historyItemDetail/ImageAdjust";
 
 export default {
   name: "HistoryItemDetailPage",
   props: ['GID'],
-  components: {singleImageInfoAdjustPart, singleImageProcess_imageAdjust},
+  components: {ImageAdjust, ImageInfoFormPart},
   data() {
     return {
       titleInfo: {
@@ -92,6 +92,14 @@ export default {
   },
   mounted() {
     this.initDownloadImageInfo();
+    this.$bus.$on("getAdjustImage",(data)=>{
+      this.imageShowInfo.NBIImageName = "/static/Data/NBI/" + data.imageNBIName;
+      this.imageShowInfo.srcList.push("/static/Data/NBI/" + data.imageNBIName);
+      console.log("这里是hitoryItemDetailPage，更新后的srcList：",this.imageShowInfo.srcList)
+    })
+  },
+  beforeDestroy() {
+    this.$bus.$off("getAdjustImage")
   },
   methods: {
     // cookie
