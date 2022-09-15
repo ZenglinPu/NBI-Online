@@ -57,7 +57,7 @@ def checkUIDRegistered(uid):
     table = getTable(conn, NBITABLE.UserInfo)
     result = table.find({"UID": uid})
     if result.count() == 0:
-        conn.close()
+        # conn.close()
         return False
     # conn.close()
     return True

@@ -1,4 +1,3 @@
-import pymongo
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 

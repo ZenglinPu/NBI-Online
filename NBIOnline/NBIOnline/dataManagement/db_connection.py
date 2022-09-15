@@ -46,6 +46,7 @@ def getConnection():
                 'mongodb://{}:{}@{}:{}/?authSource={}'.format(conf['db_user'], conf['db_password'], conf['db_address'], conf['db_port'],
                                                               conf['db_authsource']))
         except Exception as e:
+            print('Try to reconnect database.')
             global_connection = None
 
     return global_connection
