@@ -276,11 +276,38 @@ def getLastAdjustArg(request):
 
         gid = request.POST.get("gid")
         imageInfo, imageAdditionInfo = getAllImageInfoBy_id(gid)
+        # 对比度
+        if imageInfo.get("contrast")==None:
+            contrast=100
+        else:
+            contrast=int(imageInfo.get("contrast"))
+        # 亮度
+        if imageInfo.get("brightness")==None:
+            brightness=0
+        else:
+            brightness=int(imageInfo.get("brightness"))
+        # 饱和度
+        if imageInfo.get("saturation")==None:
+            saturation=100
+        else:
+            saturation=int(imageInfo.get("saturation"))
+        # 明度
+        if imageInfo.get("luminosity")==None:
+            luminosity=100
+        else:
+            luminosity=int(imageInfo.get("luminosity"))
+        # 通道
+        if imageInfo.get("channelOffset")==None:
+            channelOffset=0
+        else:
+            channelOffset=int(imageInfo.get("channelOffset"))
+
         ret = {
-            "contrast": int(imageInfo.get("contrast")),
-            "light": int(imageInfo.get("light")),
-            "saturation": int(imageInfo.get("saturation")),
-            "channelOffset": int(imageInfo.get("channelOffset"))
+            "contrast": contrast,
+            "brightness": brightness,
+            "saturation": saturation,
+            "luminosity": luminosity,
+            "channelOffset":channelOffset
         }
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type="application/json")

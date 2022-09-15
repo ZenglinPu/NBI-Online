@@ -10,27 +10,27 @@
           <div id="generateBtn">
             <el-popover placement="top-start" width="100" trigger="hover" content="可设置对比度、亮度等信息调整图片">
               <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                icon="el-icon-link" circle></el-button>
+                         icon="el-icon-link" circle></el-button>
             </el-popover>
             <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
             <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">调整图片</button>
           </div>
           <div id="mainControlBtn">
             <div
-              style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+                style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
               <el-popover placement="top-start" width="100" trigger="hover"
-                content="使用后台算法自动调整输入图片强度，避免因为输入图片亮度不统一而造成的色彩偏移问题。">
+                          content="使用后台算法自动调整输入图片强度，避免因为输入图片亮度不统一而造成的色彩偏移问题。">
                 <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                  icon="el-icon-link" circle></el-button>
+                           icon="el-icon-link" circle></el-button>
               </el-popover>
               <p style="font-family: 幼圆,serif;">自动调整通道</p>
               <input type="checkbox" ref="isAutoChannel">
             </div>
             <div
-              style="margin-top: 25px;font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+                style="margin-top: 25px;font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
               <el-popover placement="top-start" width="100" trigger="hover" content="自动调整最终生成图片的亮度，更适合观察">
                 <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                  icon="el-icon-link" circle></el-button>
+                           icon="el-icon-link" circle></el-button>
               </el-popover>
               <p style="font-family: 幼圆,serif;">自动调整亮度</p>
               <input type="checkbox" ref="isAutoBrightness">
@@ -39,43 +39,43 @@
           <div id="mainControlRange">
             <div class="mainControlRange_container">
               <div
-                style="width: 85%;height: 30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
+                  style="width: 85%;height: 30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
                 <p style="font-family: 幼圆,serif;">通道偏移调整：</p>
                 <div style="width: 30px;height: 100%;display: flex;justify-content: start;align-items: center">
                   <p style="color: #2244CC">{{ channelOffset }}</p>
                 </div>
                 <el-popover placement="top-start" width="100" trigger="hover"
-                  content="通道偏移，手动调整输入图片强度，在自动调整的基础上可以进一步修改。">
+                            content="通道偏移，手动调整输入图片强度，在自动调整的基础上可以进一步修改。">
                   <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                    icon="el-icon-link" circle></el-button>
+                             icon="el-icon-link" circle></el-button>
                 </el-popover>
               </div>
               <div style="width:85%; height: 50%;display: flex;flex-direction: column;">
                 <div style="width:100%; height: 30%;display: flex;flex-direction: row;">
                   <p
-                    style="height: 100%;font-size: small;width: 50%;text-align: left;color: rgb(255, 33, 33);font-family: Arial, Helvetica, sans-serif;">
+                      style="height: 100%;font-size: small;width: 50%;text-align: left;color: rgb(255, 33, 33);font-family: Arial, Helvetica, sans-serif;">
                     红色增强</p>
                   <p
-                    style="height: 100%;font-size: small;width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">
+                      style="height: 100%;font-size: small;width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">
                     青色增强</p>
                 </div>
                 <div
-                  style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
+                    style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
                   <input type="range" id="channelAdjustRange" min="-30" max="30" v-model="channelOffset">
                 </div>
               </div>
             </div>
             <div class="mainControlRange_container">
               <div
-                style="width: 85%;height:30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
+                  style="width: 85%;height:30%;display: flex;flex-direction: row;justify-content: start;align-items: center">
                 <p style="font-family: 幼圆,serif;">亮度偏移调整：</p>
                 <div style="width: 30px;height: 100%;display: flex;justify-content: start;align-items: center">
                   <p style="color: #2244CC">{{ brightnessOffset }}</p>
                 </div>
                 <el-popover placement="top-start" width="100" trigger="hover"
-                  content="亮度偏移，调整最终生成图片的亮度，在自动调整的基础上可以进一步修改。">
+                            content="亮度偏移，调整最终生成图片的亮度，在自动调整的基础上可以进一步修改。">
                   <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                    icon="el-icon-link" circle></el-button>
+                             icon="el-icon-link" circle></el-button>
                 </el-popover>
               </div>
               <div style="width:85%; height: 50%;display: flex;flex-direction: column;">
@@ -84,9 +84,9 @@
                   <p style="width: 50%;text-align: right;font-family: Arial, Helvetica, sans-serif;">提高亮度</p>
                 </div>
                 <div
-                  style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
+                    style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
                   <input type="range" id="brightnessAdjustRange" class="checke" min="-80" max="80"
-                    v-model="brightnessOffset">
+                         v-model="brightnessOffset">
                 </div>
               </div>
             </div>
@@ -102,7 +102,7 @@ import HistoryImageInfo from "@/components/history/historyItemDetail/HistoryImag
 
 export default {
   name: "ImageInfoFormPart",
-  components: { HistoryImageInfo },
+  components: {HistoryImageInfo},
   props: ['GID'],
   data() {
     return {
@@ -120,19 +120,16 @@ export default {
       imageResultSrc: "",
     }
   },
+  updated() {
+    this.$bus.$emit("sendLastArg")
+  },
   mounted() {
     //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
     // this.$bus.$on("getUploadedInfo", (data) => {
     //   this.isUploaded_fromSend = data;
     // });
-    this.$bus.$on("getAdjustImageInfo", (data) => {
-      this.fromAdjust.isOpen = data.isOpen;
-      this.fromAdjust.contrastOffset = data.contrastOffset;
-      this.fromAdjust.luminosityOffset = data.luminosityOffset;
-      this.fromAdjust.saturationOffset = data.saturationOffset;
-    });
     this.getLastAdjustArg()
-    this.$bus.$on("sendLastArg",()=>{
+    this.$bus.$on("sendLastArg", () => {
       const toSend = {
         "contrastOffset": this.fromAdjust.contrastOffset,
         "luminosityOffset": this.fromAdjust.luminosityOffset,
@@ -141,6 +138,14 @@ export default {
       //发送数据到send
       this.$bus.$emit("getlastArg", toSend);
     })
+
+    this.$bus.$on("getAdjustImageInfo", (data) => {
+      this.fromAdjust.isOpen = data.isOpen;
+      this.fromAdjust.contrastOffset = data.contrastOffset;
+      this.fromAdjust.luminosityOffset = data.luminosityOffset;
+      this.fromAdjust.saturationOffset = data.saturationOffset;
+    });
+
   },
   beforeDestroy() {
     // this.$bus.$off("getUploadedInfo");
@@ -206,7 +211,7 @@ export default {
         getResultForm.append("mode", "full");
       }
       let config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: {'Content-Type': 'multipart/form-data'}
       };
       this.$axios.post("/NBI/Image/getResult/", getResultForm, config).then((response) => {
         if (response.data === 1) {
@@ -215,7 +220,7 @@ export default {
             message: '登录状态错误！',
             type: 'error'
           });
-          this.$bus.$emit("changeStatus", { status: false, uname: '' });
+          this.$bus.$emit("changeStatus", {status: false, uname: ''});
         } else if (response.data === 2) {
           this.$message({
             showClose: true,
@@ -230,27 +235,27 @@ export default {
           });
         } else {
           this.updatePageNBIImage(response.data);
-          console.log("ImageInfoForm中拿到的数据",response.data)
+          console.log("ImageInfoForm中拿到的数据", response.data)
         }
         this.isGenerating = false;
       });
     },
     updatePageNBIImage(data) {
-      this.imageResultSrc=data.resultImage;
+      this.imageResultSrc = data.resultImage;
       const toSend = {
         "imageNBIName": data.resultImage,
       };
       this.$bus.$emit("getAdjustImage", toSend)
     },
-    getLastAdjustArg(){
+    getLastAdjustArg() {
       let config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: {'Content-Type': 'multipart/form-data'}
       };
-      let getLastAdjustArgForm= new FormData();
+      let getLastAdjustArgForm = new FormData();
       getLastAdjustArgForm.append("token", this.getToken());
       getLastAdjustArgForm.append("uid", this.getUID());
       getLastAdjustArgForm.append("gid", this.GID);
-      this.$axios.post("/NBI/Image/getLastAdjustArg/",getLastAdjustArgForm, config).then((response) => {
+      this.$axios.post("/NBI/Image/getLastAdjustArg/", getLastAdjustArgForm, config).then((response) => {
         if (response.data === 1) {
           this.$message({
             showClose: true,
@@ -258,13 +263,12 @@ export default {
             type: 'error'
           });
         } else {
-          console.log("getLastAdjustArg得到的数据是",response.data)
-          this.channelOffset=response.data.channelOffset;
-          this.brightnessOffset=response.data.light;
-          this.fromAdjust.contrastOffset=response.data.contrast;
-          this.fromAdjust.saturationOffset=response.data.saturation;
-          this.fromAdjust.luminosityOffset=response.data.light;
-
+          console.log("getLastAdjustArg得到的数据是", response.data, this.fromAdjust)
+          this.channelOffset = response.data.channelOffset;
+          this.brightnessOffset = response.data.brightness;
+          this.fromAdjust.contrastOffset = response.data.contrast;
+          this.fromAdjust.saturationOffset = response.data.saturation;
+          this.fromAdjust.luminosityOffset = response.data.luminosity;
         }
       });
     }
@@ -274,8 +278,7 @@ export default {
 
 <style scoped>
 #brightnessAdjustRange {
-  background-image: linear-gradient(to right, rgb(0, 0, 0, 1), rgba(160, 160, 160, 0.2));
-  ;
+  background-image: linear-gradient(to right, rgb(0, 0, 0, 1), rgba(160, 160, 160, 0.2));;
   border-radius: 10px;
   width: 100%;
   -webkit-appearance: none;
@@ -283,8 +286,7 @@ export default {
 }
 
 #channelAdjustRange {
-  background-image: linear-gradient(to right, rgb(183, 0, 0), rgb(0, 234, 255));
-  ;
+  background-image: linear-gradient(to right, rgb(183, 0, 0), rgb(0, 234, 255));;
   border-radius: 10px;
   width: 100%;
   -webkit-appearance: none;
