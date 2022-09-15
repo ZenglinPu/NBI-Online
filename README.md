@@ -118,8 +118,9 @@ npm install axios
 | isAutoBrightness| Boolean| 最后一次生成时是否自动调节亮度                                              |
 | isGenerated    | Boolean | 是否点击了生成按钮，没有的则默认保留24小时                                    |
 | contrast       | Integer | 最后一次生成时的对比度                                                     |
-| light          | Integer | 最后一次生成时的亮度                                                       |
+| brightness     | Integer | 最后一次生成时的亮度                                                       |
 | saturation     | Integer | 最后一次生成时的饱和度                                                     |
+| luminosity     | Integer | 最后一次生成时的明度
 | channelOffset  | Integer | 最后一次生成时的通道调整值                                                 |
 | isBatch        | Boolean | 是否是批处理提交的图片，如果是批处理的图片则不在单张的History里面展示              |
 
