@@ -115,6 +115,7 @@ export default {
       brightnessOffset: 0,
       isGenerating: false,
       isUploaded_fromSend: false,
+      gid_fromSend: '',
       fromAdjust:{
         isOpen: false,
         contrastOffset: 0,
@@ -128,7 +129,8 @@ export default {
   },
   mounted() {
     this.$bus.$on("getUploadedInfo",(data)=>{
-      this.isUploaded_fromSend = data;
+      this.isUploaded_fromSend = data['uploadStatus'];
+      this.gid_fromSend = data['gid'];
     });
     this.$bus.$on("getAdjustImageInfo", (data)=>{
       this.fromAdjust.isOpen = data.isOpen;
@@ -181,6 +183,7 @@ export default {
         //简单生成
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
+        getResultForm.append("gid", this.gid_fromSend);
         getResultForm.append("channelOffset", this.channelOffset);
         getResultForm.append("brightnessAdjust", this.brightnessOffset);
         getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
@@ -191,6 +194,7 @@ export default {
         //带有处理信息的生成
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
+        getResultForm.append("gid", this.gid_fromSend);
         getResultForm.append("channelOffset", this.channelOffset);
         getResultForm.append("brightnessAdjust", this.brightnessOffset);
         getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);

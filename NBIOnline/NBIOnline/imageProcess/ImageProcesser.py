@@ -152,7 +152,7 @@ def generateNBIImage_easy(image_blue_name, image_green_name, user, channelOffset
 
 
 def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset, brightnessOffset, isAutoChannel,
-                          isAutoBrightness, contrast, numinosity, saturation):
+                          isAutoBrightness, contrast, luminosity, saturation):
     image_blue = pillowImage.open(r"../NBIOnline/static/Data/Blue/{name}".format(name=image_blue_name))
     image_green = pillowImage.open(r"../NBIOnline/static/Data/Green/{name}".format(name=image_green_name))
     # 临时文件名，加上随机避免前端因为缓存而不更新图片
@@ -169,7 +169,7 @@ def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset
             ChannelOffset=channelOffset,
             BrightnessOffset=brightnessOffset,
             contrast=contrast,
-            numinosity=numinosity,
+            luminosity=luminosity,
             saturation=saturation,
         )
         cv2.imwrite(r"../NBIOnline/static/Data/NBI/{name}".format(name=resultName), resultImage)

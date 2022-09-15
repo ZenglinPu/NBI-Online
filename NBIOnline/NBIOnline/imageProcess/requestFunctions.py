@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from ..dataManagement.db_User import addSumGenerate
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
-from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, getInfoByUID
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, getInfoByUIDAndGID
 from ..dataManagement.db_ImageData import imageData, updateImageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 from ..userManagement.userRank import getUserRankByUID, checkUploadTime
@@ -111,6 +111,7 @@ def uploadImage(request):
             "imageBlue": image_blue_name,
             "imageGreen": image_green_name,
             "imageWhite": image_white_name,
+            "gid": str(gid),
         }
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type="application/json")
@@ -130,6 +131,7 @@ def updateInputAndGetNBI(request):
         # 因为uid中存在符号.
         # 在进行图片的处理中应当替换掉
         user = user.replace(".", "^")
+        gid = request.POST.get('gid')
 
         channelOffset = int(request.POST.get("channelOffset"))
         brightnessOffset = int(request.POST.get("brightnessAdjust"))
@@ -138,13 +140,13 @@ def updateInputAndGetNBI(request):
 
         mode = request.POST.get("mode")
 
-        # 通过数据库找到上次刚刚提交的图片信息
-        lastInfo = getInfoByUID(user)
+        # 通过数据库找到gid的图片信息
+        imgInfo = getInfoByUIDAndGID(user, gid)
         # 生成新NBI图片
         if mode == "easy":
             processResult, resultName, resultImage = generateNBIImage_easy(
-                image_blue_name=lastInfo.get("Image_Blue"),
-                image_green_name=lastInfo.get("Image_Green"),
+                image_blue_name=imgInfo.get("Image_Blue"),
+                image_green_name=imgInfo.get("Image_Green"),
                 user=user,
                 channelOffset=channelOffset,
                 brightnessOffset=brightnessOffset,
@@ -158,15 +160,15 @@ def updateInputAndGetNBI(request):
             saturationOffset = int(request.POST.get("saturationOffset"))  # 饱和度
 
             processResult, resultName, resultImage = generateNBIImage_full(
-                image_blue_name=lastInfo.get("Image_Blue"),
-                image_green_name=lastInfo.get("Image_Green"),
+                image_blue_name=imgInfo.get("Image_Blue"),
+                image_green_name=imgInfo.get("Image_Green"),
                 user=user,
                 channelOffset=channelOffset,
                 brightnessOffset=brightnessOffset,
                 isAutoChannel=isAutoChannel,
                 isAutoBrightness=isAutoBrightness,
                 contrast=contrastOffset,
-                numinosity=luminosityOffset,
+                luminosity=luminosityOffset,
                 saturation=saturationOffset,
             )
             cname = compressImage(resultImage, resultName, 15)
@@ -178,9 +180,9 @@ def updateInputAndGetNBI(request):
             return HttpResponse(3)
 
         # 把旧的NBI&&Temp图片删除
-        if lastInfo.get("Image_Result") is not None:
-            deleteOneImage("NBI", lastInfo.get("Image_Result"))
-            deleteOneImage("Temp", lastInfo.get("Image_Compress"))
+        if imgInfo.get("Image_Result") is not None:
+            deleteOneImage("NBI", imgInfo.get("Image_Result"))
+            deleteOneImage("Temp", imgInfo.get("Image_Compress"))
 
         # 更新数据库
         updateDict = {}
@@ -208,16 +210,16 @@ def updateInputAndGetNBI(request):
         # 根据用户等级判断刚刚生成的图片保留多久
         # 高级用户保存一年，低级用户30天
         if getUserRankByUID(user.replace("^", ".")) == 2:
-            if not lastInfo.get("isGenerated"):
-                updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 366
+            if not imgInfo.get("isGenerated"):
+                updateDict['expireTime'] = imgInfo.get("expireTime") + 24 * 60 * 60 * 366
                 updateDict['isGenerated'] = True
             ret = {"resultImage": resultName, "showImage": cname}
         else:
-            if not lastInfo.get("isGenerated"):
-                updateDict['expireTime'] = lastInfo.get("expireTime") + 24 * 60 * 60 * 30
+            if not imgInfo.get("isGenerated"):
+                updateDict['expireTime'] = imgInfo.get("expireTime") + 24 * 60 * 60 * 30
                 updateDict['isGenerated'] = True
             ret = {"resultImage": -1, "showImage": cname}  # 普通用户不返回高清图片名称，不能下载高清图片
-        updateImageData(lastInfo.get("_id"), updateDict)
+        updateImageData(imgInfo.get("_id"), updateDict)
 
         # 返回新的图片数据到前端
         ret = json.dumps(ret)

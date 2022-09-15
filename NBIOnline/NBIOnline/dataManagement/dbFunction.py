@@ -20,16 +20,14 @@ def getLastImage(user):
         return False
 
     # 这个UID提交过数据，查看是否是同样的图片
-    # conn.close()
     return result[0]
 
 
-# 根据UID获取最近一次提交的数据的信息
-def getInfoByUID(UID):
+# 根据UID, gid获取最近一次提交的数据的信息
+def getInfoByUIDAndGID(UID, GID):
     conn = getConnection()
     table = getTable(conn, NBITABLE.PhotoInfo)
-    ret = table.find_one({"UID": UID}, sort=[('lastChangeTime', -1)])
-    # conn.close()
+    ret = table.find_one({"UID": UID, "_id": ObjectId(str(GID))}, sort=[('lastChangeTime', -1)])
     return ret
 
 
@@ -40,7 +38,6 @@ def getAllImageInfoBy_id(_id):
     table_addition = getTable(conn, NBITABLE.PhotoAdditionInfo)
     ret = table.find_one({'_id': ObjectId(_id)})
     ret_addition = table_addition.find_one({'gid': ObjectId(_id)})
-    # conn.close()
     return ret, ret_addition
 
 
