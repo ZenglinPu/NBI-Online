@@ -150,12 +150,13 @@ export default {
       moreMessage:{
         noUpdateTime: false,
         noDownload: false,
-      }
+      },
+      imageInfoID: '',  //上传后返回图片信息id，通过这个id来生成结果图片
     }
   },
   mounted() {
     this.$bus.$on('sendUploadedInfoToGet',()=>{
-      this.$bus.$emit("getUploadedInfo",this.isUploaded);
+      this.$bus.$emit("getUploadedInfo",{"uploadStatus":this.isUploaded, "gid": this.imageInfoID});
     });
     this.$bus.$on('showNoDownloadInfo',()=>{
       this.moreMessage.noDownload = true;
@@ -291,6 +292,7 @@ export default {
           this.$refs.uploadStatus.innerText = "已上传";
           this.uploadStatus_class = "uploadStatus_green";
           this.isUploaded = true;
+          this.imageInfoID = response.data.gid;
         }
         this.$refs.uploadBtn.disabled = false;
       });

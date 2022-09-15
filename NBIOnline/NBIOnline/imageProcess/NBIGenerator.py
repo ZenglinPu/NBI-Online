@@ -50,7 +50,7 @@ def getNBIImage_easy(image_blue, image_green, isAutoCutImage=True, isAutoBrightn
 
 
 def getNBIImage_full(image_blue, image_green, isAutoCutImage=True, isAutoBrightness=False, isAutoChannel=False,
-                     ChannelOffset=0, BrightnessOffset=0, contrast=0, numinosity=0, saturation=0):
+                     ChannelOffset=0, BrightnessOffset=0, contrast=0, luminosity=0, saturation=0):
     print("Input Image Size:\n\tBlue Image:{b}\n\tGreen Image:{g}".format(b=image_blue.size, g=image_green.size))
     if not image_blue.size == image_green.size:
         print("The Image Size Should be the same")
@@ -86,14 +86,14 @@ def getNBIImage_full(image_blue, image_green, isAutoCutImage=True, isAutoBrightn
         mergeImage = aug(mergeImage)
 
     # 根据输入调整图片亮度，对比度，明度，饱和度
-    mergeImage = updateImageWithHSV(mergeImage, BrightnessOffset, contrast, numinosity, saturation)
+    mergeImage = updateImageWithHSV(mergeImage, BrightnessOffset, contrast, luminosity, saturation)
 
     print("Get NBI Image Success.")
     return mergeImage
 
 
 # 调整图片亮度，对比度，明度，饱和度
-def updateImageWithHSV(sourceImage, brightnessOffset, contrast, numinosity, satsaturation):
+def updateImageWithHSV(sourceImage, brightnessOffset, contrast, luminosity, saturation):
     image = sourceImage
     # 调整亮度
     if not brightnessOffset == 0:
@@ -107,12 +107,14 @@ def updateImageWithHSV(sourceImage, brightnessOffset, contrast, numinosity, sats
     image = cv2.addWeighted(image, contrast, img2, 1 - contrast, 0)
 
     # 明度
-    numinosity = numinosity / 100
+    if luminosity > 0:
+        luminosity = 0
+    luminosity = luminosity / 100
     img_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    img_hsv[:, :, 2] = numinosity * img_hsv[:, :, 2]
+    img_hsv[:, :, 2] = luminosity * img_hsv[:, :, 2]
 
     # 饱和度
-    satsaturation = satsaturation / 100
+    satsaturation = saturation / 100
     img_hsv[:, :, 1] = satsaturation * img_hsv[:, :, 1]
     image = cv2.cvtColor(img_hsv, cv2.COLOR_HSV2BGR)
     return image

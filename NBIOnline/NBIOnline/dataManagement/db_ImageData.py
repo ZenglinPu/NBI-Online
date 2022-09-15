@@ -86,3 +86,10 @@ def updateImageData(_id, updateValue):
     result = table.update_one(condition, newValue)  # 执行数据库更新操作
     conn.close()
     return result
+
+
+def getImageInfoByID(_id):
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.PhotoInfo)
+    condition = {'_id': _id}
+    return table.find_one(condition)

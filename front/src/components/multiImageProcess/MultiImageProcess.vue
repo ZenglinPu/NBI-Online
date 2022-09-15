@@ -74,7 +74,7 @@
           <el-table-column
             fixed
             prop="name"
-            label="标本名称"
+            label="标本ID"
             width="262">
           </el-table-column>
           <el-table-column
@@ -84,7 +84,7 @@
             <template slot-scope="scope">
               <div style="height: 83px;display: flex;align-items: center;">
                 <el-image
-                  :src="'/static/Data/Temp/' + scope.row.blueCompress"
+                  :src="'/static/Data/Blue/' + scope.row.blueCompress"
                   style="height: 83px;"
                 >
                 </el-image>
@@ -98,7 +98,7 @@
             <template slot-scope="scope">
               <div style="height: 83px;display: flex;align-items: center;">
                 <el-image
-                  :src="'/static/Data/Temp/' + scope.row.greenCompress"
+                  :src="'/static/Data/Green/' + scope.row.greenCompress"
                   style="height: 83px;"
                 >
                 </el-image>
@@ -112,7 +112,7 @@
             <template slot-scope="scope">
               <div style="height: 83px;display: flex;align-items: center;">
                 <el-image
-                  :src="'/static/Data/Temp/' + scope.row.whiteCompress"
+                  :src="'/static/Data/White/' + scope.row.whiteCompress"
                   style="height: 83px;"
                 >
                 </el-image>
@@ -146,6 +146,7 @@ export default {
       batchTitle: '',
       batchID: '',
       isUploaded: false,
+      isPassCheck: false,
       activities: [
       {
         content: '等待上传',
@@ -162,21 +163,21 @@ export default {
         size: 'large',
         type: 'primary',
         icon: 'el-icon-close',
-        color: '#ff4747'
+        color: '#ff9854'
       }, {
         content: '检查压缩包',
         timestamp: '',
         size: 'large',
         type: 'primary',
         icon: 'el-icon-close',
-        color: '#ff4747'
+        color: '#ff9854'
       },{
         content: '处理图片组',
         timestamp: '',
         size: 'large',
         type: 'primary',
         icon: 'el-icon-close',
-        color: '#ff4747'
+        color: '#ff9854'
       }, {
         content: '处理完成',
         timestamp: '',
@@ -185,32 +186,14 @@ export default {
         icon: 'el-icon-close',
         color: '#ff9854'
       }],
-      tableData: [{
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      }, {
-        name: '王小虎',
-        blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
-        whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
-      },]
+      tableData: [
+      // {
+      //   name: '王小虎',
+      //   blueCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+      //   greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
+      //   whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
+      // },
+      ]
     };
   },
   methods:{
@@ -231,6 +214,35 @@ export default {
     },
     chooseNewPackage(){
       this.$refs.compressPackageInput.click();
+    },
+    showImageInfoInPackage(){
+      let packageImageForm = new FormData();
+      packageImageForm.append("uid", this.getUID());
+      packageImageForm.append("token", this.getToken());
+      packageImageForm.append("batchID", this.batchID);
+      this.$axios.post("/NBI/Batch/getOriginImage/",packageImageForm,{
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response) => {
+        // console.log(response)
+        if (response.data === 1) {
+          this.$message({
+            showClose: true,
+            message: '账户信息错误，上传失败！',
+            type: 'error'
+          });
+        }
+        else{
+          for (const key in response.data) {
+            const item = response.data[key];
+            this.tableData.push({
+              name: item.imageName,
+              blueCompress: item.imageBlue,
+              greenCompress: item.imageGreen,
+              whiteCompress: item.imageWhite,
+            })
+          }
+        }
+      });
     },
     startCheckBatchStatus(){
       setInterval(()=>{
@@ -262,12 +274,17 @@ export default {
               this.activities[1].icon = 'el-icon-check';
               this.activities[1].timestamp = response.data.uploadTime;
 
-              this.activities[2].color = "#ff9854";
+              this.activities[2].color = "#ff4747";
               this.activities[2].icon = 'el-icon-close';
               this.activities[2].content = "检查失败，压缩包不符合要求";
             }
             if (response.data.status === 4 || response.data.status === 5){
               // 检查通过，处理中
+              if (!this.isPassCheck){
+                this.showImageInfoInPackage();
+                this.isPassCheck = true;
+              }
+
               this.activities[1].color = "#0bbd87";
               this.activities[1].icon = 'el-icon-check';
               this.activities[1].timestamp = response.data.uploadTime;
@@ -437,10 +454,9 @@ button {
 }
 
 .header-button {
-  width: 50%;
-  height: 30px;
+  width: 90%;
+  height: 35px;
   cursor: pointer;
-  transition: 0.15s ease;
   border: transparent 2px solid;
   /* background-clip: padding-box, border-box;
   background-origin: padding-box, border-box; */
@@ -459,7 +475,7 @@ button {
   /* color: #fff; */
   /* background-image: linear-gradient(135deg, #6cc3de 0%, #767ff6 100%); */
   border: solid 2px #fff;
-  box-shadow: 0px 0px 4px #fff inset;
+  box-shadow: 0 0 4px #fff inset;
 }
 
 .el-header .header-follow {
