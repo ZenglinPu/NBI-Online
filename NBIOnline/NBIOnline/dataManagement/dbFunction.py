@@ -240,24 +240,24 @@ def similar_diff_ratio(str1, str2):
 def saveModification(id, sampleName, partName, preDiagnosis, pathologic, differentiation, infiltration, cuttingEdge, remark):
     conn = getConnection()
     table_PhotoAdditionInfo = getTable(conn, NBITABLE.PhotoAdditionInfo)
-    print(table_PhotoAdditionInfo)
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"sampleName": sampleName}})
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"part": partName}})
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"preDiagnosis": preDiagnosis}})
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"pathologic": pathologic}})
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"differentiation": differentiation}})
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"infiltration": infiltration}})
-    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"cuttingEdge": cuttingEdge}})
+    # print(table_PhotoAdditionInfo)
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"sampleName": sampleName}})
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"part": partName}})
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"preDiagnosis": preDiagnosis}})
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"pathologic": pathologic}})
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"differentiation": differentiation}})
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"infiltration": infiltration}})
+    # table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"cuttingEdge": cuttingEdge}})
 
-    # table_PhotoAdditionInfo.update_one({"gid": id}, {"$set": {
-    #     "sampleName": sampleName,
-    #     "partName": partName,
-    #     "preDiagnosis": preDiagnosis,
-    #     "pathologic": pathologic,
-    #     "differentiation": differentiation,
-    #     "infiltration": infiltration,
-    #     "cuttingEdge": cuttingEdge,
-    # }})
+    table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {
+        "sampleName": sampleName,
+        "part": partName,
+        "preDiagnosis": preDiagnosis,
+        "pathologic": pathologic,
+        "differentiation": differentiation,
+        "infiltration": infiltration,
+        "cuttingEdge": cuttingEdge,
+    }})
     # 如果备注为空就不修改
     if remark is not None:
         table_PhotoAdditionInfo.update_one({"gid": ObjectId(id)}, {"$set": {"remark": remark}})

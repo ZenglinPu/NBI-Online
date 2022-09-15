@@ -107,10 +107,15 @@ export default {
       //发送数据到send
       this.$bus.$emit("getAdjustImageInfo", toSend);
     })
-
+    this.$bus.$on("getlastArg",(data)=>{
+      this.saturationOffset=data.saturationOffset;
+      this.contrastOffset=data.contrastOffset;
+      this.luminosityOffset=data.luminosityOffset;
+    })
   },
   beforeDestroy() {
     this.$bus.$off("sendAdjustImageInfo");
+    this.$bus.$off("getlastArg");
   },
   methods:{
     showInfo(){
