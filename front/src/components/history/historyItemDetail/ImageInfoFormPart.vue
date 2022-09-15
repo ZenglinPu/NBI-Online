@@ -120,19 +120,16 @@ export default {
       imageResultSrc: "",
     }
   },
+  updated() {
+    this.$bus.$emit("sendLastArg")
+  },
   mounted() {
     //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
     // this.$bus.$on("getUploadedInfo", (data) => {
     //   this.isUploaded_fromSend = data;
     // });
-    this.$bus.$on("getAdjustImageInfo", (data) => {
-      this.fromAdjust.isOpen = data.isOpen;
-      this.fromAdjust.contrastOffset = data.contrastOffset;
-      this.fromAdjust.luminosityOffset = data.luminosityOffset;
-      this.fromAdjust.saturationOffset = data.saturationOffset;
-    });
     this.getLastAdjustArg()
-    this.$bus.$on("sendLastArg",()=>{
+    this.$bus.$on("sendLastArg", () => {
       const toSend = {
         "contrastOffset": this.fromAdjust.contrastOffset,
         "luminosityOffset": this.fromAdjust.luminosityOffset,
@@ -140,7 +137,15 @@ export default {
       };
       //发送数据到send
       this.$bus.$emit("getlastArg", toSend);
-    })
+    }) 
+    
+    this.$bus.$on("getAdjustImageInfo", (data) => {
+      this.fromAdjust.isOpen = data.isOpen;
+      this.fromAdjust.contrastOffset = data.contrastOffset;
+      this.fromAdjust.luminosityOffset = data.luminosityOffset;
+      this.fromAdjust.saturationOffset = data.saturationOffset;
+    });
+
   },
   beforeDestroy() {
     // this.$bus.$off("getUploadedInfo");
@@ -230,27 +235,27 @@ export default {
           });
         } else {
           this.updatePageNBIImage(response.data);
-          console.log("ImageInfoForm中拿到的数据",response.data)
+          console.log("ImageInfoForm中拿到的数据", response.data)
         }
         this.isGenerating = false;
       });
     },
     updatePageNBIImage(data) {
-      this.imageResultSrc=data.resultImage;
+      this.imageResultSrc = data.resultImage;
       const toSend = {
         "imageNBIName": data.resultImage,
       };
       this.$bus.$emit("getAdjustImage", toSend)
     },
-    getLastAdjustArg(){
+    getLastAdjustArg() {
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
       };
-      let getLastAdjustArgForm= new FormData();
+      let getLastAdjustArgForm = new FormData();
       getLastAdjustArgForm.append("token", this.getToken());
       getLastAdjustArgForm.append("uid", this.getUID());
       getLastAdjustArgForm.append("gid", this.GID);
-      this.$axios.post("/NBI/Image/getLastAdjustArg/",getLastAdjustArgForm, config).then((response) => {
+      this.$axios.post("/NBI/Image/getLastAdjustArg/", getLastAdjustArgForm, config).then((response) => {
         if (response.data === 1) {
           this.$message({
             showClose: true,
@@ -258,13 +263,12 @@ export default {
             type: 'error'
           });
         } else {
-          console.log("getLastAdjustArg得到的数据是",response.data)
-          this.channelOffset=response.data.channelOffset;
-          this.brightnessOffset=response.data.light;
-          this.fromAdjust.contrastOffset=response.data.contrast;
-          this.fromAdjust.saturationOffset=response.data.saturation;
-          this.fromAdjust.luminosityOffset=response.data.light;
-
+          console.log("getLastAdjustArg得到的数据是", response.data,this.fromAdjust)
+          this.channelOffset = response.data.channelOffset;
+          this.brightnessOffset = response.data.brightness;
+          this.fromAdjust.contrastOffset = response.data.contrast;
+          this.fromAdjust.saturationOffset = response.data.saturation;
+          this.fromAdjust.luminosityOffset = response.data.luminosity;
         }
       });
     }
