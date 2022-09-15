@@ -128,5 +128,5 @@ def logoutInToken(uid):
     table = getTable(conn, NBITABLE.TokenInfo)
     newValue = {"$set": {"expiresTime": datetime.now()}}
     result = table.update_one({"UID": uid}, newValue)
-    conn.close()
+    #conn.close()
     return result

@@ -73,7 +73,7 @@ class imageData:
         conn = getConnection()
         table = getTable(conn, NBITABLE.PhotoInfo)
         ret = table.insert_one(self.getDict())
-        conn.close()
+        # conn.close()
         return ret
 
 
@@ -84,7 +84,7 @@ def updateImageData(_id, updateValue):
     condition = {'_id': _id}
     newValue = {"$set": updateValue}
     result = table.update_one(condition, newValue)  # 执行数据库更新操作
-    conn.close()
+    # conn.close()
     return result
 
 

@@ -1,4 +1,3 @@
-import pymongo
 import time
 import datetime
 from ..imageProcess.NBIGenerator import getRandom
