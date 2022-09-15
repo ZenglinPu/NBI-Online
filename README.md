@@ -121,6 +121,7 @@ npm install axios
 | light          | Integer | 最后一次生成时的亮度                                                       |
 | saturation     | Integer | 最后一次生成时的饱和度                                                     |
 | channelOffset  | Integer | 最后一次生成时的通道调整值                                                 |
+| isBatch        | Boolean | 是否是批处理提交的图片，如果是批处理的图片则不在单张的History里面展示              |
 
 **图片附加信息表**
 

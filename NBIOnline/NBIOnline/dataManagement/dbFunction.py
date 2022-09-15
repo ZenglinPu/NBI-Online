@@ -3,7 +3,6 @@ import math
 import time
 
 from bson.objectid import ObjectId
-import pymongo
 import os
 
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
@@ -81,7 +80,7 @@ def getHistory(user, currentPage, pageCount):
     table_PhotoInfo = getTable(conn, NBITABLE.PhotoInfo)
     table_PhotoAdditionInfo = getTable(conn, NBITABLE.PhotoAdditionInfo)
     data = {}
-    allInfo = table_PhotoInfo.find({'UID': user}).sort("lastChangeTime", -1)
+    allInfo = table_PhotoInfo.find({'UID': user, 'isBatch': False}).sort("lastChangeTime", -1)
     """
     我们当前每一页展示pageCount张图，
     目前需要的数据是currentPage页的数据，
@@ -124,7 +123,7 @@ def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
     table_PhotoInfo = getTable(conn, NBITABLE.PhotoInfo)
     table_PhotoAdditionInfo = getTable(conn, NBITABLE.PhotoAdditionInfo)
     # 这个用户的所有数据
-    allInfo = table_PhotoInfo.find({'UID': user}).sort("lastChangeTime", -1)
+    allInfo = table_PhotoInfo.find({'UID': user, 'isBatch': False}).sort("lastChangeTime", -1)
     data = {}
     count = 1
     jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要

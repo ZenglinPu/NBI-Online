@@ -2,6 +2,7 @@ import time
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 from ..configLoader import nbi_conf
 
+
 # '''
 # 图片生成信息表：PhotoInfo
 # | 字段名         | 类型    | 含义                 |
@@ -21,12 +22,14 @@ from ..configLoader import nbi_conf
 # | light          | Integer | 最后一次生成时的亮度                                                       |
 # | saturation     | Integer | 最后一次生成时的饱和度                                                     |
 # | channelOffset  | Integer | 最后一次生成时的通道调整值                                                 |
+# | isBatch        | Boolean | 是否是批处理提交的图片，如果是批处理的图片则不在单张的History里面展示              |
 # '''
+
 
 # image data
 class imageData:
     def __init__(self, uid, image_green=None, isAutoBrightness=None, image_blue=None, image_white=None,
-                 image_result=None, image_compress=None, lastChangeTime=None):
+                 image_result=None, image_compress=None, lastChangeTime=None, isBatch=False):
         self.uid = uid
         self.image_blue = image_blue
         self.image_green = image_green
@@ -35,13 +38,15 @@ class imageData:
         self.image_compress = image_compress
         self.uploadTime = time.time()
         self.lastChangeTime = lastChangeTime
-        self.expireTime = self.uploadTime + nbi_conf.configs['gc_unprocessed_image_expire_time'] * 60 * 60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后 (可在配置文件中更改
+        self.expireTime = self.uploadTime + nbi_conf.configs[
+            'gc_unprocessed_image_expire_time'] * 60 * 60  # 在刚刚上传时生成这条数据，过期时间默认设置为24小时后 (可在配置文件中更改
         self.isAutoBrightness = isAutoBrightness
         self.isGenerated = False
         self.contrast = None
         self.light = None
         self.saturation = None
         self.channelOffset = None
+        self.isBatch = isBatch
 
     def getDict(self):
         ret = dict()
@@ -60,6 +65,7 @@ class imageData:
         ret['channelOffset'] = None
         ret['isAutoBrightness'] = self.isAutoBrightness
         ret['isGenerated'] = self.isGenerated
+        ret['isBatch'] = self.isBatch
         return ret
 
     # 创建新数据并保存

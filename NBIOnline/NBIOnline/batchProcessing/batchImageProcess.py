@@ -104,6 +104,7 @@ def transToStorage(originPath, toMoveList, uid):
         image_result=None,
         image_compress=None,
         lastChangeTime=time.time(),
+        isBatch=True,
     )
     gid = newImageData.saveData().inserted_id
     newAdditionInfo = imageAdditionInfo(
