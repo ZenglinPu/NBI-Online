@@ -1,4 +1,8 @@
 import time
+
+from bson import ObjectId
+
+from .db_ImageData import getImageInfoByID
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
@@ -71,3 +75,21 @@ def updateBatchInfo(_id, newValue):
     newValue = {"$set": newValue}
     result = table.update_one(condition, newValue)  # 执行数据库更新操作
     return result
+
+
+# 提供_id，获取所有原始图片的信息
+def getAllSrcImageInfoByBatchID(_id):
+    conn = getConnection()
+    table_batch = getTable(conn, NBITABLE.BatchProcess)
+    imgList = table_batch.find_one({'_id': _id}).get('imgList').split('|')
+    ret = []
+    for image in imgList:
+        imageInfo = getImageInfoByID(ObjectId(image))
+        toAdd = {
+            'imageBlue': imageInfo.get('Image_Blue'),
+            'imageGreen': imageInfo.get('Image_Green'),
+            'imageWhite': imageInfo.get('Image_White'),
+            'imageName': str(imageInfo.get('_id')),
+        }
+        ret.append(toAdd)
+    return ret

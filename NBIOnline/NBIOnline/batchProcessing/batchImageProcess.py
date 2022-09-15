@@ -8,6 +8,7 @@ from ..dataManagement.db_batchProcess import updateBatchInfo
 from ..imageProcess.ImageProcesser import transPackageImage
 
 
+# 处理已经检查好的图片数据，更新单张图片的数据库
 def nbiImageProcessing(*args):
     batchID = args[0]
     pass
@@ -21,54 +22,56 @@ def batchImagePreProcessing(*args):
     # 用来记录更新数据库
     totalPare = 0
     imgList = []
+    try:
+        while len(os.listdir(originPath)) > 0:
+            # 选取第一张图片
+            img_pareName, img_pareType, img_type = getNameAndType(os.listdir(originPath)[0])
+            isFindBlue = False
+            isFindGreen = False
 
-    while len(os.listdir(originPath)) > 0:
-        # 选取第一张图片
-        img_pareName, img_pareType, img_type = getNameAndType(os.listdir(originPath)[0])
-        isFindBlue = False
-        isFindGreen = False
+            if img_pareType == "B" or img_pareName == "b":
+                isFindBlue = True
+            if img_pareType == "G" or img_pareName == "g":
+                isFindGreen = True
 
-        if img_pareType == "B" or img_pareName == "b":
-            isFindBlue = True
-        if img_pareType == "G" or img_pareName == "g":
-            isFindGreen = True
+            # 用来记录已经配对的图片名称
+            toMoveList = [os.listdir(originPath)[0]]
+            # print(img_pareName, img_pareType, img_type)
+            # 遍历整个文件夹，寻找配对
+            for i in os.listdir(originPath):
+                pn, pt, rt = getNameAndType(i)
+                # print(pn, pt, rt)
+                if pn == img_pareName:
+                    if pt == img_pareType:
+                        continue
+                    # 找到配对
+                    else:
+                        if pt == "B" or pt == "b":
+                            isFindBlue = True
+                        if pt == "G" or pt == "g":
+                            isFindGreen = True
+                        toMoveList.append(getFullName(pn, pt, rt))
 
-        # 用来记录已经配对的图片名称
-        toMoveList = [os.listdir(originPath)[0]]
-        # print(img_pareName, img_pareType, img_type)
-        # 遍历整个文件夹，寻找配对
-        for i in os.listdir(originPath):
-            pn, pt, rt = getNameAndType(i)
-            # print(pn, pt, rt)
-            if pn == img_pareName:
-                if pt == img_pareType:
-                    continue
-                # 找到配对
-                else:
-                    if pt == "B" or pt == "b":
-                        isFindBlue = True
-                    if pt == "G" or pt == "g":
-                        isFindGreen = True
-                    toMoveList.append(getFullName(pn, pt, rt))
+            # 仅有在既有蓝色又有绿色的时候才移动图片，否则依然检查不通过，白色无所谓
+            if isFindGreen and isFindBlue:
+                totalPare += 1
+                imgList.append(str(transToStorage(originPath, toMoveList, args[2])))
+                for i in toMoveList:
+                    os.remove(originPath+'/'+i)
+            else:
+                # 检查没有通过，通过_id更新数据库
+                updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})
+                return
 
-        # 仅有在既有蓝色又有绿色的时候才移动图片，否则依然检查不通过，白色无所谓
-        if isFindGreen and isFindBlue:
-            totalPare += 1
-            imgList.append(str(transToStorage(originPath, toMoveList, args[2])))
-            for i in toMoveList:
-                os.remove(originPath+'/'+i)
-            print(imgList)
-        else:
-            # 检查没有通过，通过_id更新数据库
-            updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})
-            return
-
-    # 开始处理图片生成NBI
-    processThread = threading.Thread(target=nbiImageProcessing, args=[batchID])
-    processThread.start()
-    # 检查通过，通过_id更新数据库
-    updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 4, 'imgList': '|'.join(imgList)})
-    return
+        # 开始处理图片生成NBI
+        processThread = threading.Thread(target=nbiImageProcessing, args=[batchID])
+        processThread.start()
+        # 检查通过，通过_id更新数据库
+        updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 4, 'imgList': '|'.join(imgList)})
+        return
+    except Exception as e:
+        updateBatchInfo(batchID,
+                        {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})
 
 
 def getNameAndType(fullName):

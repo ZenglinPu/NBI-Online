@@ -5,6 +5,7 @@ import time
 from bson.objectid import ObjectId
 import os
 
+from .db_batchProcess import getAllSrcImageInfoByBatchID
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
@@ -314,6 +315,7 @@ def getBatchStatusByID(_id):
 
 
 # 根据_id查询一个批次所有原始图片，由于很多原始图片很大，这一步可能会很慢
-# 注意，这一步需要在检查完成之后进行，在这一步完成之后才能确保图片都成组，并且已经生成了压缩图片
+# 注意，这一步需要在检查完成之后进行，在这一步完成之后才能确保图片都成组
 def getOriginImage(_id):
-    pass
+    ret = getAllSrcImageInfoByBatchID(_id)
+    return ret
