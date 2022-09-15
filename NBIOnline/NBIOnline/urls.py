@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
 
-from .batchProcessing.batchRequest import batchUpload_compress, getBatchStatus, getInitImageInfo
+from .batchProcessing.batchRequest import batchUpload_compress, getBatchStatus, getInitImageInfo, startBatchProcess
 from .userManagement.register import sendValidCodeEmail, registerNewUser
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
@@ -17,7 +17,7 @@ urlpatterns = [
     path(r'NBI/Image/upload/', uploadImage, name='uploadImage'),
     path(r'NBI/Image/getResult/', updateInputAndGetNBI, name='inputUpdate'),
     path(r'NBI/Image/chooseLastImage/', chooseLastImage, name='chooseLastImage'),
-    path(r'NBI/Image/getLastAdjustArg/',getLastAdjustArg, name='getLastAdjustArg'),
+    path(r'NBI/Image/getLastAdjustArg/', getLastAdjustArg, name='getLastAdjustArg'),
 
     # """User"""
     path(r"NBI/User/register/sendEmail", sendValidCodeEmail, name="validCodeEmail"),
@@ -44,4 +44,5 @@ urlpatterns = [
     path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
     path(r"NBI/Batch/checkStatus/", getBatchStatus, name="get batch status by batch id"),
     path(r"NBI/Batch/getOriginImage/", getInitImageInfo, name="get batch info after passing package check"),
+    path(r"NBI/Batch/startProcess/", startBatchProcess, name="start batch process"),
 ]

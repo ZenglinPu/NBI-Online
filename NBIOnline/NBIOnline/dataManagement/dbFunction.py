@@ -69,8 +69,10 @@ def deleteOneImage(t, name):
         print("Can not find image type:{t}".format(t=t))
         return
     if name is not None:
-        os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" + t + "/" + name)
-
+        try:
+            os.system("rm /home/ubuntu/NBI-Online/NBIOnline/static/Data/" + t + "/" + name)
+        except Exception as e:
+            raise e
 
 # 提取HistoryData页面所需的基础信息，无筛选条件，数据按照lastChangeTime逆序返回
 def getHistory(user, currentPage, pageCount):

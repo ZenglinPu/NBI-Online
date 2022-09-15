@@ -77,6 +77,13 @@ def updateBatchInfo(_id, newValue):
     return result
 
 
+def getBatchInfo(_id):
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.BatchProcess)
+    condition = {'_id': _id}
+    return table.find_one(condition)
+
+
 # 提供_id，获取所有原始图片的信息
 def getAllSrcImageInfoByBatchID(_id):
     conn = getConnection()

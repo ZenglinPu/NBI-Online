@@ -58,6 +58,7 @@ class NBIManager():
 
 # manager = NBIManager("PhotoAdditionInfo")
 # manager = NBIManager("PhotoInfo")
+# manager = NBIManager("BatchProcess")
 # manager.clearAllImageData()
 # manager.removeTableData()
 # manager.printAll()

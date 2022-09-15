@@ -4,6 +4,8 @@ import time
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
+# 根据uid返回用户等级
+# 超级用户返回2，否则返回1
 def getUserRankByUID(uid):
     conn = getConnection()
     table_UserInfo = getTable(conn, NBITABLE.UserInfo)

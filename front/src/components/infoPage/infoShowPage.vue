@@ -115,7 +115,10 @@
           <span style="color: red">修改</span>
           <span>、</span>
           <span style="color: red">下载</span>
-          <span>等操作;</span>
+          <span>等操作;</span><br>
+          <span>（四）仅有</span>
+          <span style="color: goldenrod">高级用户</span>
+          <span>可以使用NBI图片批处理功能。</span>
         </div>
       </div>
     </div>
@@ -179,6 +182,35 @@
       </div>
     </div>
     <div class="infoPageContentContainer" style="border-bottom: 1px solid gray;width: 93%"></div>
+
+    <div id="batchInfo" class="infoPageSubTitle">
+      <i class="el-icon-discover" style="color: #0b007e"></i>
+      <p style="margin-left: 10px">图片批处理相关说明：</p>
+    </div>
+    <div class="infoPageContentContainer">
+      <div class="infoPageContend_subTitle">
+        <p>
+          - 批处理流程
+        </p>
+      </div>
+      <div class="infoPageContend_info">
+        <div style="width: 100%;height: 90%">
+          <span>&nbsp;&nbsp;&nbsp;TODO</span>
+        </div>
+      </div>
+    </div>
+    <div class="infoPageContentContainer">
+      <div class="infoPageContend_subTitle">
+        <p>
+          - 压缩包检查要求
+        </p>
+      </div>
+      <div class="infoPageContend_info">
+        <div style="width: 100%;height: 90%">
+          <span>&nbsp;&nbsp;&nbsp;TODO</span>
+        </div>
+      </div>
+    </div>
 
     <div id="userAgreementInfo" class="infoPageSubTitle">
       <i class="el-icon-discover" style="color: #0b007e"></i>
@@ -285,6 +317,9 @@ export default {
       }
       if (which === "beSuper"){
         document.getElementById('howToBeSuperUserInfo') .scrollIntoView({ behavior: 'smooth' });
+      }
+      if (which === "batchRequest"){
+        document.getElementById("batchInfo") .scrollIntoView({ behavior: 'smooth' });
       }
     },
   }

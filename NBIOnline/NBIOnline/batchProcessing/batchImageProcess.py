@@ -11,6 +11,7 @@ from ..imageProcess.ImageProcesser import transPackageImage
 # 处理已经检查好的图片数据，更新单张图片的数据库
 def nbiImageProcessing(*args):
     batchID = args[0]
+    uid = args[1]
     pass
 
 
@@ -63,9 +64,6 @@ def batchImagePreProcessing(*args):
                 updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})
                 return
 
-        # 开始处理图片生成NBI
-        processThread = threading.Thread(target=nbiImageProcessing, args=[batchID])
-        processThread.start()
         # 检查通过，通过_id更新数据库
         updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 4, 'imgList': '|'.join(imgList)})
         return

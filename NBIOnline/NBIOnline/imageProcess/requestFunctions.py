@@ -7,10 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 from ..dataManagement.db_User import addSumGenerate
 from ..userManagement.token import tokenCheck
 from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
-from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, getInfoByUIDAndGID
+from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, \
+    getInfoByUIDAndGID
 from ..dataManagement.db_ImageData import imageData, updateImageData
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 from ..userManagement.userRank import getUserRankByUID, checkUploadTime
+
 
 # 查询并返回上一次提交的图片
 @csrf_exempt
@@ -201,10 +203,10 @@ def updateInputAndGetNBI(request):
                 "Image_Compress": cname,
                 "lastChangeTime": time.time(),
                 'isAutoBrightness': isAutoBrightness,
-                'brightness': brightnessOffset,                             # 亮度
-                "contrast": int(request.POST.get("contrastOffset")),        # 对比度
-                "luminosity": int(request.POST.get("luminosityOffset")),    # 明度
-                "saturation": int(request.POST.get("saturationOffset")),    # 饱和度
+                'brightness': brightnessOffset,  # 亮度
+                "contrast": int(request.POST.get("contrastOffset")),  # 对比度
+                "luminosity": int(request.POST.get("luminosityOffset")),  # 明度
+                "saturation": int(request.POST.get("saturationOffset")),  # 饱和度
                 "channelOffset": channelOffset,
             }
         # 根据用户等级判断刚刚生成的图片保留多久
@@ -266,6 +268,7 @@ def historyImgInfo(request):
     else:
         return HttpResponse(2)
 
+
 @csrf_exempt
 def getLastAdjustArg(request):
     if request.method == "POST":
@@ -279,37 +282,37 @@ def getLastAdjustArg(request):
         gid = request.POST.get("gid")
         imageInfo, imageAdditionInfo = getAllImageInfoBy_id(gid)
         # 对比度
-        if imageInfo.get("contrast")==None:
-            contrast=100
+        if imageInfo.get("contrast") is None:
+            contrast = 100
         else:
-            contrast=int(imageInfo.get("contrast"))
+            contrast = int(imageInfo.get("contrast"))
         # 亮度
-        if imageInfo.get("brightness")==None:
-            brightness=0
+        if imageInfo.get("brightness") is None:
+            brightness = 0
         else:
-            brightness=int(imageInfo.get("brightness"))
+            brightness = int(imageInfo.get("brightness"))
         # 饱和度
-        if imageInfo.get("saturation")==None:
-            saturation=100
+        if imageInfo.get("saturation") is None:
+            saturation = 100
         else:
-            saturation=int(imageInfo.get("saturation"))
+            saturation = int(imageInfo.get("saturation"))
         # 明度
-        if imageInfo.get("luminosity")==None:
-            luminosity=100
+        if imageInfo.get("luminosity") is None:
+            luminosity = 100
         else:
-            luminosity=int(imageInfo.get("luminosity"))
+            luminosity = int(imageInfo.get("luminosity"))
         # 通道
-        if imageInfo.get("channelOffset")==None:
-            channelOffset=0
+        if imageInfo.get("channelOffset") is None:
+            channelOffset = 0
         else:
-            channelOffset=int(imageInfo.get("channelOffset"))
+            channelOffset = int(imageInfo.get("channelOffset"))
 
         ret = {
             "contrast": contrast,
             "brightness": brightness,
             "saturation": saturation,
             "luminosity": luminosity,
-            "channelOffset":channelOffset
+            "channelOffset": channelOffset
         }
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type="application/json")

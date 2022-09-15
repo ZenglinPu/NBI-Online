@@ -1,5 +1,15 @@
 <template>
  <el-container>
+   <el-dialog
+      title="无法使用批处理功能？"
+      :visible.sync="moreMessage.noBatch"
+      width="30%"
+      center>
+      <span>点击<a @click="toInfoPage_batchProcess()" class="fontLink">这里</a>查看批处理权限规则</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="moreMessage.noBatch = false">确 定</el-button>
+      </span>
+    </el-dialog>
     <el-aside width="350px">
       <div class="aside-button">
         <div v-show="!isUploaded" class="uploadPackageBtn" @click="chooseNewPackage()">
@@ -52,14 +62,14 @@
                 placement="top-start"
                 width="100"
                 trigger="hover"
-                content="写什么呢？大概是批处理的使用提示吧！">
-                <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
+                content="上传原始图片压缩包，批量生成NBI图片。（点击查看批处理压缩包详细规则）">
+                <el-button @click="toInfoPage_batchRequest()" style="cursor: pointer;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
               </el-popover>
             </div>
           </el-col>
           <el-col :span="4">
             <div class="header-last">
-              <button class="header-button">生成结果</button>
+              <el-button @click="startProcess()" :disabled="!isPassCheck || isProcessing" type="danger" style="width: 90%;height: 36px; font-family: 幼圆,serif;">{{ uploadBtnFont }}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -70,22 +80,23 @@
           :header-cell-style="{color: '#222222', fontSize:'14px'}"
           :data="tableData"
           style="width: 100%;"
-          max-height="573">
+          max-height="603">
           <el-table-column
-            fixed
             prop="name"
             label="标本ID"
-            width="262">
+            width="242">
           </el-table-column>
           <el-table-column
             prop="blueCompress"
             label="蓝色光源图片"
-            width="262">
+            align="center"
+            width="252">
             <template slot-scope="scope">
-              <div style="height: 83px;display: flex;align-items: center;">
+              <div style="height: 83px;display: flex;align-items: center;justify-content: center">
                 <el-image
                   :src="'/static/Data/Blue/' + scope.row.blueCompress"
-                  style="height: 83px;"
+                  :fit="'contain'"
+                  style="width: 80%;height: 80%"
                 >
                 </el-image>
               </div>
@@ -94,12 +105,14 @@
           <el-table-column
             prop="greenCompress"
             label="绿色光源图片"
-            width="262">
+            align="center"
+            width="252">
             <template slot-scope="scope">
-              <div style="height: 83px;display: flex;align-items: center;">
+              <div style="height: 83px;display: flex;align-items: center;justify-content: center">
                 <el-image
                   :src="'/static/Data/Green/' + scope.row.greenCompress"
-                  style="height: 83px;"
+                  :fit="'contain'"
+                  style="width: 80%;height: 80%"
                 >
                 </el-image>
               </div>
@@ -108,24 +121,27 @@
           <el-table-column
             prop="whiteCompress"
             label="白色光源图片"
-            width="262">
+            align="center"
+            width="252">
             <template slot-scope="scope">
-              <div style="height: 83px;display: flex;align-items: center;">
+              <div style="height: 83px;display: flex;align-items: center;justify-content: center">
                 <el-image
+                  v-show="scope.row.whiteCompress !== null"
                   :src="'/static/Data/White/' + scope.row.whiteCompress"
-                  style="height: 83px;"
+                  style="width: 80%;height: 80%"
+                  :fit="'contain'"
                 >
                 </el-image>
+                <p v-show="scope.row.whiteCompress === null">未上传白色标本图像</p>
               </div>
             </template>
           </el-table-column>
           <el-table-column
-            fixed="right"
             label="操作"
             width="120">
             <template slot-scope="scope">
               <el-button
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
+                @click.native.prevent="deleteRow(scope.$index)"
                 type="text"
                 size="small">
                 <i class="el-icon-delete oneImageDeleteBtn"></i>移除
@@ -147,6 +163,8 @@ export default {
       batchID: '',
       isUploaded: false,
       isPassCheck: false,
+      isProcessing: false,
+      uploadBtnFont: "开始处理",
       activities: [
       {
         content: '等待上传',
@@ -193,10 +211,31 @@ export default {
       //   greenCompress: 'result_compress_10@10*com~gdztfkvc.jpg',
       //   whiteCompress: 'result_compress_10@10*com~gdztfkvc.jpg'
       // },
-      ]
+      ],
+      moreMessage:{
+        noBatch: false,
+      },
+      deleteImagePare: [], // 记录前端开始处理前打算去掉的图片组
     };
   },
   methods:{
+    toInfoPage_batchProcess(){
+      this.moreMessage.noBatch = false;
+      this.$router.push({
+        path: "/Info",
+        query: {which: "userType"},
+      })
+    },
+    toInfoPage_batchRequest(){
+      this.$router.push({
+        path: "/Info",
+        query: {which: "batchRequest"},
+      })
+    },
+    deleteRow(index){
+      this.deleteImagePare.push(this.tableData[index].name);
+      this.tableData.splice(index, 1);
+    },
     // cookie
     getCookie(objName){//获取指定名称的cookie的值
       const arrStr = document.cookie.split("; ");
@@ -214,6 +253,53 @@ export default {
     },
     chooseNewPackage(){
       this.$refs.compressPackageInput.click();
+    },
+    startProcess(){
+      let startProcessForm = new FormData();
+      startProcessForm.append("uid", this.getUID());
+      startProcessForm.append("token", this.getToken());
+      startProcessForm.append("batchID", this.batchID);
+      startProcessForm.append("ignoreImage", this.deleteImagePare);
+      this.isProcessing = true;
+      this.uploadBtnFont = "处理中";
+      this.$axios.post("/NBI/Batch/startProcess/",startProcessForm,{
+         headers: {'Content-Type': 'multipart/form-data'}
+      }).then((response) => {
+        if (response.data === 1) {
+          this.$message({
+            showClose: true,
+            message: '账户信息错误，上传失败！',
+            type: 'error'
+          });
+          this.uploadBtnFont = "开始处理";
+          this.isProcessing = false;
+        }
+        else if (response.data === 2) {
+          this.$message({
+            showClose: true,
+            message: '错误，该批次无法被处理',
+            type: 'error'
+          });
+          this.uploadBtnFont = "开始处理";
+          this.isProcessing = false;
+        }
+        else if (response.data === 4) {
+          this.$message({
+            showClose: true,
+            message: '错误，该批次为空',
+            type: 'error'
+          });
+          this.uploadBtnFont = "开始处理";
+          this.isProcessing = false;
+        }
+        else{
+          this.$message({
+            showClose: true,
+            message: '已开始处理',
+            type: 'success'
+          });
+        }
+      });
     },
     showImageInfoInPackage(){
       let packageImageForm = new FormData();
@@ -283,6 +369,10 @@ export default {
               if (!this.isPassCheck){
                 this.showImageInfoInPackage();
                 this.isPassCheck = true;
+              }
+
+              if (this.isProcessing){
+                this.uploadBtnFont = "处理中（"+response.data.processedNum+"/"+response.data.batchSize+")";
               }
 
               this.activities[1].color = "#0bbd87";
@@ -358,6 +448,17 @@ export default {
           });
           this.$refs.uploadPackageIcon.className = "el-icon-upload";
           this.$refs.uploadPackageFont.innerHTML = "点击上传";
+        }
+        else if (response.data === 3){
+          // 不是超级用户，不能上传
+          this.$message({
+            showClose: true,
+            message: '您不是超级用户，不能使用批处理功能！',
+            type: 'error'
+          });
+          this.$refs.uploadPackageIcon.className = "el-icon-upload";
+          this.$refs.uploadPackageFont.innerHTML = "点击上传";
+          this.moreMessage.noBatch = true;
         }
         else{
           // console.log(response.data);
@@ -504,5 +605,14 @@ button {
 
 .el-table >>> .el-table__body .el-table__cell {
   padding: 1px 0;
+}
+.fontLink{
+  margin-left: 4px;
+  margin-right: 4px;
+  color: #1122AA;
+  cursor: pointer;
+}
+.fontLink:hover{
+  color: #2a3ff5;
 }
 </style>

@@ -4,14 +4,17 @@ import threading
 from bson import ObjectId
 from django.http import HttpResponse
 
-from .batchImageProcess import batchImagePreProcessing
+from .batchImageProcess import batchImagePreProcessing, nbiImageProcessing
 from .compressProcess import getCompressedFiles
-from ..dataManagement.dbFunction import getBatchStatusByID, getOriginImage
-from ..dataManagement.db_batchProcess import batchProcess
+from ..dataManagement.dbFunction import getBatchStatusByID, getOriginImage, deleteAllInfoOfImageBy_id
+from ..dataManagement.db_batchProcess import batchProcess, getBatchInfo, updateBatchInfo
 from ..userManagement.token import tokenCheck
 
 
 # 上传压缩包
+from ..userManagement.userRank import getUserRankByUID
+
+
 def batchUpload_compress(request):
     user = str(request.POST.get("uid"))
     token = str(request.POST.get("token"))
@@ -20,6 +23,10 @@ def batchUpload_compress(request):
     if not tokenCheck(user, token):
         # 1表示登录状态有问题
         return HttpResponse(1)
+
+    if getUserRankByUID(user) != 2:
+        # 不是超级用户，不能上传
+        return HttpResponse(3)
 
     user = user.replace('.', '^')
 
@@ -75,3 +82,41 @@ def getInitImageInfo(request):
     ret = getOriginImage(batchID)
     ret = json.dumps(ret)
     return HttpResponse(ret, content_type="application/json")
+
+
+# 开始指定batch id的批处理
+def startBatchProcess(request):
+    user = str(request.POST.get("uid"))
+    token = str(request.POST.get("token"))
+    # 检查登录状态
+    if not tokenCheck(user, token):
+        # 1表示登录状态有问题
+        return HttpResponse(1)
+    batchID = ObjectId(request.POST.get("batchID"))
+    batchInfo = getBatchInfo(batchID)
+
+    # 只有状态4的批可以处理
+    if batchInfo.get('status') != 4:
+        # 状态不对，不能处理
+        return HttpResponse(2)
+
+    ignoreImage = request.POST.get("ignoreImage").split(',')
+    imgList = batchInfo.get('imgList').split('|')
+    totalNum = int(batchInfo.get('batchSize'))
+    # print(ignoreImage)
+    if ignoreImage[0] != '':
+        # 预先去除不用处理的图片
+        for ignore in ignoreImage:
+            imgList.remove(ignore)
+            deleteAllInfoOfImageBy_id(ObjectId(ignore))
+            totalNum -= 1
+
+    # 更新数据库，开始处理
+    updateBatchInfo(batchID, {'status': 5, 'imgList': '|'.join(imgList), 'batchSize': totalNum})
+
+    if totalNum != 0:
+        processThread = threading.Thread(target=nbiImageProcessing, args=[batchID, user.replace('.', '^')])
+        processThread.start()
+        return HttpResponse(3)
+    else:
+        return HttpResponse(4)
