@@ -13,21 +13,21 @@
             <p style="font-family: 幼圆,serif ">&emsp;&emsp;对比度</p>
             <el-popover placement="top-start" width="100" title="对比度" trigger="hover" content="拉大高低亮度像素的距离，提高图片明暗对比程度。">
               <el-button style="margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link"
-                         circle></el-button>
+                circle></el-button>
             </el-popover>
           </div>
           <div style="width:75%; height: 100%;display: flex;flex-direction: column;justify-content: center;">
             <div
-                style="font-family: 幼圆,serif;font-size: small;width:80%; height: 30%;display: flex;flex-direction: row;justify-content: center;align-items: center">
+              style="font-family: 幼圆,serif;font-size: small;width:80%; height: 30%;display: flex;flex-direction: row;justify-content: center;align-items: center">
               <p style="width: 50%;display: flex;justify-content: left;color: rgb(0, 0, 0);">低对比度</p>
               <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);">高对比度</p>
             </div>
             <div
-                style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
+              style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
               <input @change="showInfo()" type="range" id="contrastAdjustRange" min="0" max="200"
-                     v-model="contrastOffset">
+                v-model="contrastOffset">
               <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;overflow: hidden;">
-                {{ contrastOffset }}</p>
+                {{contrastOffset}}</p>
               <el-button icon="el-icon-refresh-right" circle @click="contrastOffset=100"></el-button>
             </div>
           </div>
@@ -37,21 +37,21 @@
             <p style="font-family: 幼圆,serif">&emsp;&emsp;&emsp;明度</p>
             <el-popover placement="top-start" width="100" title="明度" trigger="hover" content="按SVD分解像素，高明度提高图片整体暗部。">
               <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                         icon="el-icon-link" circle></el-button>
+                icon="el-icon-link" circle></el-button>
             </el-popover>
           </div>
           <div style="width:75%; height: 100%;display: flex;flex-direction: column;justify-content: center;">
             <div
-                style="font-family: 幼圆,serif;font-size: small;width:80%; height: 30%;display: flex;flex-direction: row;justify-content: center;align-items: center">
+              style="font-family: 幼圆,serif;font-size: small;width:80%; height: 30%;display: flex;flex-direction: row;justify-content: center;align-items: center">
               <p style="width: 50%;display: flex;justify-content: left;color: rgb(0, 0, 0);">低明度</p>
               <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);">高明度</p>
             </div>
             <div
-                style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
+              style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
               <input @change="showInfo()" type="range" id="numinosityAdjustRange" min="0" max="200"
-                     v-model="luminosityOffset">
+                v-model="luminosityOffset">
               <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;overflow: hidden;">
-                {{ luminosityOffset }}</p>
+                {{luminosityOffset}}</p>
               <el-button icon="el-icon-refresh-right" circle @click="luminosityOffset=100"></el-button>
             </div>
           </div>
@@ -61,21 +61,21 @@
             <p style="font-family: 幼圆,serif">&emsp;&emsp;饱和度</p>
             <el-popover placement="top-start" width="100" title="饱和度" trigger="hover" content="按SVD分解像素，高饱和度色彩更加鲜艳。">
               <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
-                         icon="el-icon-link" circle></el-button>
+                icon="el-icon-link" circle></el-button>
             </el-popover>
           </div>
           <div style="width:75%; height: 100%;display: flex;flex-direction: column;justify-content: center;">
             <div
-                style="font-family: 幼圆,serif;font-size: small;width:80%; height: 30%;display: flex;flex-direction: row;justify-content: center;align-items: center">
+              style="font-family: 幼圆,serif;font-size: small;width:80%; height: 30%;display: flex;flex-direction: row;justify-content: center;align-items: center">
               <p style="width: 50%;display: flex;justify-content: left;color: rgb(0, 0, 0);">低饱和度</p>
               <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);">高饱和度</p>
             </div>
             <div
-                style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
+              style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
               <input @change="showInfo()" type="range" id="saturationAdjustRange" min="0" max="200"
-                     v-model="saturationOffset">
+                v-model="saturationOffset">
               <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 50px;height: 100%;overflow: hidden;"
-                 id="saturationOffsetValue">{{ saturationOffset }}</p>
+                id="saturationOffsetValue">{{saturationOffset}}</p>
               <el-button icon="el-icon-refresh-right" circle @click="saturationOffset=100"></el-button>
             </div>
           </div>
@@ -190,6 +190,7 @@ input[type="checkbox"] {
   align-items: center;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 #controlPanelPart {
   width: 100%;
   height: 100%;
@@ -200,6 +201,7 @@ input[type="checkbox"] {
   align-items: center;
   flex-direction: row;
 }
+
 .adjustContainer {
   width: 100%;
   height: 60px;
