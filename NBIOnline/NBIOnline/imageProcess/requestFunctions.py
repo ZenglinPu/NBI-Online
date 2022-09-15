@@ -191,6 +191,7 @@ def updateInputAndGetNBI(request):
                 "lastChangeTime": time.time(),
                 "channelOffset": channelOffset,
                 'isAutoBrightness': isAutoBrightness,
+                'brightness': brightnessOffset,
             }
         elif mode == "full":
             updateDict = {
@@ -198,9 +199,10 @@ def updateInputAndGetNBI(request):
                 "Image_Compress": cname,
                 "lastChangeTime": time.time(),
                 'isAutoBrightness': isAutoBrightness,
-                "contrast": int(request.POST.get("contrastOffset")),
-                "light": int(request.POST.get("luminosityOffset")),  # 明度
-                "saturation": int(request.POST.get("saturationOffset")),  # 饱和度
+                'brightness': brightnessOffset,                             # 亮度
+                "contrast": int(request.POST.get("contrastOffset")),        # 对比度
+                "luminosity": int(request.POST.get("luminosityOffset")),    # 明度
+                "saturation": int(request.POST.get("saturationOffset")),    # 饱和度
                 "channelOffset": channelOffset,
             }
         # 根据用户等级判断刚刚生成的图片保留多久

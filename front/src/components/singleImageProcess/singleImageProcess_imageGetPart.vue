@@ -188,6 +188,7 @@ export default {
         getResultForm.append("mode", "easy")
       }
       else{
+        //带有处理信息的生成
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
         getResultForm.append("channelOffset", this.channelOffset);

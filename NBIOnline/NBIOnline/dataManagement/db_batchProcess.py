@@ -44,7 +44,7 @@ class batchProcess:
         ret['UID'] = self.uid
         ret['batchName'] = self.batchName
         ret['srcFolderName'] = self.srcFolderName
-        ret['gidList'] = '|'.join(self.imgList)
+        ret['imgList'] = '|'.join(self.imgList)
         ret['uploadTime'] = self.uploadTime
         ret['checkTime'] = self.checkTime
         ret['finishTime'] = self.finishTime

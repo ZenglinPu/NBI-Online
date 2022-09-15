@@ -4,7 +4,7 @@
       <c_header :singleOrMulti="singleOrMulti" :singleOrBatchHistory="singleOrBatchHistory" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
     <div id="mainFunctionContainer">
-      <keep-alive include="SingleImageProcess">
+      <keep-alive>
         <router-view></router-view>
       </keep-alive>
     </div>

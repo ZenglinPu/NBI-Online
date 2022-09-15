@@ -1,8 +1,5 @@
 import os
-import time
-
 import pymongo
-from ..dataManagement.db_connection import getConnection
 
 
 # 管理数据库的函数，谨慎调用
@@ -10,7 +7,9 @@ from ..dataManagement.db_connection import getConnection
 # system manager
 class NBIManager():
     def __init__(self, table):
-        self.__conn = getConnection()
+        self.__conn = self.__conn = pymongo.MongoClient(
+                'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017",
+                                                              "admin"))
         if table == "PhotoInfo":
             self.__table = self.__conn.nbi.PhotoInfo
         elif table == "UserInfo":
@@ -23,6 +22,7 @@ class NBIManager():
             self.__table = self.__conn.nbi.BatchProcess
         else:
             print("No table:{t}".format(t=table))
+            return
 
     def closeConnection(self):
         self.__conn.close()
@@ -39,7 +39,7 @@ class NBIManager():
         self.__table.remove(condition)
 
     # 清除数据表中的所有图片数据
-    def removeAllTableData(self):
+    def removeTableData(self):
         if input("Make sure you want to clear all data in table {t}[y/N]:".format(t=self.__table)) == 'y':
             self.__table.remove()
 
@@ -56,8 +56,8 @@ class NBIManager():
             os.system("mkdir /home/ubuntu/NBI-Online/NBIOnline/static/Data/Temp")
 
 
-# manager = NBIManager("UserInfo")
+# manager = NBIManager("PhotoAdditionInfo")
+# manager = NBIManager("PhotoInfo")
 # manager.clearAllImageData()
-# manager.removeAllTableData()
+# manager.removeTableData()
 # manager.printAll()
-print(time.time())
