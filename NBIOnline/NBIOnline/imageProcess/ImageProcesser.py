@@ -1,11 +1,16 @@
 """用来处理图片，保存，压缩，转化图片格式的方法"""
+import time
+
 import cv2
 import rawpy
 from PIL import Image as pillowImage
 from .NBIGenerator import getNBIImage_full, getRandom, pillow2cv2, getNBIImage_easy
 from ..configLoader import nbi_conf
+from ..dataManagement.dbFunction import getInfoByUIDAndGID, deleteOneImage
+from ..dataManagement.db_ImageData import updateImageData
 
 conf = nbi_conf
+
 
 # 输入cv2类图片，直接保存压缩后图片并且在数据库中记录
 def compressImage(image, name, rate):
@@ -205,3 +210,42 @@ def raw2jpg_file(image, imageType, name):
             savePath = "../NBIOnline/static/Data/Green/" + name
         with open(savePath, 'wb') as f:
             f.write(thumb.data)
+
+
+def processImageByID(uid, _id):
+    # 因为uid中存在符号.
+    # 在进行图片的处理中应当替换掉
+    uid = uid.replace(".", "^")
+
+    # 通过数据库找到gid的图片信息
+    imgInfo = getInfoByUIDAndGID(uid, _id)
+
+    processResult, resultName, resultImage = generateNBIImage_easy(
+        image_blue_name=imgInfo.get("Image_Blue"),
+        image_green_name=imgInfo.get("Image_Green"),
+        user=uid,
+        channelOffset=0,
+        brightnessOffset=0,
+        isAutoChannel=0,
+        isAutoBrightness=0,
+    )
+    cname = compressImage(resultImage, resultName, 15)
+
+    # 把旧的NBI&&Temp图片删除
+    if imgInfo.get("Image_Result") is not None:
+        deleteOneImage("NBI", imgInfo.get("Image_Result"))
+        deleteOneImage("Temp", imgInfo.get("Image_Compress"))
+
+    # 更新数据库
+    updateDict = {
+        "Image_Result": resultName,
+        "Image_Compress": cname,
+        "lastChangeTime": time.time(),
+    }
+
+    # 高级用户保存一年，批处理是高级用户的权限，都是保留一年
+    if not imgInfo.get("isGenerated"):
+        updateDict['expireTime'] = imgInfo.get("expireTime") + 24 * 60 * 60 * 366
+        updateDict['isGenerated'] = True
+
+    updateImageData(imgInfo.get("_id"), updateDict)

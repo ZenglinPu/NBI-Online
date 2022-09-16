@@ -74,6 +74,7 @@ def deleteOneImage(t, name):
         except Exception as e:
             raise e
 
+
 # 提取HistoryData页面所需的基础信息，无筛选条件，数据按照lastChangeTime逆序返回
 def getHistory(user, currentPage, pageCount):
     conn = getConnection()

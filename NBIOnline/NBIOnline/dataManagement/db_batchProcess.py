@@ -20,7 +20,7 @@ from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 # | imgList        | String  | 这一批次所有图片的_id，字符串形式，中间用'|'分割，其中每条数据是元组的形式           |
 # | batchSize      | Integer | 这一批次的图片组数                                                         |
 # | processedNum   | Integer | 这一批次已经处理的图片组数                                                   |
-# | status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成  |
+# | status         | Integer | 这一批次的处理状态，1-上传中；2-检查中；3-检查失败；4-检查成功；5-处理中；6-处理完成；7-处理错误  |
 # '''
 
 

@@ -1,18 +1,38 @@
 import os
-import threading
 import time
+
+from bson import ObjectId
 
 from ..dataManagement.db_ImageAdditionInfo import imageAdditionInfo
 from ..dataManagement.db_ImageData import imageData
-from ..dataManagement.db_batchProcess import updateBatchInfo
-from ..imageProcess.ImageProcesser import transPackageImage
+from ..dataManagement.db_batchProcess import updateBatchInfo, getBatchInfo
+from ..imageProcess.ImageProcesser import transPackageImage, processImageByID
 
 
 # 处理已经检查好的图片数据，更新单张图片的数据库
 def nbiImageProcessing(*args):
     batchID = args[0]
     uid = args[1]
-    pass
+
+    batchInfo = getBatchInfo(batchID)
+    processNum = batchInfo.get("processedNum")
+    for img_id in batchInfo.get('imgList').split('|'):
+        try:
+            processImageByID(uid, ObjectId(img_id))
+        except Exception as e:
+            updateBatchInfo(batchID, {'status': 7})
+            raise e
+        processNum += 1
+        if processNum % 5 == 0:
+            # 每处理5条数据更新一次数据库
+            updateBatchInfo(batchID, {'processedNum': processNum})
+    # 成功处理完成
+    updateDict = {
+        'status': 6,
+        'finishTime': time.time(),
+        'processedNum': processNum,
+    }
+    updateBatchInfo(batchID, updateDict)
 
 
 # 图片预处理，检查，成组，更新数据库，放到对应的路径下
@@ -62,14 +82,21 @@ def batchImagePreProcessing(*args):
             else:
                 # 检查没有通过，通过_id更新数据库
                 updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})
+                os.remove(originPath)
                 return
 
         # 检查通过，通过_id更新数据库
         updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 4, 'imgList': '|'.join(imgList)})
+        try:
+            os.remove(originPath)
+        except Exception as e:
+            os.system("rm "+str(originPath))
         return
     except Exception as e:
         updateBatchInfo(batchID,
                         {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})
+        os.remove(originPath)
+        raise e
 
 
 def getNameAndType(fullName):
