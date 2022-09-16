@@ -1,7 +1,8 @@
 import math
 import random
-import numpy as np
+
 import cv2
+import numpy as np
 from PIL import Image
 
 
@@ -217,15 +218,3 @@ def getRandom(randomlength=8):
     str_list = [random.choice(ascii_letters) for i in range(randomlength)]
     random_str = '~' + ''.join(str_list)
     return random_str
-
-
-"""function test"""
-# 415nm是blue
-# 540nm是green
-
-# img_blue = Image.open(r"../static/media/B_1.jpg")
-# img_green = Image.open(r"../static/media/G_1.jpg")
-# img_blue = Image.open(r"../static/media/1-415nm.jpg")
-# img_green = Image.open(r"../static/media/1-540nm.jpg")
-
-# getNBIImage(image_blue=img_blue, image_green=img_green, isAutoCutImage=True, isAutoProcessImage=True, offset=12)

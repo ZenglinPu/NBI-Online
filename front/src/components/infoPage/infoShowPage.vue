@@ -4,6 +4,7 @@
       <i class="el-icon-info" style="color: #0b007e"></i>
       <p style="margin-left: 10px">NBI-Online说明文档</p>
     </div>
+
     <div class="infoPageSubTitle">
       <i class="el-icon-discover" style="color: #0b007e"></i>
       <p style="margin-left: 10px">用户权限与图片管理相关说明：</p>
@@ -195,7 +196,14 @@
       </div>
       <div class="infoPageContend_info">
         <div style="width: 100%;height: 90%">
-          <span>&nbsp;&nbsp;&nbsp;TODO</span>
+          <span>&nbsp;&nbsp;&nbsp;想要使用批处理功能批量生成和下载图片，首先需要拥有</span>
+          <span style="color: goldenrod">超级用户</span>
+          <span>的账号权限，批处理功能仅仅针对超级用户开启。进行批处理的步骤为;</span><br>
+          <span>（一）上传符合要求的压缩包文件，里面包含着</span>
+          <span style="color: red">符合要求</span>
+          <span>的待处理原始图片;</span><br>
+          <span>（二）等待压缩包通过检查，然后点击开始处理按钮；</span><br>
+          <span>（三）等待批次处理完成，点击查看结果下载和修改处理结果;</span><br>
         </div>
       </div>
     </div>
@@ -207,7 +215,9 @@
       </div>
       <div class="infoPageContend_info">
         <div style="width: 100%;height: 90%">
-          <span>&nbsp;&nbsp;&nbsp;TODO</span>
+          <span>&nbsp;&nbsp;&nbsp;不同提交方式的压缩包要求: </span><br>
+          <span>（一）普通压缩包提交： TODO</span><br>
+          <span>（二）自动识别压缩包提交: TODO</span><br>
         </div>
       </div>
     </div>
@@ -285,11 +295,6 @@
       </div>
     </div>
     <div class="infoPageContentContainer" style="border-bottom: 1px solid gray;width: 93%"></div>
-<!--    <p>1)uploadTimes</p>-->
-<!--    <p>2)userAgreement</p>-->
-<!--    <p>3)beSuper</p>-->
-<!--    <p>4)userType</p>-->
-<!--    <p>5)nbi</p>-->
   </div>
 </template>
 

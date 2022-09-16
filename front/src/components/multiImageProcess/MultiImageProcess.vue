@@ -69,7 +69,8 @@
           </el-col>
           <el-col :span="4">
             <div class="header-last">
-              <el-button @click="startProcess()" :disabled="!isPassCheck || isProcessing" type="danger" style="width: 90%;height: 36px; font-family: 幼圆,serif;">{{ uploadBtnFont }}</el-button>
+              <el-button v-show="isFinish" type="success" style="width: 90%;margin-right: 4%;height: 36px; font-family: 幼圆,serif;">查看处理结果</el-button>
+              <el-button v-show="!isFinish" @click="startProcess()" :disabled="!isPassCheck || isProcessing" type="danger" style="width: 90%;margin-right: 4%;height: 36px; font-family: 幼圆,serif;">{{ uploadBtnFont }}</el-button>
             </div>
           </el-col>
         </el-row>
@@ -164,6 +165,7 @@ export default {
       isUploaded: false,
       isPassCheck: false,
       isProcessing: false,
+      isFinish: false,
       uploadBtnFont: "开始处理",
       activities: [
       {
@@ -389,6 +391,19 @@ export default {
             }
             if (response.data.status === 6){
               // 处理完成
+              if (this.isProcessing){
+                this.uploadBtnFont = "处理中（"+response.data.processedNum+"/"+response.data.batchSize+")";
+                this.isProcessing = false;
+              }
+              if (!this.isFinish){
+                this.isFinish = true;
+                this.$message({
+                  showClose: true,
+                  message: '批处理已完成',
+                  type: 'success'
+                });
+              }
+
               this.activities[1].color = "#0bbd87";
               this.activities[1].icon = 'el-icon-check';
               this.activities[1].timestamp = response.data.uploadTime;
@@ -403,6 +418,20 @@ export default {
 
               this.activities[4].color = "#0bbd87";
               this.activities[4].icon = "el-icon-check";
+            }
+            if (response.data.status === 7) {
+              // 处理错误
+              this.activities[4].color = "#ff4747";
+              this.activities[4].icon = "el-icon-cross";
+              this.activities[4].content = "处理错误";
+              if (!this.isFinish){
+                this.isFinish = true;
+                this.$message({
+                  showClose: true,
+                  message: '批处理处理错误',
+                  type: 'error'
+                });
+              }
             }
           })
       }, 5000);
