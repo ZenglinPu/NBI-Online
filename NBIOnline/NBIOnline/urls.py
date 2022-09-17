@@ -8,7 +8,7 @@ from .userManagement.login import loginCheck, checkByToken, logoutCheck
 from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
 from .imageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo,getLastAdjustArg
 from .historyManagement.history import historyDisplay, deleteHistoryImage, historyFilter, modifyInfo, batchDisplay
-from .batchHistoryManagement.bacthHistory import batchHistoryDisplay
+from .batchHistoryManagement.bacthHistory import batchHistoryDisplay,batchHistoryWithFilter
 
 urlpatterns = [
     path(r'NBI/admin/', admin.site.urls),
@@ -48,5 +48,6 @@ urlpatterns = [
     path(r"NBI/Batch/startProcess/", startBatchProcess, name="start batch process"),
 
     # Batch History Display
-    path(r"NBI/BatchHistory/display", batchHistoryDisplay, name="batchHistoryDisplay")
+    path(r"NBI/BatchHistory/display/", batchHistoryDisplay, name="batchHistoryDisplay"),
+    path(r'NBI/BatchHistory/getBatchHistoryWithFilter/', batchHistoryWithFilter),
 ]
