@@ -1,12 +1,13 @@
 <template>
   <div id="imgShowPart">
-    <div class="imgPart_inner" style="height: 340px;margin-top: 5px;">
+    <div class="imgPart_inner" style="height: 100%;">
+      <div class="additionTitle">附加信息</div>
       <div style="width: 100%;height:100%;display:flex;justify-content: left;">
-        <el-scrollbar id="additionInfoForm" style="height: 100%; padding-top: 10px;">
+        <el-scrollbar id="additionInfoForm">
           <!-- 滚动条 -->
           <HistoryImageInfo :GID="this.GID"></HistoryImageInfo>
         </el-scrollbar><!-- /滚动条 -->
-        <div id="mainControlPart">
+        <!-- <div id="mainControlPart">
           <div id="generateBtn">
             <el-popover placement="top-start" width="100" trigger="hover" content="可设置对比度、亮度等信息调整图片">
               <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference"
@@ -91,7 +92,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -106,178 +107,178 @@ export default {
   props: ['GID'],
   data() {
     return {
-      channelOffset: 0,
-      brightnessOffset: 0,
-      isGenerating: false,
-      isUploaded_fromSend: true,
-      fromAdjust: {
-        isOpen: false,
-        contrastOffset: 0,
-        luminosityOffset: 0,
-        saturationOffset: 0,
-      },
-      recordRealResult: "",
-      imageResultSrc: "",
+      // channelOffset: 0,
+      // brightnessOffset: 0,
+      // isGenerating: false,
+      // isUploaded_fromSend: true,
+      // fromAdjust: {
+      //   isOpen: false,
+      //   contrastOffset: 0,
+      //   luminosityOffset: 0,
+      //   saturationOffset: 0,
+      // },
+      // recordRealResult: "",
+      // imageResultSrc: "",
     }
   },
-  updated() {
-    this.$bus.$emit("sendLastArg")
-  },
-  mounted() {
-    //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
-    // this.$bus.$on("getUploadedInfo", (data) => {
-    //   this.isUploaded_fromSend = data;
-    // });
-    this.getLastAdjustArg()
-    this.$bus.$on("sendLastArg", () => {
-      const toSend = {
-        "contrastOffset": this.fromAdjust.contrastOffset,
-        "luminosityOffset": this.fromAdjust.luminosityOffset,
-        "saturationOffset": this.fromAdjust.saturationOffset,
-      };
-      //发送数据到send
-      this.$bus.$emit("getlastArg", toSend);
-    }) 
+  // updated() {
+  //   this.$bus.$emit("sendLastArg")
+  // },
+  // mounted() {
+  //   //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
+  //   // this.$bus.$on("getUploadedInfo", (data) => {
+  //   //   this.isUploaded_fromSend = data;
+  //   // });
+  //   this.getLastAdjustArg()
+  //   this.$bus.$on("sendLastArg", () => {
+  //     const toSend = {
+  //       "contrastOffset": this.fromAdjust.contrastOffset,
+  //       "luminosityOffset": this.fromAdjust.luminosityOffset,
+  //       "saturationOffset": this.fromAdjust.saturationOffset,
+  //     };
+  //     //发送数据到send
+  //     this.$bus.$emit("getlastArg", toSend);
+  //   }) 
     
-    this.$bus.$on("getAdjustImageInfo", (data) => {
-      this.fromAdjust.isOpen = data.isOpen;
-      this.fromAdjust.contrastOffset = data.contrastOffset;
-      this.fromAdjust.luminosityOffset = data.luminosityOffset;
-      this.fromAdjust.saturationOffset = data.saturationOffset;
-    });
+  //   this.$bus.$on("getAdjustImageInfo", (data) => {
+  //     this.fromAdjust.isOpen = data.isOpen;
+  //     this.fromAdjust.contrastOffset = data.contrastOffset;
+  //     this.fromAdjust.luminosityOffset = data.luminosityOffset;
+  //     this.fromAdjust.saturationOffset = data.saturationOffset;
+  //   });
 
-  },
-  beforeDestroy() {
-    // this.$bus.$off("getUploadedInfo");
-    this.$bus.$off("getAdjustImageInfo");
-    this.$bus.$off("sendLastArg");
-  },
-  methods: {
-    // cookie
-    getCookie(objName) {//获取指定名称的cookie的值
-      const arrStr = document.cookie.split("; ");
-      for (let i = 0; i < arrStr.length; i++) {
-        const temp = arrStr[i].split("=");
-        if (temp[0] === objName) return temp[1];
-      }
-      return null;
-    },
-    getToken() {
-      return this.getCookie("NBI_token");
-    },
-    getUID() {
-      return this.getCookie("NBI_UID");
-    },
-    // checkUploaded() {
-    //   // 发送信号给send让他调用我的事件，传输数据
-    //   this.$bus.$emit("sendUploadedInfoToGet");
-    // },
-    //获取对比度等信息
-    getAdjustImageInfo() {
-      this.$bus.$emit("sendAdjustImageInfo");
-    },
-    getResultImage() {
-      // this.checkUploaded();
-      if (!this.isUploaded_fromSend) {
-        this.$message({
-          showClose: true,
-          message: "请先完成图片上传",
-          type: 'warning'
-        });
-        return;
-      }
-      this.isGenerating = true;
-      this.getAdjustImageInfo();
-      let getResultForm = new FormData();
-      if (!this.fromAdjust.isOpen) {
-        //简单生成
-        getResultForm.append("token", this.getToken());
-        getResultForm.append("user", this.getUID());
-        getResultForm.append("channelOffset", this.channelOffset);
-        getResultForm.append("brightnessAdjust", this.brightnessOffset);
-        getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
-        getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("mode", "easy")
-      } else {
-        getResultForm.append("token", this.getToken());
-        getResultForm.append("user", this.getUID());
-        getResultForm.append("channelOffset", this.channelOffset);
-        getResultForm.append("brightnessAdjust", this.brightnessOffset);
-        getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
-        getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("contrastOffset", this.fromAdjust.contrastOffset);
-        getResultForm.append("luminosityOffset", this.fromAdjust.luminosityOffset);
-        getResultForm.append("saturationOffset", this.fromAdjust.saturationOffset);
-        getResultForm.append("mode", "full");
-      }
-      let config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      };
-      this.$axios.post("/NBI/Image/getResult/", getResultForm, config).then((response) => {
-        if (response.data === 1) {
-          this.$message({
-            showClose: true,
-            message: '登录状态错误！',
-            type: 'error'
-          });
-          this.$bus.$emit("changeStatus", { status: false, uname: '' });
-        } else if (response.data === 2) {
-          this.$message({
-            showClose: true,
-            message: '请求方式错误！',
-            type: 'error'
-          });
-        } else if (response.data === 3) {
-          this.$message({
-            showClose: true,
-            message: '图片处理错误！',
-            type: 'error'
-          });
-        } else {
-          this.updatePageNBIImage(response.data);
-          console.log("ImageInfoForm中拿到的数据", response.data)
-        }
-        this.isGenerating = false;
-      });
-    },
-    updatePageNBIImage(data) {
-      this.imageResultSrc = data.resultImage;
-      const toSend = {
-        "imageNBIName": data.resultImage,
-      };
-      this.$bus.$emit("getAdjustImage", toSend)
-    },
-    getLastAdjustArg() {
-      let config = {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      };
-      let getLastAdjustArgForm = new FormData();
-      getLastAdjustArgForm.append("token", this.getToken());
-      getLastAdjustArgForm.append("uid", this.getUID());
-      getLastAdjustArgForm.append("gid", this.GID);
-      this.$axios.post("/NBI/Image/getLastAdjustArg/", getLastAdjustArgForm, config).then((response) => {
-        if (response.data === 1) {
-          this.$message({
-            showClose: true,
-            message: '登录状态错误！',
-            type: 'error'
-          });
-        } else {
-          console.log("getLastAdjustArg得到的数据是", response.data,this.fromAdjust)
-          this.channelOffset = response.data.channelOffset;
-          this.brightnessOffset = response.data.brightness;
-          this.fromAdjust.contrastOffset = response.data.contrast;
-          this.fromAdjust.saturationOffset = response.data.saturation;
-          this.fromAdjust.luminosityOffset = response.data.luminosity;
-        }
-      });
-    }
-  }
+  // },
+  // beforeDestroy() {
+  //   // this.$bus.$off("getUploadedInfo");
+  //   this.$bus.$off("getAdjustImageInfo");
+  //   this.$bus.$off("sendLastArg");
+  // },
+  // methods: {
+  //   // cookie
+  //   getCookie(objName) {//获取指定名称的cookie的值
+  //     const arrStr = document.cookie.split("; ");
+  //     for (let i = 0; i < arrStr.length; i++) {
+  //       const temp = arrStr[i].split("=");
+  //       if (temp[0] === objName) return temp[1];
+  //     }
+  //     return null;
+  //   },
+  //   getToken() {
+  //     return this.getCookie("NBI_token");
+  //   },
+  //   getUID() {
+  //     return this.getCookie("NBI_UID");
+  //   },
+  //   // checkUploaded() {
+  //   //   // 发送信号给send让他调用我的事件，传输数据
+  //   //   this.$bus.$emit("sendUploadedInfoToGet");
+  //   // },
+  //   //获取对比度等信息
+  //   getAdjustImageInfo() {
+  //     this.$bus.$emit("sendAdjustImageInfo");
+  //   },
+  //   getResultImage() {
+  //     // this.checkUploaded();
+  //     if (!this.isUploaded_fromSend) {
+  //       this.$message({
+  //         showClose: true,
+  //         message: "请先完成图片上传",
+  //         type: 'warning'
+  //       });
+  //       return;
+  //     }
+  //     this.isGenerating = true;
+  //     this.getAdjustImageInfo();
+  //     let getResultForm = new FormData();
+  //     if (!this.fromAdjust.isOpen) {
+  //       //简单生成
+  //       getResultForm.append("token", this.getToken());
+  //       getResultForm.append("user", this.getUID());
+  //       getResultForm.append("channelOffset", this.channelOffset);
+  //       getResultForm.append("brightnessAdjust", this.brightnessOffset);
+  //       getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
+  //       getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
+  //       getResultForm.append("mode", "easy")
+  //     } else {
+  //       getResultForm.append("token", this.getToken());
+  //       getResultForm.append("user", this.getUID());
+  //       getResultForm.append("channelOffset", this.channelOffset);
+  //       getResultForm.append("brightnessAdjust", this.brightnessOffset);
+  //       getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
+  //       getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
+  //       getResultForm.append("contrastOffset", this.fromAdjust.contrastOffset);
+  //       getResultForm.append("luminosityOffset", this.fromAdjust.luminosityOffset);
+  //       getResultForm.append("saturationOffset", this.fromAdjust.saturationOffset);
+  //       getResultForm.append("mode", "full");
+  //     }
+  //     let config = {
+  //       headers: { 'Content-Type': 'multipart/form-data' }
+  //     };
+  //     this.$axios.post("/NBI/Image/getResult/", getResultForm, config).then((response) => {
+  //       if (response.data === 1) {
+  //         this.$message({
+  //           showClose: true,
+  //           message: '登录状态错误！',
+  //           type: 'error'
+  //         });
+  //         this.$bus.$emit("changeStatus", { status: false, uname: '' });
+  //       } else if (response.data === 2) {
+  //         this.$message({
+  //           showClose: true,
+  //           message: '请求方式错误！',
+  //           type: 'error'
+  //         });
+  //       } else if (response.data === 3) {
+  //         this.$message({
+  //           showClose: true,
+  //           message: '图片处理错误！',
+  //           type: 'error'
+  //         });
+  //       } else {
+  //         this.updatePageNBIImage(response.data);
+  //         console.log("ImageInfoForm中拿到的数据", response.data)
+  //       }
+  //       this.isGenerating = false;
+  //     });
+  //   },
+  //   updatePageNBIImage(data) {
+  //     this.imageResultSrc = data.resultImage;
+  //     const toSend = {
+  //       "imageNBIName": data.resultImage,
+  //     };
+  //     this.$bus.$emit("getAdjustImage", toSend)
+  //   },
+  //   getLastAdjustArg() {
+  //     let config = {
+  //       headers: { 'Content-Type': 'multipart/form-data' }
+  //     };
+  //     let getLastAdjustArgForm = new FormData();
+  //     getLastAdjustArgForm.append("token", this.getToken());
+  //     getLastAdjustArgForm.append("uid", this.getUID());
+  //     getLastAdjustArgForm.append("gid", this.GID);
+  //     this.$axios.post("/NBI/Image/getLastAdjustArg/", getLastAdjustArgForm, config).then((response) => {
+  //       if (response.data === 1) {
+  //         this.$message({
+  //           showClose: true,
+  //           message: '登录状态错误！',
+  //           type: 'error'
+  //         });
+  //       } else {
+  //         console.log("getLastAdjustArg得到的数据是", response.data,this.fromAdjust)
+  //         this.channelOffset = response.data.channelOffset;
+  //         this.brightnessOffset = response.data.brightness;
+  //         this.fromAdjust.contrastOffset = response.data.contrast;
+  //         this.fromAdjust.saturationOffset = response.data.saturation;
+  //         this.fromAdjust.luminosityOffset = response.data.luminosity;
+  //       }
+  //     });
+  //   }
+  // }
 }
 </script>
 
 <style scoped>
-#brightnessAdjustRange {
+/* #brightnessAdjustRange {
   background-image: linear-gradient(to right, rgb(0, 0, 0, 1), rgba(160, 160, 160, 0.2));
   ;
   border-radius: 10px;
@@ -293,7 +294,7 @@ export default {
   width: 100%;
   -webkit-appearance: none;
   height: 4px;
-}
+} */
 
 #imgShowPart {
   width: 100%;
@@ -303,17 +304,17 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border-bottom: 1px grey solid;
+  /* border-bottom: 1px grey solid; */
 }
 
 .imgPart_inner {
-  width: 98%;
+  width: 100%;
   display: flex;
   justify-content: center;
   flex-direction: column;
 }
 
-#mainControlPart {
+/* #mainControlPart {
   width: 30%;
   display: flex;
   flex-direction: column;
@@ -327,7 +328,7 @@ input[type="checkbox"] {
   width: 22px;
   border: 3px rgb(0, 94, 255);
   cursor: pointer;
-}
+} */
 
 #generateBtn {
   width: 100%;
@@ -339,7 +340,7 @@ input[type="checkbox"] {
   border-bottom: 1px grey solid;
 }
 
-#mainControlBtn {
+/* #mainControlBtn {
   width: 100%;
   height: 25%;
   display: flex;
@@ -356,14 +357,25 @@ input[type="checkbox"] {
   flex-direction: column;
   justify-content: start;
   align-items: flex-start;
+} */
+
+.additionTitle {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+  font-weight: bold;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
+  background-image: linear-gradient(180deg, #fbfbff 0%, #fff 100%);
 }
 
-
 #additionInfoForm {
-  width: 70%;
+  width: 100%;
   height: 100%;
-  background-color: rgba(126, 126, 126, 0.25);
-  border: 2px solid black;
+  /* background-color: rgba(126, 126, 126, 0.25); */
+  padding-top: 20px;
+  border-left: 1px solid #e6e6e6;
+  border-right: 1px solid #e6e6e6;
   /* border-radius: 40px; */
   font-family: STHeiti, serif;
   color: #363636;
@@ -374,7 +386,7 @@ input[type="checkbox"] {
   transition: 0.3s;
 }
 
-.mainControlRange_container {
+/* .mainControlRange_container {
   width: 100%;
   height: 50%;
   display: flex;
@@ -398,5 +410,5 @@ input[type="checkbox"] {
 #getResultImage:hover {
   background-color: rgba(56, 56, 56, 0.78);
   color: #edecd6;
-}
+} */
 </style>

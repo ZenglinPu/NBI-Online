@@ -30,24 +30,24 @@
     <div id="detailInfoContainer">
       <div id="imageShowPart">
         <div
-            style="height: 74%;width: 100%;display: flex;justify-content: center;align-items: center;border: 1px solid darkblue; background-color: #6a6f77">
+            style="height: 74%;width: 100%;display: flex;justify-content: center;align-items: center; background-color: #6a6f77">
           <el-image class="bigNBIImage" v-show="imageShowInfo.NBIImageName!=='None'" :src="imageShowInfo.NBIImageName"
                     :preview-src-list="imageShowInfo.srcList"></el-image>
         </div>
         <div
             style="height: 25%;margin-top: 1%;width: 100%;display: flex;justify-content: space-between;align-items: center;">
           <div
-              style="height: 96%;width: 32%;display: flex;justify-content: center;align-items: center;border: 1px solid darkblue; background-color: #6a6f77">
+              style="height: 96%;width: 32%;display: flex;justify-content: center;align-items: center;border: 1px solid #e6e6e6; background-color: #6a6f77">
             <el-image class="bigNBIImage" v-show="imageShowInfo.src_blue!=='None'"
                       :src="imageShowInfo.src_blue"></el-image>
           </div>
           <div
-              style="height: 96%;width: 32%;display: flex;justify-content: center;align-items: center;border: 1px solid darkblue; background-color: #6a6f77">
+              style="height: 96%;width: 32%;display: flex;justify-content: center;align-items: center;border: 1px solid #e6e6e6; background-color: #6a6f77">
             <el-image class="bigNBIImage" v-show="imageShowInfo.src_green!=='None'"
                       :src="imageShowInfo.src_green"></el-image>
           </div>
           <div
-              style="height: 96%;width: 32%;display: flex;justify-content: center;align-items: center;border: 1px solid darkblue; background-color: #6a6f77">
+              style="height: 96%;width: 32%;display: flex;justify-content: center;align-items: center;border: 1px solid #e6e6e6; background-color: #6a6f77">
             <p v-show="imageShowInfo.src_white==='/static/Data/White/null'" style="color: whitesmoke">未上传白色图片</p>
             <el-image class="bigNBIImage" v-show="imageShowInfo.src_white!=='/static/Data/White/null'"
                       :src="imageShowInfo.src_white"></el-image>
@@ -55,12 +55,12 @@
         </div>
       </div>
       <div id="imageAdjustPartContainer">
-        <div style="width: 100%;height: 65%">
+        <el-col :span="12">
+          <ImageAdjust :GID="this.GID" ></ImageAdjust>
+        </el-col>
+        <el-col :span="12">
           <ImageInfoFormPart :GID="this.GID" ></ImageInfoFormPart>
-        </div>
-        <div style="width: 100%;height: 35%">
-          <ImageAdjust></ImageAdjust>
-        </div>
+        </el-col>
       </div>
     </div>
   </div>
@@ -216,7 +216,8 @@ export default {
   flex-direction: row;
   justify-content: start;
   align-items: center;
-  border-bottom: 2px solid #777777;
+  /* border-bottom: 2px solid #777777; */
+  background: #f5f5fc;
 }
 
 #detailInfoContainer {
@@ -234,12 +235,13 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-top: 1px #e6e6e6 solid;
 }
 
 #imageAdjustPartContainer {
   width: 65%;
   height: 100%;
-  border: 1px rgb(0, 149, 255) solid;
+  border: 1px #e6e6e6 solid;
 }
 
 .bigNBIImage {

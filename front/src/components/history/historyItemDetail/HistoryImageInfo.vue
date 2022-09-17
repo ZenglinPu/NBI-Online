@@ -312,4 +312,8 @@ export default {
 /*#infiltrationSelector{*/
 /*  width: 50px;*/
 /*}*/
+
+.el-form >>> .el-form-item--mini.el-form-item {
+  margin-bottom: 22px;
+}
 </style>
