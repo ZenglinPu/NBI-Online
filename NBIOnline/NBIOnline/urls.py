@@ -48,5 +48,5 @@ urlpatterns = [
     path(r"NBI/Batch/startProcess/", startBatchProcess, name="start batch process"),
 
     # Batch History Display
-    path(r"NBI/BatchHistory/display",batchHistoryDisplay,name = "batchHistoryDisplay")
+    path(r"NBI/BatchHistory/display", batchHistoryDisplay, name="batchHistoryDisplay")
 ]

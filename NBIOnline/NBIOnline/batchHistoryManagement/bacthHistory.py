@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..userManagement.token import tokenCheck
 from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter, saveModification, \
-    getBatchHistory
+    getBatchHistoryData
 
 
 # 进入historyData页面后，展示基本信息
@@ -27,7 +27,7 @@ def batchHistoryDisplay(request):
         # 每一页展示多少条数据
         pageCount = int(request.POST.get("pageCount"))
 
-        ret = getBatchHistory(user, currentPage, pageCount)
+        ret = getBatchHistoryData(user, currentPage, pageCount)
         # print(ret)
         ret = json.dumps(ret)
         return HttpResponse(ret, content_type='application/json')

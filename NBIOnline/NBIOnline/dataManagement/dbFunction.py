@@ -118,7 +118,7 @@ def getHistory(user, currentPage, pageCount):
     return ret
 
 # 批处理数据展示界面
-def getBatchHistory(user, currentPage, pageCount):
+def getBatchHistoryData(user, currentPage, pageCount):
     conn = getConnection()
     table_BacthInfo = getTable(conn,NBITABLE.BatchProcess)
     data = {}
