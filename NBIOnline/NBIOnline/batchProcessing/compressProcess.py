@@ -13,7 +13,7 @@ def getCompressedFiles(packageName, user, in_path, out_folder_path):
     if os.path.exists(out_folder_path):
         shutil.rmtree(out_folder_path)  # 若输出文件夹以存在，会删除原先的文件夹！！！
     # 解压到指定目录,首先创建一个解压目录
-    os.mkdir(out_folder_path)
+    os.makedirs(out_folder_path)
     with zipfile.ZipFile(file=in_path, mode='r') as zf:
         for old_name in zf.namelist():
             # 获取文件大小，目的是区分文件夹还是文件，如果是空文件应该不好用。

@@ -10,14 +10,15 @@
         <el-button type="primary" @click="moreMessage.noBatch = false">确 定</el-button>
       </span>
     </el-dialog>
-    <el-aside width="350px">
+    <el-aside width="355px">
       <div class="aside-button">
         <div v-show="!isUploaded" class="uploadPackageBtn" @click="chooseNewPackage()">
           <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
           <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
         </div>
-        <div v-show="isUploaded" class="uploadPackageBtn">
+        <div v-show="isUploaded" class="uploadPackageBtn" @mouseenter="reUploadBtnShow = true" @mouseleave="reUploadBtnShow=false">
           <img style="height: 45%" src="/static/img/packageIcon.png">
+          <el-button v-show="reUploadBtnShow" type="danger" style="width: 65%;transition: 0.2s ease; margin-top: -50%" @click="reUploadBtn">重新上传</el-button>
         </div>
         <div style="height: 10%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只支持上传zip文件</div>
         <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
@@ -44,7 +45,6 @@
             </el-timeline-item>
           </el-timeline>
         </div>
-
       </div>
     </el-aside>
     <el-container>
@@ -167,6 +167,7 @@ export default {
       isProcessing: false,
       isFinish: false,
       uploadBtnFont: "开始处理",
+      reUploadBtnShow: false,
       activities: [
       {
         content: '等待上传',
@@ -221,6 +222,12 @@ export default {
     };
   },
   methods:{
+    reUploadBtn(){
+      this.isFinish = false;
+      this.isUploaded = false;
+      this.isPassCheck = false;
+
+    },
     toInfoPage_batchProcess(){
       this.moreMessage.noBatch = false;
       this.$router.push({
@@ -332,6 +339,123 @@ export default {
         }
       });
     },
+    updateProcessStatusShow(status, uploadTime, checkTime, finishTime, processedNum, batchSize){
+      if (status === 1){
+              // 上传中
+              this.activities[1].color = "#ff9854";
+              this.activities[1].icon = 'el-icon-loading';
+            }
+      if (status === 2){
+        // 上传完成，检查中
+        this.activities[1].color = "#0bbd87";
+        this.activities[1].icon = 'el-icon-check';
+        this.activities[1].timestamp = uploadTime;
+
+        this.activities[2].color = "#ff9854";
+        this.activities[2].icon = 'el-icon-loading';
+      }
+      if (status === 3){
+        // 检查失败
+        this.activities[1].color = "#0bbd87";
+        this.activities[1].icon = 'el-icon-check';
+        this.activities[1].timestamp = uploadTime;
+
+        this.activities[2].color = "#ff4747";
+        this.activities[2].icon = 'el-icon-close';
+        this.activities[2].content = "检查失败，压缩包不符合要求";
+      }
+      if (status === 4){
+        // 检查通过，处理中
+        if (!this.isPassCheck){
+          this.showImageInfoInPackage();
+          this.isPassCheck = true;
+        }
+
+        if (this.isProcessing){
+          this.uploadBtnFont = "处理中（"+processedNum+"/"+ batchSize+")";
+        }
+
+        this.activities[1].color = "#0bbd87";
+        this.activities[1].icon = 'el-icon-check';
+        this.activities[1].timestamp = uploadTime;
+
+        this.activities[2].color = "#0bbd87";
+        this.activities[2].icon = 'el-icon-check';
+        this.activities[2].timestamp = checkTime;
+
+        this.activities[3].color = "#ff9854";
+        this.activities[3].icon = 'el-icon-close';
+        this.activities[3].content = "处理图片组";
+      }
+      if (status === 5){
+        // 检查通过，处理中
+        if (!this.isPassCheck){
+          this.showImageInfoInPackage();
+          this.isPassCheck = true;
+        }
+
+        if (this.isProcessing){
+          this.uploadBtnFont = "处理中（"+ processedNum+"/"+ batchSize+")";
+        }
+
+        this.activities[1].color = "#0bbd87";
+        this.activities[1].icon = 'el-icon-check';
+        this.activities[1].timestamp = uploadTime;
+
+        this.activities[2].color = "#0bbd87";
+        this.activities[2].icon = 'el-icon-check';
+        this.activities[2].timestamp = checkTime;
+
+        this.activities[3].color = "#ff9854";
+        this.activities[3].icon = 'el-icon-loading';
+        this.activities[3].content = "处理图片组("+processedNum+"/"+ batchSize+")";
+      }
+      if (status === 6){
+        // 处理完成
+        if (this.isProcessing){
+          this.uploadBtnFont = "处理中（"+processedNum+"/"+batchSize+")";
+          this.isProcessing = false;
+        }
+        if (!this.isFinish){
+          this.isFinish = true;
+          this.$message({
+            showClose: true,
+            message: '批处理已完成',
+            type: 'success'
+          });
+        }
+
+        this.activities[1].color = "#0bbd87";
+        this.activities[1].icon = 'el-icon-check';
+        this.activities[1].timestamp = uploadTime;
+
+        this.activities[2].color = "#0bbd87";
+        this.activities[2].icon = 'el-icon-check';
+        this.activities[2].timestamp = checkTime;
+
+        this.activities[3].color = "#0bbd87";
+        this.activities[3].icon = 'el-icon-check';
+        this.activities[3].content = "处理图片组("+ processedNum+"/"+ batchSize+")";
+        this.activities[3].timestamp = finishTime;
+
+        this.activities[4].color = "#0bbd87";
+        this.activities[4].icon = "el-icon-check";
+      }
+      if (status === 7) {
+        // 处理错误
+        this.activities[4].color = "#ff4747";
+        this.activities[4].icon = "el-icon-close";
+        this.activities[4].content = "处理错误";
+        if (!this.isFinish){
+          this.isFinish = true;
+          this.$message({
+            showClose: true,
+            message: '批处理处理错误',
+            type: 'error'
+          });
+        }
+      }
+    },
     startCheckBatchStatus(){
       setInterval(()=>{
           let statusCheckForm = new FormData();
@@ -342,97 +466,14 @@ export default {
           this.$axios.post("/NBI/Batch/checkStatus/",statusCheckForm,{
              headers: {'Content-Type': 'multipart/form-data'}
           }).then((response) => {
-            if (response.data.status === 1){
-              // 上传中
-              this.activities[1].color = "#ff9854";
-              this.activities[1].icon = 'el-icon-loading';
-            }
-            if (response.data.status === 2){
-              // 上传完成，检查中
-              this.activities[1].color = "#0bbd87";
-              this.activities[1].icon = 'el-icon-check';
-              this.activities[1].timestamp = response.data.uploadTime;
-
-              this.activities[2].color = "#ff9854";
-              this.activities[2].icon = 'el-icon-loading';
-            }
-            if (response.data.status === 3){
-              // 检查失败
-              this.activities[1].color = "#0bbd87";
-              this.activities[1].icon = 'el-icon-check';
-              this.activities[1].timestamp = response.data.uploadTime;
-
-              this.activities[2].color = "#ff4747";
-              this.activities[2].icon = 'el-icon-close';
-              this.activities[2].content = "检查失败，压缩包不符合要求";
-            }
-            if (response.data.status === 4 || response.data.status === 5){
-              // 检查通过，处理中
-              if (!this.isPassCheck){
-                this.showImageInfoInPackage();
-                this.isPassCheck = true;
-              }
-
-              if (this.isProcessing){
-                this.uploadBtnFont = "处理中（"+response.data.processedNum+"/"+response.data.batchSize+")";
-              }
-
-              this.activities[1].color = "#0bbd87";
-              this.activities[1].icon = 'el-icon-check';
-              this.activities[1].timestamp = response.data.uploadTime;
-
-              this.activities[2].color = "#0bbd87";
-              this.activities[2].icon = 'el-icon-check';
-              this.activities[2].timestamp = response.data.checkTime;
-
-              this.activities[3].color = "#ff9854";
-              this.activities[3].icon = 'el-icon-loading';
-              this.activities[3].content = "处理图片组("+response.data.processedNum+"/"+response.data.batchSize+")";
-            }
-            if (response.data.status === 6){
-              // 处理完成
-              if (this.isProcessing){
-                this.uploadBtnFont = "处理中（"+response.data.processedNum+"/"+response.data.batchSize+")";
-                this.isProcessing = false;
-              }
-              if (!this.isFinish){
-                this.isFinish = true;
-                this.$message({
-                  showClose: true,
-                  message: '批处理已完成',
-                  type: 'success'
-                });
-              }
-
-              this.activities[1].color = "#0bbd87";
-              this.activities[1].icon = 'el-icon-check';
-              this.activities[1].timestamp = response.data.uploadTime;
-
-              this.activities[2].color = "#0bbd87";
-              this.activities[2].icon = 'el-icon-check';
-              this.activities[2].timestamp = response.data.checkTime;
-
-              this.activities[3].color = "#0bbd87";
-              this.activities[3].icon = 'el-icon-check';
-              this.activities[3].content = "处理图片组("+response.data.processedNum+"/"+response.data.batchSize+")";
-
-              this.activities[4].color = "#0bbd87";
-              this.activities[4].icon = "el-icon-check";
-            }
-            if (response.data.status === 7) {
-              // 处理错误
-              this.activities[4].color = "#ff4747";
-              this.activities[4].icon = "el-icon-cross";
-              this.activities[4].content = "处理错误";
-              if (!this.isFinish){
-                this.isFinish = true;
-                this.$message({
-                  showClose: true,
-                  message: '批处理处理错误',
-                  type: 'error'
-                });
-              }
-            }
+            this.updateProcessStatusShow(
+                response.data.status,
+                response.data.uploadTime,
+                response.data.checkTime,
+                response.data.finishTime,
+                response.data.processedNum,
+                response.data.batchSize,
+            );
           })
       }, 5000);
     },
@@ -546,13 +587,12 @@ button {
 
 .aside-button {
   overflow: hidden;
-  width: 100%;
+  width: 350px;
   height: 45%;
   display: flex;
   justify-content: start;
   align-items: center;
   flex-direction: column;
-  background-color: #fff;
   border-right: solid 1px #e6e6e6;
   border-bottom: solid 1px #e6e6e6;
   position: relative;
@@ -560,7 +600,7 @@ button {
 
 .aside-block {
   overflow: hidden;
-  width: 100%;
+  width: 340px;
   height: 55%;
   display: flex;
   justify-content: start;

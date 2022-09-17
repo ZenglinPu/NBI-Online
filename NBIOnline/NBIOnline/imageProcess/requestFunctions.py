@@ -27,7 +27,7 @@ def chooseLastImage(request):
 
         # 查询现有图片数据库中是否有名字和uid都一样的数据，如果有则说明这是重复提交
         result = getLastImage(user.replace(".", "^"))
-        if not result:
+        if result is None:
             # 返回1表示没有之前提交的图片
             return HttpResponse(1)
         else:
@@ -38,6 +38,7 @@ def chooseLastImage(request):
                 "imageBlue": result["Image_Blue"],
                 "imageGreen": result["Image_Green"],
                 "imageWhite": result["Image_White"],
+                "gid": str(result["_id"]),
                 "sampleName": additionalInfo["sampleName"],
                 "remark": additionalInfo["remark"],
             }

@@ -43,6 +43,13 @@ def batchImagePreProcessing(*args):
     # 用来记录更新数据库
     totalPare = 0
     imgList = []
+
+    if len(os.listdir(originPath)) == 0:
+        updateBatchInfo(batchID,
+                        {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3})
+        os.remove(originPath)
+        return
+
     try:
         while len(os.listdir(originPath)) > 0:
             # 选取第一张图片

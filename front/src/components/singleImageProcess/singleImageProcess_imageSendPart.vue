@@ -342,6 +342,7 @@ export default {
           this.isUploaded = true;
           this.$refs.uploadStatus.innerText = "已上传";
           this.uploadStatus_class = "uploadStatus_green";
+          this.imageInfoID = response.data.gid;
         }
       });
     },
