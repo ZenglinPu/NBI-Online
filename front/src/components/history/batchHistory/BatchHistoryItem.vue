@@ -4,12 +4,13 @@
       <div id="history-index-inner">{{ index }}</div>
     </span>
     <span class="historyItemInner" style="width: 15%; font-weight: bold;">{{ batchName }}</span>
-    <span class="historyItemInner" style="width: 20%">{{ lastChangeTimeShow }}</span>
-    <span class="historyItemInner" style="width: 20%">
+    <span class="historyItemInner" style="width: 15%">{{ batchCap }}</span>
+    <span class="historyItemInner" style="width: 15%">{{ lastChangeTimeShow }}</span>
+    <span class="historyItemInner" style="width: 10%">
       <div id="expired-time" :style="expireBackground">{{ expireTimeShow }}</div>
     </span>
     <span class="historyItemInner" style="width: 15%">
-      <el-button type="primary" plain @click="checkDetail(_id)">查看详情</el-button>
+      <el-button type="primary" plain @click="checkDetail(_id)">批次内容</el-button>
       <i class="el-icon-delete oneImageDeleteBtn" @click="deleteDetail(_id)"></i>
     </span>
   </div>
@@ -29,7 +30,11 @@ export default {
     },
     batchName:{
       type:String,
-      default:'未命名样本'
+      default:'未命名批次'
+    },
+    batchCap:{
+      type:String,
+      default:'99'
     },
     lastChangeTime:{
       type:String,
@@ -46,14 +51,6 @@ export default {
     }
   },
   computed: {
-    url(){
-      return "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime();
-    },
-    srcList(){
-      return [
-        "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
-      ]
-    },
     lastChangeTimeShow() {
       let date = new Date(parseInt(this.lastChangeTime) * 1000);
       let Year = date.getFullYear();
@@ -104,7 +101,7 @@ export default {
       return ret;
     },
     //信息填写完整，才可以“保存结果”
-    //永久显示绿色，暂时显示橙色，马上要删除显示红色
+    //1天以上显示绿色，24小时以下显示橙色，过期显示灰色
     expireBackground() {
       let str = this.expireTimeShow;
       let regOrange = RegExp('天');
@@ -112,9 +109,9 @@ export default {
       if (regGray.test(str)) {
         return { background: '#808080' };
       }else if (regOrange.test(str)) {
-        return { background: '#ff9854' };
-      }else {
         return { background: '#7ae588' };
+      }else {
+        return { background: '#ff9854' };
       }
     },
   },

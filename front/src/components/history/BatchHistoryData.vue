@@ -32,27 +32,27 @@ export default {
   data() {
     return {
       totalPage: 0,
-      totalImage: 10
+      totalBatch: 0
     }
   },
   computed: {
     total() {
-      return this.totalImage;
+      return this.totalBatch;
     }
   },
   mounted() {
-    this.$bus.$on('historyTotalPage',(data)=>{
-      // console.log('我是HistoryData组件，收到了总页数为',data);
+    this.$bus.$on('BHistoryTotalPage',(data)=>{
+      // console.log('我是BatchHistoryData组件，收到了总页数为',data);
       this.totalPage = data;
     });
-    this.$bus.$on('historyTotalImage',(data)=>{
-      // console.log('我是HistoryData组件，收到了总条数为',data);
-      this.totalImage = data;
+    this.$bus.$on('BHistoryTotalBatch',(data)=>{
+      // console.log('我是BatchHistoryData组件，收到了总条数为',data);
+      this.totalBatch = data;
     });
   },
   beforeDestroy() {
-    this.$bus.$off('historyTotalPage');
-    this.$bus.$off('historyTotalImage');
+    this.$bus.$off('BHistoryTotalPage');
+    this.$bus.$off('BHistoryTotalBatch');
   }
 }
 </script>
