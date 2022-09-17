@@ -39,7 +39,6 @@ urlpatterns = [
     path(r'NBI/History/getHistoryWithFilter/', historyFilter),
     path(r'NBI/History/batchDisplay/', batchDisplay, name='batchDisplay'),
 
-
     # """Batch Processing"""
     path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
     path(r"NBI/Batch/checkStatus/", getBatchStatus, name="get batch status by batch id"),

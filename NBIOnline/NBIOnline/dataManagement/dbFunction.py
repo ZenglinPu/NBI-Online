@@ -18,7 +18,7 @@ def getLastImage(user):
     # 这个UID没有提交过数据
     if result.count() == 0:
         conn.close()
-        return False
+        return None
 
     # 这个UID提交过数据，查看是否是同样的图片
     return result[0]

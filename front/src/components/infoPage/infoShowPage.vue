@@ -10,12 +10,12 @@
       <p style="margin-left: 10px">用户权限与图片管理相关说明：</p>
     </div>
     <div class="infoPageContentContainer">
-      <div id="uploadTimesInfo" class="infoPageContend_subTitle">
+      <div id="uploadTimesInfo" class="infoPageContent_subTitle">
         <p>
           - 源图片上传次数
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;用户仅仅在</span>
           <span style="color: red">完成源图片上传后</span>
@@ -32,12 +32,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div id="howToBeSuperUserInfo" class="infoPageContend_subTitle">
+      <div id="howToBeSuperUserInfo" class="infoPageContent_subTitle">
         <p>
           - 如何成为超级用户
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;目前，我们仅仅支持两种获得超级用户身份的方式：</span><br>
           <span>（一）新用户在</span>
@@ -66,12 +66,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div id="userTypeInfo" class="infoPageContend_subTitle">
+      <div id="userTypeInfo" class="infoPageContent_subTitle">
         <p>
           - 超级用户和普通用户的区别
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;</span>
           <span style="color: gray">普通用户</span>
@@ -130,12 +130,12 @@
       <p style="margin-left: 10px">NBI图片及其相关说明：</p>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - NBI成像及其优势
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;NBI全称是</span>
           <span style="color:red;">narrow band imaging</span>
@@ -148,12 +148,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - NBI技术结合标本拍摄台的应用
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;</span>
           <span style="color: red">标本拍摄台</span>
@@ -164,12 +164,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - NBI-Online的功能
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;</span>
           <span>NBI-Online 一个在线合成和管理NBI医用图片的免费工具网站</span>
@@ -189,12 +189,12 @@
       <p style="margin-left: 10px">图片批处理相关说明：</p>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - 批处理流程
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;想要使用批处理功能批量生成和下载图片，首先需要拥有</span>
           <span style="color: goldenrod">超级用户</span>
@@ -208,31 +208,43 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - 压缩包检查要求
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;不同提交方式的压缩包要求: </span><br>
-          <span>（一）普通压缩包提交： TODO</span><br>
-          <span>（二）自动识别压缩包提交: TODO</span><br>
+          <span>（一）普通压缩包提交： 普通的压缩包我们需要添加一定的</span><br>
+          <span style="color: red">限制条件</span>
+          <span>，以便后端程序可以识别成组的一组原始图片（蓝色、绿色和白色光源下）进行合成。</span><br>
+          <span>其主要限制主要有：1）任何压缩包中的图片都必须</span>
+          <span style="color: red">成组出现</span>
+          <span>，即有绿色光源图片就一定要有蓝色光源图片，然而白色光源为非必须上传；2）成组图片必须按照下图要求这样命名。</span><br>
+          <span style="display: flex;justify-content: center;align-content: center;width: 100%">
+            <img style="width: 55%;" src="/static/img/info_samplePackage.jpg" href="加载失败">
+          </span><br>
+          <span>检查不通过的压缩包将</span>
+          <span style="color: red">不能</span>
+          <span>被处理。</span><br>
+          <span>（二）自动识别压缩包提交: TODO</span>
         </div>
       </div>
     </div>
+    <div class="infoPageContentContainer" style="margin-top: 10px;border-bottom: 1px solid gray;width: 93%"></div>
 
     <div id="userAgreementInfo" class="infoPageSubTitle">
       <i class="el-icon-discover" style="color: #0b007e"></i>
       <p style="margin-left: 10px">NBI-Online（本网站）用户协议：</p>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - 导语
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;首先，欢迎你使用NBI-Online的服务！</span>
           <span>为了良好的使用NBI-Online服务，你应当阅读并遵守</span>
@@ -245,12 +257,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - 协议与服务
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;</span>
           <span style="color:red;">协议的范围</span>
@@ -264,12 +276,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - 用户信息保护
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;保护</span>
           <span style="color: red">用户个人信息</span>
@@ -282,12 +294,12 @@
       </div>
     </div>
     <div class="infoPageContentContainer">
-      <div class="infoPageContend_subTitle">
+      <div class="infoPageContent_subTitle">
         <p>
           - 安全责任相关
         </p>
       </div>
-      <div class="infoPageContend_info">
+      <div class="infoPageContent_info">
         <div style="width: 100%;height: 90%">
           <span>&nbsp;&nbsp;&nbsp;你理解并同意，本网站的服务同大多数网站一样，可能会受多种因素影响，包括但不限于用户原因、网络服务质量、社会环境等；也可能会受各种安全问题的侵扰，包括但不限于他人非法利用用户资料，进行现实中的骚扰；用户下载安装的其他软件或访问的其他网站中可能含有病毒、木马程序或其他恶意程序，威胁你的终端设备信息和数据安全，继而影响本服务的正常使用等。</span>
           <span>维护网站安全与正常使用是我们的共同责任，我们保证将按照行业标准合理审慎地采取必要技术措施保护你的终端设备信息和数据安全，但是你承认和同意本网站并不能就此提供完全保证。</span>
@@ -346,6 +358,7 @@ export default {
 }
 .infoPageContentContainer{
   width: 90%;
+  height: auto;
   font-family: 幼圆,serif;
   display: flex;
   flex-direction: column;
@@ -353,7 +366,7 @@ export default {
   margin-top: 5px;
   margin-bottom: 15px;
 }
-.infoPageContend_subTitle{
+.infoPageContent_subTitle{
   width: 90%;
   height: 40px;
   display: flex;
@@ -361,7 +374,7 @@ export default {
   align-items: start;
   font-weight: bold;
 }
-.infoPageContend_info{
+.infoPageContent_info{
   width: 90%;
   display: flex;
   justify-content: center;

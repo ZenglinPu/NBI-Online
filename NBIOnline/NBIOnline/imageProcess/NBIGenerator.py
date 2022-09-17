@@ -108,6 +108,7 @@ def updateImageWithHSV(sourceImage, brightnessOffset, contrast, luminosity, satu
     image = cv2.addWeighted(image, contrast, img2, 1 - contrast, 0)
 
     # 明度
+    print(luminosity)
     if luminosity > 0:
         luminosity = 0
     luminosity = luminosity / 100
