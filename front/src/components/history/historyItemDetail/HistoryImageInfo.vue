@@ -306,10 +306,25 @@ export default {
 #infoFormContainer {
   padding-right: 20px;
   padding-right: 5px;
-  padding-down: 5px;
 }
 
 /*#infiltrationSelector{*/
 /*  width: 50px;*/
 /*}*/
+
+.el-form >>> .el-form-item--mini.el-form-item {
+  margin-bottom: 22px;
+}
+
+.input-with-select >>> .el-input-group__prepend  {
+  background: #fff !important;
+}
+
+.input-with-select >>> .el-input-group__prepend .el-select--mini .el-input--suffix input {
+  cursor: pointer;
+}
+
+.input-with-select >>> .el-input-group__prepend .el-select--mini .el-input--suffix .el-input__icon {
+  cursor: pointer;
+}
 </style>
