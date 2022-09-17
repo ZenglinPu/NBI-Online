@@ -189,12 +189,6 @@ export default {
       brightnessOffset: 0,
       isGenerating: false,
       isUploaded_fromSend: true,
-      fromAdjust: {
-        isOpen: false,
-        contrastOffset: 0,
-        luminosityOffset: 0,
-        saturationOffset: 0,
-      },
       recordRealResult: "",
       imageResultSrc: "",
       moreFunctionActive: false
@@ -210,58 +204,60 @@ export default {
       }
     }
   },
-  updated() {
-    this.$bus.$emit("sendLastArg")
-  },
+//   updated() {
+//     this.$bus.$emit("sendLastArg")
+//   },
   mounted() {
+    this.getLastAdjustArg()
+
     //被emit后将数据送给infoFormPart->getAdjustImageInfo
-    this.$bus.$on("sendAdjustImageInfo", () => {
-      const toSend = {
-        "isOpen": this.$refs.isAdjustImage.checked,
-        "contrastOffset": this.contrastOffset,
-        "luminosityOffset": this.luminosityOffset,
-        "saturationOffset": this.saturationOffset,
-      };
-      //发送数据到send
-      this.$bus.$emit("getAdjustImageInfo", toSend);
-    })
-    this.$bus.$on("getlastArg", (data) => {
-      this.saturationOffset = data.saturationOffset;
-      this.contrastOffset = data.contrastOffset;
-      this.luminosityOffset = data.luminosityOffset;
-      console.log("我是adjust组件收到信息：", this.saturationOffset, this.contrastOffset)
-    })
+    // this.$bus.$on("sendAdjustImageInfo", () => {
+    //   const toSend = {
+    //     "isOpen": this.$refs.isAdjustImage.checked,
+    //     "contrastOffset": this.contrastOffset,
+    //     "luminosityOffset": this.luminosityOffset,
+    //     "saturationOffset": this.saturationOffset,
+    //   };
+    //   //发送数据到send
+    //   this.$bus.$emit("getAdjustImageInfo", toSend);
+    // })
+    // this.$bus.$on("getlastArg", (data) => {
+    //   this.saturationOffset = data.saturationOffset;
+    //   this.contrastOffset = data.contrastOffset;
+    //   this.luminosityOffset = data.luminosityOffset;
+    //   console.log("我是adjust组件收到信息：", this.saturationOffset, this.contrastOffset)
+    // })
 
     //这个数据总线getUploadedInfo貌似没啥用，考虑去掉？
     // this.$bus.$on("getUploadedInfo", (data) => {
     //   this.isUploaded_fromSend = data;
     // });
-    this.getLastAdjustArg()
-    this.$bus.$on("sendLastArg", () => {
-      const toSend = {
-        "contrastOffset": this.fromAdjust.contrastOffset,
-        "luminosityOffset": this.fromAdjust.luminosityOffset,
-        "saturationOffset": this.fromAdjust.saturationOffset,
-      };
-      //发送数据到send
-      this.$bus.$emit("getlastArg", toSend);
-    }) 
     
-    this.$bus.$on("getAdjustImageInfo", (data) => {
-      this.fromAdjust.isOpen = data.isOpen;
-      this.fromAdjust.contrastOffset = data.contrastOffset;
-      this.fromAdjust.luminosityOffset = data.luminosityOffset;
-      this.fromAdjust.saturationOffset = data.saturationOffset;
-    });
+    // this.$bus.$on("sendLastArg", () => {
+    //   const toSend = {
+    //     "contrastOffset": this.fromAdjust.contrastOffset,
+    //     "luminosityOffset": this.fromAdjust.luminosityOffset,
+    //     "saturationOffset": this.fromAdjust.saturationOffset,
+    //   };
+    //   //发送数据到send
+    //   this.$bus.$emit("getlastArg", toSend);
+    // }) 
+    
+    // this.$bus.$on("getAdjustImageInfo", (data) => {
+    //   this.fromAdjust.isOpen = data.isOpen;
+    //   this.fromAdjust.contrastOffset = data.contrastOffset;
+    //   this.fromAdjust.luminosityOffset = data.luminosityOffset;
+    //   this.fromAdjust.saturationOffset = data.saturationOffset;
+    // });
   },
-  beforeDestroy() {
-    this.$bus.$off("sendAdjustImageInfo");
-    this.$bus.$off("getlastArg");
+//   beforeDestroy() {
+//     this.$bus.$off("sendAdjustImageInfo");
+//     this.$bus.$off("getlastArg");
 
-    // this.$bus.$off("getUploadedInfo");
-    this.$bus.$off("getAdjustImageInfo");
-    this.$bus.$off("sendLastArg");
-  },
+//     // this.$bus.$off("getUploadedInfo");
+//     this.$bus.$off("getAdjustImageInfo");
+//     this.$bus.$off("sendLastArg");
+//   },
   methods: {
     changeMoreFunctionActive() {
       this.moreFunctionActive = !this.moreFunctionActive;
@@ -295,9 +291,9 @@ export default {
     //   this.$bus.$emit("sendUploadedInfoToGet");
     // },
     //获取对比度等信息
-    getAdjustImageInfo() {
-      this.$bus.$emit("sendAdjustImageInfo");
-    },
+    // getAdjustImageInfo() {
+    //   this.$bus.$emit("sendAdjustImageInfo");
+    // },
     getResultImage() {
       // this.checkUploaded();
       if (!this.isUploaded_fromSend) {
@@ -309,9 +305,9 @@ export default {
         return;
       }
       this.isGenerating = true;
-      this.getAdjustImageInfo();
+    //   this.getAdjustImageInfo();
       let getResultForm = new FormData();
-      if (!this.fromAdjust.isOpen) {
+      if (!this.moreFunctionActive) {
         //简单生成
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
@@ -327,9 +323,9 @@ export default {
         getResultForm.append("brightnessAdjust", this.brightnessOffset);
         getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
         getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("contrastOffset", this.fromAdjust.contrastOffset);
-        getResultForm.append("luminosityOffset", this.fromAdjust.luminosityOffset);
-        getResultForm.append("saturationOffset", this.fromAdjust.saturationOffset);
+        getResultForm.append("contrastOffset", this.contrastOffset);
+        getResultForm.append("luminosityOffset", this.luminosityOffset);
+        getResultForm.append("saturationOffset", this.saturationOffset);
         getResultForm.append("mode", "full");
       }
       let config = {
@@ -388,9 +384,9 @@ export default {
           console.log("getLastAdjustArg得到的数据是", response.data,this.fromAdjust)
           this.channelOffset = response.data.channelOffset;
           this.brightnessOffset = response.data.brightness;
-          this.fromAdjust.contrastOffset = response.data.contrast;
-          this.fromAdjust.saturationOffset = response.data.saturation;
-          this.fromAdjust.luminosityOffset = response.data.luminosity;
+          this.contrastOffset = response.data.contrast;
+          this.saturationOffset = response.data.saturation;
+          this.luminosityOffset = response.data.luminosity;
         }
       });
     }

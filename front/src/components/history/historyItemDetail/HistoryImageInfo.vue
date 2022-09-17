@@ -323,4 +323,8 @@ export default {
 .input-with-select >>> .el-input-group__prepend .el-select--mini .el-input--suffix input {
   cursor: pointer;
 }
+
+.input-with-select >>> .el-input-group__prepend .el-select--mini .el-input--suffix .el-input__icon {
+  cursor: pointer;
+}
 </style>
