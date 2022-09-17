@@ -658,6 +658,7 @@ button {
 
 .el-aside {
   text-align: center;
+  overflow: hidden;
 }
 
 .el-main {

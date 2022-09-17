@@ -131,7 +131,7 @@ export default {
       return ret;
     },
     //信息填写完整，才可以“保存结果”
-    //永久显示绿色，暂时显示橙色，马上要删除显示红色
+    //1天以上显示绿色，24小时内显示橙色，过期显示灰色
     expireBackground() {
       let str = this.expireTimeShow;
       let regOrange = RegExp('天');
@@ -139,9 +139,9 @@ export default {
       if (regGray.test(str)) {
         return { background: '#808080' };
       }else if (regOrange.test(str)) {
-        return { background: '#ff9854' };
-      }else {
         return { background: '#7ae588' };
+      }else {
+        return { background: '#ff9854' };
       }
     },
   },
