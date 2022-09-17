@@ -30,7 +30,7 @@ export default {
     },
     batchName:{
       type:String,
-      default:'未命名样本'
+      default:'未命名批次'
     },
     batchCap:{
       type:String,
@@ -51,14 +51,6 @@ export default {
     }
   },
   computed: {
-    url(){
-      return "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime();
-    },
-    srcList(){
-      return [
-        "/static/Data/Temp/"+this.Image_Compress + '?t=' + new Date().getTime(),
-      ]
-    },
     lastChangeTimeShow() {
       let date = new Date(parseInt(this.lastChangeTime) * 1000);
       let Year = date.getFullYear();
