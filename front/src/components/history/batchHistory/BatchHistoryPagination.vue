@@ -103,11 +103,11 @@ export default {
 }
 
 .el-pagination.is-background >>> .el-pager li:not(.disabled):hover {
-    color: #767ff6;
+    color: #cdb8ef;
 }
 
 .el-pagination.is-background >>> .el-pager li:not(.disabled).active {
-    background-color: #767ff6;
-    color: #fff;
+    background-color: #f4edff;
+    color: rgb(68, 68, 68);
 }
 </style>
