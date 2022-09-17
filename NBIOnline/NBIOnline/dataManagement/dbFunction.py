@@ -117,6 +117,42 @@ def getHistory(user, currentPage, pageCount):
     # conn.close()
     return ret
 
+# 批处理数据展示界面
+def getBatchHistory(user, currentPage, pageCount):
+    conn = getConnection()
+    table_BacthInfo = getTable(conn,NBITABLE.BatchProcess)
+    data = {}
+    allInfo = table_BacthInfo.find({'UID': user}).sort("uploadTime", -1)
+    """
+    我们当前每一页展示pageCount张图，
+    目前需要的数据是currentPage页的数据，
+    因此应该先跳过前(currentPage-1)*pageCount条的数据，
+    然后取其之后的pageCount条数据
+    """
+    # 这里count就当作序号了，因此返回的数据其开头不一定是0，但是一定连续且不重复
+    count = 1
+    jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
+    end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
+
+    for object1 in allInfo:
+        if count <= jump:
+            count += 1
+            continue
+        _id = object1['_id']
+        innerDict = {
+            'index': count,
+            '_id': str(_id),
+            'uploadTime': str(object1['uploadTime']),
+            'expireTime': str(object1['expireTime']),
+            'batchSize': int(object1['batchSize']),
+        }
+        data[count] = innerDict
+        count += 1
+        if count > end:
+            break
+    ret = {'info': data, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
+    # conn.close()
+    return ret
 
 # 根据user,filterType,filterValue获得数据
 def getHistoryWithFilter(user, currentPage, pageCount, filterType, filterValue):
