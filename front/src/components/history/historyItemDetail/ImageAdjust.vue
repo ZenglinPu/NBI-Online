@@ -196,7 +196,7 @@ export default {
   },
   computed: {
     moreFunctionShow() {
-      if(this.moreFunctionActive) {
+      if (this.moreFunctionActive) {
         return { 'opacity': '1' };
       }
       else {
@@ -204,9 +204,9 @@ export default {
       }
     }
   },
-//   updated() {
-//     this.$bus.$emit("sendLastArg")
-//   },
+  //   updated() {
+  //     this.$bus.$emit("sendLastArg")
+  //   },
   mounted() {
     this.getLastAdjustArg()
 
@@ -232,7 +232,7 @@ export default {
     // this.$bus.$on("getUploadedInfo", (data) => {
     //   this.isUploaded_fromSend = data;
     // });
-    
+
     // this.$bus.$on("sendLastArg", () => {
     //   const toSend = {
     //     "contrastOffset": this.fromAdjust.contrastOffset,
@@ -242,7 +242,7 @@ export default {
     //   //发送数据到send
     //   this.$bus.$emit("getlastArg", toSend);
     // }) 
-    
+
     // this.$bus.$on("getAdjustImageInfo", (data) => {
     //   this.fromAdjust.isOpen = data.isOpen;
     //   this.fromAdjust.contrastOffset = data.contrastOffset;
@@ -250,14 +250,14 @@ export default {
     //   this.fromAdjust.saturationOffset = data.saturationOffset;
     // });
   },
-//   beforeDestroy() {
-//     this.$bus.$off("sendAdjustImageInfo");
-//     this.$bus.$off("getlastArg");
+  //   beforeDestroy() {
+  //     this.$bus.$off("sendAdjustImageInfo");
+  //     this.$bus.$off("getlastArg");
 
-//     // this.$bus.$off("getUploadedInfo");
-//     this.$bus.$off("getAdjustImageInfo");
-//     this.$bus.$off("sendLastArg");
-//   },
+  //     // this.$bus.$off("getUploadedInfo");
+  //     this.$bus.$off("getAdjustImageInfo");
+  //     this.$bus.$off("sendLastArg");
+  //   },
   methods: {
     changeMoreFunctionActive() {
       this.moreFunctionActive = !this.moreFunctionActive;
@@ -305,10 +305,11 @@ export default {
         return;
       }
       this.isGenerating = true;
-    //   this.getAdjustImageInfo();
+      //   this.getAdjustImageInfo();
       let getResultForm = new FormData();
       if (!this.moreFunctionActive) {
         //简单生成
+        getResultForm.append("gid", this.GID)
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
         getResultForm.append("channelOffset", this.channelOffset);
@@ -317,6 +318,7 @@ export default {
         getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
         getResultForm.append("mode", "easy")
       } else {
+        getResultForm.append("gid", this.GID)
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
         getResultForm.append("channelOffset", this.channelOffset);
@@ -381,7 +383,7 @@ export default {
             type: 'error'
           });
         } else {
-          console.log("getLastAdjustArg得到的数据是", response.data,this.fromAdjust)
+          console.log("getLastAdjustArg得到的数据是", response.data, this.fromAdjust)
           this.channelOffset = response.data.channelOffset;
           this.brightnessOffset = response.data.brightness;
           this.contrastOffset = response.data.contrast;

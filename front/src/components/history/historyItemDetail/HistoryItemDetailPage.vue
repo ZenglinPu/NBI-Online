@@ -92,7 +92,6 @@ export default {
   },
   mounted() {
     this.initDownloadImageInfo();
-    //有些奇怪，权限还有问题
     this.$bus.$on("getAdjustImage",(data)=>{
       this.imageShowInfo.NBIImageName = "/static/Data/NBI/" + data.imageNBIName;
       this.imageShowInfo.srcList.push("/static/Data/NBI/" + data.imageNBIName);
