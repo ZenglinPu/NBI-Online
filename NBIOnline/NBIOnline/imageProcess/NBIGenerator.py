@@ -108,9 +108,9 @@ def updateImageWithHSV(sourceImage, brightnessOffset, contrast, luminosity, satu
     image = cv2.addWeighted(image, contrast, img2, 1 - contrast, 0)
 
     # 明度
-    print(luminosity)
-    if luminosity > 0:
-        luminosity = 0
+    # print(luminosity)
+    if luminosity > 100:
+        luminosity = 100
     luminosity = luminosity / 100
     img_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     img_hsv[:, :, 2] = luminosity * img_hsv[:, :, 2]

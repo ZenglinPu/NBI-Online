@@ -38,7 +38,7 @@ def chooseLastImage(request):
                 "imageBlue": result["Image_Blue"],
                 "imageGreen": result["Image_Green"],
                 "imageWhite": result["Image_White"],
-                "gid": result["_id"],
+                "gid": str(result["_id"]),
                 "sampleName": additionalInfo["sampleName"],
                 "remark": additionalInfo["remark"],
             }
