@@ -35,7 +35,7 @@ def batchUpload_compress(request):
     if packageFile is None:
         return HttpResponse(2)
 
-    srcFolderName = getCompressedFiles(str(packageFile), user, packageFile.temporary_file_path(), "./static/Data/Batch")
+    srcFolderName = getCompressedFiles(str(packageFile), user, packageFile.temporary_file_path())
 
     newBatchProcess = batchProcess(uid=user, batchName=str(packageFile).split('.')[0])
     newBatchProcess.srcFolderName = srcFolderName

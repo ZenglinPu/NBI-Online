@@ -1,5 +1,6 @@
 import os
 import time
+import shutil
 
 from bson import ObjectId
 
@@ -23,9 +24,7 @@ def nbiImageProcessing(*args):
             updateBatchInfo(batchID, {'status': 7})
             raise e
         processNum += 1
-        if processNum % 5 == 0:
-            # 每处理5条数据更新一次数据库
-            updateBatchInfo(batchID, {'processedNum': processNum})
+        updateBatchInfo(batchID, {'processedNum': processNum})
     # 成功处理完成
     updateDict = {
         'status': 6,
@@ -38,17 +37,11 @@ def nbiImageProcessing(*args):
 # 图片预处理，检查，成组，更新数据库，放到对应的路径下
 def batchImagePreProcessing(*args):
     batchID = args[0]
-    originPath = "./static/Data/Batch/" + args[1]
+    originPath = "../NBIOnline/static/Data/Batch/" + args[1]
 
     # 用来记录更新数据库
     totalPare = 0
     imgList = []
-
-    if len(os.listdir(originPath)) == 0:
-        updateBatchInfo(batchID,
-                        {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3})
-        os.remove(originPath)
-        return
 
     try:
         while len(os.listdir(originPath)) > 0:
@@ -94,10 +87,7 @@ def batchImagePreProcessing(*args):
 
         # 检查通过，通过_id更新数据库
         updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 4, 'imgList': '|'.join(imgList)})
-        try:
-            os.remove(originPath)
-        except Exception as e:
-            os.system("rm "+str(originPath))
+        shutil.rmtree(originPath)
         return
     except Exception as e:
         updateBatchInfo(batchID,
