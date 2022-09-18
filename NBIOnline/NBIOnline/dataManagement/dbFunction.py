@@ -13,7 +13,7 @@ from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 def getLastImage(user):
     conn = getConnection()
     table = getTable(conn, NBITABLE.PhotoInfo)
-    result = table.find({"UID": user}, sort=[('lastChangeTime', -1)])
+    result = table.find({"UID": user, "isBatch": False}, sort=[('lastChangeTime', -1)])
 
     # 这个UID没有提交过数据
     if result.count() == 0:

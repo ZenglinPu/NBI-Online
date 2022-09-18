@@ -32,7 +32,6 @@ def chooseLastImage(request):
             return HttpResponse(1)
         else:
             additionalInfo = getAdditionalInfoBy_id(result["_id"])
-            # 返回0表示可以提交完整的新图片数据
             # print(additionalInfo)
             ret = {
                 "imageBlue": result["Image_Blue"],
