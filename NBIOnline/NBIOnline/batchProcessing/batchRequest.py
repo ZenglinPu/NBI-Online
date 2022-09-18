@@ -1,20 +1,20 @@
 import json
 import threading
+from tkinter import E
 
 from bson import ObjectId
 from django.http import HttpResponse
 
 from .batchImageProcess import batchImagePreProcessing, nbiImageProcessing
-from .compressProcess import getCompressedFiles
+from .compressProcess import getCompressedFile_inMemory, getCompressedFiles
 from ..dataManagement.dbFunction import getBatchStatusByID, getOriginImage, deleteAllInfoOfImageBy_id
 from ..dataManagement.db_batchProcess import batchProcess, getBatchInfo, updateBatchInfo
 from ..userManagement.token import tokenCheck
-
+from ..userManagement.userRank import getUserRankByUID
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 # 上传压缩包
-from ..userManagement.userRank import getUserRankByUID
-
-
 def batchUpload_compress(request):
     user = str(request.POST.get("uid"))
     token = str(request.POST.get("token"))
@@ -35,7 +35,15 @@ def batchUpload_compress(request):
     if packageFile is None:
         return HttpResponse(2)
 
-    srcFolderName = getCompressedFiles(str(packageFile), user, packageFile.temporary_file_path())
+    try:
+        try:
+            # 大的压缩包，django会保存在磁盘上
+            srcFolderName = getCompressedFiles(str(packageFile), user, packageFile.temporary_file_path())
+        except:
+            # 小的压缩包，django会保存在内存里
+            srcFolderName = getCompressedFile_inMemory(str(packageFile), user, packageFile)
+    except Exception as e:
+        return HttpResponse(2)
 
     newBatchProcess = batchProcess(uid=user, batchName=str(packageFile).split('.')[0])
     newBatchProcess.srcFolderName = srcFolderName

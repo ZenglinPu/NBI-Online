@@ -24,9 +24,28 @@ def getCompressedFiles(packageName, user, in_path):
             with open(file=new_path, mode='wb') as f:
                 # zf.read 是读取压缩包里的文件内容
                 f.write(zf.read(old_name))
-
     return folderName
 
+
+def getCompressedFile_inMemory(packageName, user, fileInMemory):
+    folderName = packageName.split('.')[0].replace(' ','$')
+    folderName = "{folderName}_{uid}{rand}".format(folderName=folderName, uid=user, rand=getRandom())
+    out_folder_path = "../NBIOnline/static/Data/Batch/" + folderName
+    if os.path.exists(out_folder_path):
+        shutil.rmtree(out_folder_path)  # 若输出文件夹以存在，会删除原先的文件夹！！！
+    # 解压到指定目录,首先创建一个解压目录
+    os.makedirs(out_folder_path)
+    with zipfile.ZipFile(file=fileInMemory, mode='r') as zf:
+        for old_name in zf.namelist():
+            # 由于源码遇到中文是cp437方式，所以解码成gbk，windows即可正常
+            new_name = old_name.encode('cp437').decode('gbk')
+            # 拼接文件的保存路径
+            new_path = os.path.join(out_folder_path, new_name)
+            # 通过open创建文件，写入数据
+            with open(file=new_path, mode='wb') as f:
+                # zf.read 是读取压缩包里的文件内容
+                f.write(zf.read(old_name))
+    return folderName
 
 # windows上测试用这个函数
 # def getCompressedFiles(packageName, user, in_path, out_folder_path):
