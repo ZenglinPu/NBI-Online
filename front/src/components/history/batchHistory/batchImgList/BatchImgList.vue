@@ -144,7 +144,7 @@ export default {
         getHistoryFilterForm.append("filterValue", filterValue);
       }
       // console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
-      this.$axios.post("todo", getHistoryFilterForm, {
+      this.$axios.post("/NBI/BatchHistory/batchImgDataWithFilter/", getHistoryFilterForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -173,7 +173,7 @@ export default {
       getHistoryForm.append("currentPage", currentPage);
       //显示条数
       getHistoryForm.append("pageCount", pageCount);
-      this.$axios.post("todo",getHistoryForm, {
+      this.$axios.post("/NBI/BatchHistory/batchImgData/",getHistoryForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -185,6 +185,7 @@ export default {
           this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else {
+          // console.log(response);
           this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage)
         }
       })

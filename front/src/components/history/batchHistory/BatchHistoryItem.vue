@@ -39,7 +39,6 @@ export default {
       type:String,
       required:true
     },
-    //todo
     _id:{
       type:String,
       required:true
@@ -148,7 +147,7 @@ export default {
         deleteImageForm.append("token", this.getToken());
         //当前页面
         deleteImageForm.append("bid", BID);
-        this.$axios.post("todo", deleteImageForm, {
+        this.$axios.post("/NBI/BatchHistory/deleteBatch/", deleteImageForm, {
          headers: {'Content-Type': 'multipart/form-data'}
         }).then((response) => {
           if (response.data === 1){
@@ -172,7 +171,7 @@ export default {
               message: '图片已删除',
               type: 'success'
             });
-            this.$bus.$emit("updateHistoryPage");
+            this.$bus.$emit("updateBHistoryPage");
           }
         });
       })
