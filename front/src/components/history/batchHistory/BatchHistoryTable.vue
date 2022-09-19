@@ -134,7 +134,8 @@ export default {
       else{
         getHistoryFilterForm.append("filterValue", filterValue);
       }
-      // console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
+      console.log("筛选开始咯！筛选的条件是：");
+      console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
       this.$axios.post("/NBI/BatchHistory/getBatchHistoryWithFilter/", getHistoryFilterForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
@@ -147,8 +148,9 @@ export default {
           this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else {
-          // console.log(response.data);
-          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalBatch);
+          console.log("让我们看看服务器返回了什么吧：");
+          console.log(response.data);
+          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage);
         }
       });
     },

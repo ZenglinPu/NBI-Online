@@ -28,17 +28,8 @@
         prefix-icon="el-icon-search"
         @keyup.enter.native="searchNewHistory()"
       ></el-input>
-      <el-input
-        v-show="searchValue === '2'"
-        placeholder="请输入标本部位"
-        v-model="searchText"
-        ref="search"
-        clearable
-        prefix-icon="el-icon-search"
-        @keyup.enter.native="searchNewHistory()"
-      ></el-input>
       <el-date-picker
-        v-show="searchValue === '3'"
+        v-show="searchValue === '2'"
         v-model="dateRange"
         type="daterange"
         align="right"
