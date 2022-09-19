@@ -130,7 +130,7 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
-    //传入GID
+    //传入BID
     checkDetail(BID) {
       this.$router.push({
         name: 'BatchImgData',
