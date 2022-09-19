@@ -39,7 +39,6 @@ export default {
       type:String,
       required:true
     },
-    //todo
     _id:{
       type:String,
       required:true
@@ -130,7 +129,7 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
-    //传入GID
+    //传入BID
     checkDetail(BID) {
       this.$router.push({
         name: 'BatchImgData',
@@ -139,7 +138,7 @@ export default {
         }
       })
     },
-    deleteDetail(GID) {
+    deleteDetail(BID) {
       this.$confirm('确认删除？（操作不可逆）')
       .then(() => {
         let deleteImageForm = new FormData();
@@ -147,8 +146,8 @@ export default {
         deleteImageForm.append("uid", this.getUID());
         deleteImageForm.append("token", this.getToken());
         //当前页面
-        deleteImageForm.append("gid", GID);
-        this.$axios.post("/NBI/History/deleteImage/", deleteImageForm, {
+        deleteImageForm.append("bid", BID);
+        this.$axios.post("/NBI/BatchHistory/deleteBatch/", deleteImageForm, {
          headers: {'Content-Type': 'multipart/form-data'}
         }).then((response) => {
           if (response.data === 1){
@@ -172,7 +171,7 @@ export default {
               message: '图片已删除',
               type: 'success'
             });
-            this.$bus.$emit("updateHistoryPage");
+            this.$bus.$emit("updateBHistoryPage");
           }
         });
       })

@@ -34,21 +34,14 @@ export default {
     HistoryItem,
     HistoryLoadPage
   },
+  props: ['BID'],
   data(){
     return{
       totalPage: 0,
       totalImage: 0,
       currentPage: 1,
       pageSize:5,
-      historyList: [{
-        index: '1',
-        sampleName: "样本",
-        part: "胃",
-        preDiagnosis:"胃癌",
-        lastChangeTime:"2022-09-06 16:14:13",
-        expireTime: "2022-09-12 16:14:13" ,
-        _id: "item._id"
-      }],
+      historyList: [],
       reset: true,
       filter:{
         isFilter: false,
@@ -126,12 +119,17 @@ export default {
     getUID(){
       return this.getCookie("NBI_UID");
     },
+    getBID(){
+      return this.BID;
+    },
     //根据条件搜索数据并显示
     downloadHistoryWithFilter(currentPage, pageCount, filterType, filterValue){
       let getHistoryFilterForm = new FormData();
       // 身份识别数据
       getHistoryFilterForm.append("uid", this.getUID());
       getHistoryFilterForm.append("token", this.getToken());
+      // 批次识别数据
+      getHistoryFilterForm.append("bid", this.getBID());
       //当前页面
       getHistoryFilterForm.append("currentPage", currentPage);
       //显示条数
@@ -146,7 +144,7 @@ export default {
         getHistoryFilterForm.append("filterValue", filterValue);
       }
       // console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
-      this.$axios.post("/NBI/History/getHistoryWithFilter/", getHistoryFilterForm, {
+      this.$axios.post("/NBI/BatchHistory/batchImgDataWithFilter/", getHistoryFilterForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -169,11 +167,13 @@ export default {
       // 身份识别数据
       getHistoryForm.append("uid", this.getUID());
       getHistoryForm.append("token", this.getToken());
+      // 批次识别数据
+      getHistoryForm.append("bid", this.getBID());
       //当前页面
       getHistoryForm.append("currentPage", currentPage);
       //显示条数
       getHistoryForm.append("pageCount", pageCount);
-      this.$axios.post("/NBI/History/display/",getHistoryForm, {
+      this.$axios.post("/NBI/BatchHistory/batchImgData/",getHistoryForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -185,6 +185,7 @@ export default {
           this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else {
+          // console.log(response);
           this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage)
         }
       })
