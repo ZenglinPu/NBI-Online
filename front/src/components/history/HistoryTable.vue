@@ -177,6 +177,7 @@ export default {
           this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else {
+          // console.log(response.data);
           this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage)
         }
       })
