@@ -135,7 +135,7 @@ export default {
         getHistoryFilterForm.append("filterValue", filterValue);
       }
       // console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
-      this.$axios.post("/NBI/BatchHistory/getBatchHistoryWithFilter", getHistoryFilterForm, {
+      this.$axios.post("/NBI/BatchHistory/getBatchHistoryWithFilter/", getHistoryFilterForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -162,7 +162,7 @@ export default {
       getHistoryForm.append("currentPage", currentPage);
       //显示条数
       getHistoryForm.append("pageCount", pageCount);
-      this.$axios.post("/NBI/BatchHistory/display",getHistoryForm, {
+      this.$axios.post("/NBI/BatchHistory/batchDisplay/",getHistoryForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -174,8 +174,8 @@ export default {
           this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else {
-          console.log(response.data);
-          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalBatch)
+          // console.log(response.data);
+          this.loadHistory(response.data.info,response.data.totalPage,response.data.totalImage)
         }
       })
     },
@@ -192,15 +192,15 @@ export default {
       for (var key in data) {
         var item = data[key];
         this.batchHistoryList.push({
-          batchCompress: item.batchCompress,
-          batchSize: item.batchSize,
+          batchName: item.batchName,
+          batchCap: item.batchSize,
           expireTime: item.expireTime,
           index: item.index,
           lastChangeTime: item.uploadTime,
           _id: item._id
         })
       }
-      // // console.log(this.historyList);
+      // console.log(this.batchHistoryList);
 
       this.sendTotalPage();
       this.sendTotalBatch();

@@ -157,7 +157,7 @@ export default {
           });
           return;
         }
-        this.$bus.$emit('updateBHistoryPageWithFilter', {"filterType": 3, "filterValue": this.dateRange});
+        this.$bus.$emit('updateBHistoryPageWithFilter', {"filterType": 2, "filterValue": this.dateRange});
       }
       this.isSearch = true;
     },
