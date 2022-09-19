@@ -18,11 +18,6 @@
 <script>
 export default {
   name: "BatchHistoryItem",
-  data() {
-    return {
-
-    };
-  },
   props:{
     index:{
       type:String,
@@ -50,6 +45,10 @@ export default {
       required:true
     }
   },
+  // mounted() {
+  //   console.log(this.batchName);
+  //   console.log(this.batchCap);
+  // },
   computed: {
     lastChangeTimeShow() {
       let date = new Date(parseInt(this.lastChangeTime) * 1000);

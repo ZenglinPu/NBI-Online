@@ -78,10 +78,6 @@ export default {
         disabled: false,
       }, {
         value: '2',
-        label: '标本部位',
-        disabled: false,
-      }, {
-        value: '3',
         label: '上传时间',
         disabled: false,
       }],
@@ -149,13 +145,9 @@ export default {
     searchNewHistory(){
       if (this.searchValue === '1'){
         // 根据标本名字搜索
-        this.$bus.$emit('updateHistoryPageWithFilter', {"filterType": 1, "filterValue": this.searchText});
+        this.$bus.$emit('updateBHistoryPageWithFilter', {"filterType": 1, "filterValue": this.searchText});
       }
       else if (this.searchValue === '2'){
-        // 根据标本部位搜索
-        this.$bus.$emit('updateHistoryPageWithFilter', {"filterType": 2, "filterValue": this.searchText});
-      }
-      else if (this.searchValue === '3'){
         // 根据标本上传时间段搜索
         if (this.dateRange === ''){
           this.$message({
@@ -165,13 +157,13 @@ export default {
           });
           return;
         }
-        this.$bus.$emit('updateHistoryPageWithFilter', {"filterType": 3, "filterValue": this.dateRange});
+        this.$bus.$emit('updateBHistoryPageWithFilter', {"filterType": 2, "filterValue": this.dateRange});
       }
       this.isSearch = true;
     },
     getAllHistory(){
       this.$bus.$emit('noFilter');
-      this.$bus.$emit('updateHistoryPage');
+      this.$bus.$emit('updateBHistoryPage');
       this.isSearch = false;
     }
   }
