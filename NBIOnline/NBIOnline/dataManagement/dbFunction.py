@@ -382,7 +382,7 @@ def getBatchHistoryWithFilter(user, currentPage, pageCount, filterType, filterVa
         for info in allInfo:
             # additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
             # print(similar_diff_ratio(filterValue, additionInfo['sampleName']))
-            if similar_diff_ratio(filterValue, info['batchName']) > 0.76:
+            if similar_diff_ratio(filterValue, info['batchName']) > 0.60:
                 if count <= jump:
                     count += 1
                     continue
@@ -425,5 +425,146 @@ def getBatchHistoryWithFilter(user, currentPage, pageCount, filterType, filterVa
                 count += 1
 
     ret = {'info': data, 'totalPage': math.ceil(float((count - 1) / pageCount)), 'totalImage': (count - 1)}
+    # conn.close()
+    return ret
+
+# 批处理批数据详情界面
+def getBatchImgData(user, bid, currentPage, pageCount):
+    conn = getConnection()
+    table_BacthInfo = getTable(conn, NBITABLE.BatchProcess)
+    data = {}
+    batch_info = table_BacthInfo.find_one({'UID': user, '_id': ObjectId(bid)})
+    batch_info['_id'] = str(batch_info['_id'])
+    gid_list = batch_info['imgList'].split('|')
+    gid_list = [ObjectId(item) for item in gid_list]
+    table_PhotoInfo = getTable(conn, NBITABLE.PhotoInfo)
+    table_PhotoAdditionInfo = getTable(conn, NBITABLE.PhotoAdditionInfo)
+
+    allInfo = table_PhotoInfo.find({'UID': user, '_id': {"$in": gid_list}}).sort("lastChangeTime", -1)
+    count = 1
+    jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
+    end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
+
+    for object1 in allInfo:
+        if count <= jump:
+            count += 1
+            continue
+        _id = object1['_id']
+        innerDict = {
+            'index': count,
+            '_id': str(_id),
+            'Image_Compress': str(object1['Image_Compress']),
+            'lastChangeTime': str(object1['lastChangeTime']),
+            'expireTime': str(object1['expireTime']),
+        }
+        object2 = table_PhotoAdditionInfo.find_one({"gid": _id})
+        innerDict['sampleName'] = object2['sampleName']
+        innerDict['part'] = object2['part']
+        innerDict['preDiagnosis'] = object2['preDiagnosis']
+        data[count] = innerDict
+        count += 1
+        if count > end:
+            break
+    ret = {'info': data, 'batchInfo': batch_info, 'totalPage': math.ceil(float(allInfo.count() / pageCount)), 'totalImage': allInfo.count()}
+    # conn.close()
+    return ret
+# 删除批处理信息
+def deleteBacthData(_id):
+    conn = getConnection()
+    table_BatchProcess = getTable(conn, NBITABLE.BatchProcess)
+    ret = True
+    batch_info = table_BatchProcess.find_one({"_id": ObjectId(_id)})
+    # print(info_image)
+    # print(info_imageAddition)
+    try:
+        gid_list = batch_info['imgList'].split('|')
+        gid_list = [ObjectId(item) for item in gid_list]
+        table_BatchProcess.delete_one({"_id": ObjectId(_id)})
+        for gid in gid_list:
+            ret &= deleteAllInfoOfImageBy_id(gid)
+            print(ret)
+        return True
+    except Exception as e:
+        return False
+
+# 根据过滤内部具体的图片
+def getBatchDataWithFilter(user, bid , currentPage, pageCount, filterType, filterValue):
+    conn = getConnection()
+    table_BatchProcess = getTable(conn, NBITABLE.BatchProcess)
+    table_PhotoInfo = getTable(conn, NBITABLE.PhotoInfo)
+    table_PhotoAdditionInfo = getTable(conn, NBITABLE.PhotoAdditionInfo)
+    batch_info = table_BatchProcess.find_one({'UID': user, '_id': ObjectId(bid)})
+    batch_info['_id'] = str(batch_info['_id'])
+    gid_list = batch_info['imgList'].split('|')
+    gid_list = [ObjectId(item) for item in gid_list]
+    # 这个用户的所有数据
+    allInfo = table_PhotoInfo.find({'UID': user, '_id': {"$in": gid_list}}).sort("uploadTime", -1)
+    data = {}
+    count = 1
+    jump = (currentPage - 1) * pageCount  # 1 ~ jump的数据都不要
+    end = currentPage * pageCount  # jump+1 ~ end的数据放进来，end+1的就不要了
+    # 根据筛选条件获得满足条件的数据
+    if filterType == 1:
+        # 名称模糊搜索
+        for info in allInfo:
+            additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
+            # print(similar_diff_ratio(filterValue, additionInfo['sampleName']))
+            if similar_diff_ratio(filterValue, additionInfo['sampleName']) > 0.76:
+                if count <= jump:
+                    count += 1
+                    continue
+                if count > end:
+                    # 就不往返回的数据里加东西了，但是要继续计数
+                    count += 1
+                    continue
+                _id = info['_id']
+                innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
+                             'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
+                             'sampleName': additionInfo['sampleName'], 'part': additionInfo['part'],
+                             'preDiagnosis': additionInfo['preDiagnosis']}
+                data[count] = innerDict
+                count += 1
+
+    elif filterType == 2:
+        # 部位搜索
+        for info in allInfo:
+            additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
+            # print(similar_diff_ratio(filterValue, additionInfo['part']))
+            if similar_diff_ratio(filterValue, additionInfo['part']) > 0.9:
+                if count <= jump:
+                    count += 1
+                    continue
+                if count > end:
+                    count += 1
+                    continue
+                _id = info['_id']
+                innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
+                             'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
+                             'sampleName': additionInfo['sampleName'], 'part': additionInfo['part'],
+                             'preDiagnosis': additionInfo['preDiagnosis']}
+                data[count] = innerDict
+                count += 1
+
+    elif filterType == 3:
+        # 时间范围内搜索
+        for info in allInfo:
+            additionInfo = table_PhotoAdditionInfo.find_one({"gid": info['_id']})
+            # print(float(filterValue.split(',')[0]) , info['uploadTime'], float(filterValue.split(',')[1]))
+            if float(filterValue.split(',')[0]) <= info['uploadTime'] * 1000 <= float(filterValue.split(',')[1]):
+                if count <= jump:
+                    count += 1
+                    continue
+                if count > end:
+                    count += 1
+                    continue
+                _id = info['_id']
+                innerDict = {'index': count, '_id': str(_id), 'Image_Compress': str(info['Image_Compress']),
+                             'lastChangeTime': str(info['lastChangeTime']), 'expireTime': str(info['expireTime']),
+                             'sampleName': additionInfo['sampleName'], 'part': additionInfo['part'],
+                             'preDiagnosis': additionInfo['preDiagnosis']}
+                data[count] = innerDict
+                count += 1
+
+    ret = {'info': data, 'batchInfo': batch_info, 'totalPage': math.ceil(float((count - 1) / pageCount)), 'totalImage': (count - 1)}
     # conn.close()
     return ret
