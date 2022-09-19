@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..userManagement.token import tokenCheck
 from ..dataManagement.dbFunction import getHistory, deleteAllInfoOfImageBy_id, getHistoryWithFilter, saveModification, \
-    getBatchHistoryData,getBatchHistoryWithFilter
+    getBatchHistoryData,getBatchHistoryWithFilter,deleteBacthData
 
 
 # 进入historyData页面后，展示基本信息
@@ -33,20 +33,20 @@ def batchHistoryDisplay(request):
         return HttpResponse(ret, content_type='application/json')
 
 
-#
-# def deleteHistoryImage(request):
-#     if request.method == 'POST':
-#         user = request.POST.get('uid')
-#         token = request.POST.get('token')
-#         # 检查登录状态
-#         if not tokenCheck(user, token):
-#             # 1表示登录状态有问题
-#             return HttpResponse(1)
-#
-#         result = deleteAllInfoOfImageBy_id(request.POST.get("gid"))
-#         if result:
-#             return HttpResponse(2)
-#         return HttpResponse(3)
+# 删除batch数据
+def deleteBatchData(request):
+    if request.method == 'POST':
+        user = request.POST.get('uid')
+        token = request.POST.get('token')
+        # 检查登录状态
+        if not tokenCheck(user, token):
+            # 1表示登录状态有问题
+            return HttpResponse(1)
+        bid = request.POST.get("bid")
+        result = deleteBacthData(bid)
+        if result:
+            return HttpResponse(2)
+        return HttpResponse(3)
 #
 #
 def batchHistoryWithFilter(request):
