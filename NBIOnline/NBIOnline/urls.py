@@ -50,7 +50,7 @@ urlpatterns = [
     # Batch History Display
     path(r"NBI/BatchHistory/batchDisplay/", batchHistoryDisplay, name="batchHistoryDisplay"),
     path(r'NBI/BatchHistory/getBatchHistoryWithFilter/', batchHistoryWithFilter),
-    path(r'NBI/BatchHistory/deleteBatch/', deleteBatchData, name="deleteOneImage"),
+    path(r'NBI/BatchHistory/deleteBatch/', deleteBatchData, name="deleteBatch"),
     path(r'NBI/BatchHistory/batchImgData/', batchInfoDisplay, name="batchInfoDisplay"),
     path(r'NBI/BatchHistory/batchImgDataWithFilter/', batchImgDataWithFilter),
 ]
