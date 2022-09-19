@@ -81,11 +81,11 @@ export default {
   methods: {
     handleSizeChange(val) {
       // console.log(`每页 ${val} 条`);
-      this.$bus.$emit('historySizeChange',val);
+      this.$bus.$emit('BHistorySizeChange',val);
     },
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
-      this.$bus.$emit('historyCPChange',val);
+      this.$bus.$emit('BHistoryCPChange',val);
     },
   }
 }

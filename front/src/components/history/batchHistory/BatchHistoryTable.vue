@@ -35,7 +35,7 @@ export default {
     return{
       totalPage: 0,
       totalBatch: 0,
-      currentPage: 0,
+      currentPage: 1,
       pageSize:5,
       batchHistoryList: [],
       reset: true,
@@ -50,6 +50,54 @@ export default {
     itemVisible() {
       return this.reset;
     }
+  },
+  mounted() {
+    this.downloadHistory(this.currentPage,this.pageSize);
+    this.$bus.$on('BHistoryCPChange',(data)=>{
+      this.currentPage = data;
+      this.reset = false;
+      if (this.filter.isFilter){
+        this.downloadHistoryWithFilter(data, this.pageSize, this.filter.filterType, this.filter.filterValue);
+      }
+      else{
+        this.downloadHistory(this.currentPage,this.pageSize);
+      }
+
+    });
+    this.$bus.$on('BHistorySizeChange',(data)=>{
+      this.pageSize = data;
+      if (this.filter.isFilter){
+        this.downloadHistoryWithFilter(1, this.pageSize, this.filter.filterType, this.filter.filterValue);
+      }
+      else{
+        this.downloadHistory(1,this.pageSize);
+      }
+    });
+    this.$bus.$on('updateBHistoryPage', ()=>{
+      if (this.filter.isFilter){
+        this.downloadHistoryWithFilter(1, this.pageSize, this.filter.filterType, this.filter.filterValue);
+      }
+      else{
+        this.downloadHistory(this.currentPage,this.pageSize);
+      }
+
+    });
+    this.$bus.$on('updateBHistoryPageWithFilter', (data)=>{
+      this.downloadHistoryWithFilter(1, this.pageSize, data.filterType, data.filterValue);
+      this.filter.isFilter = true;
+      this.filter.filterType = data.filterType;
+      this.filter.filterValue = data.filterValue;
+    });
+    this.$bus.$on('noFilter',()=>{
+      this.filter.isFilter = false;
+    });
+  },
+  beforeDestroy() {
+    this.$bus.$off('BHistoryCPChange');
+    this.$bus.$off('BHistorySizeChange');
+    this.$bus.$off('updateBHistoryPage');
+    this.$bus.$off('updateBHistoryPageWithFilter');
+    this.$bus.$off('noFilter');
   },
   methods: {
     // cookie
@@ -87,7 +135,7 @@ export default {
         getHistoryFilterForm.append("filterValue", filterValue);
       }
       // console.log(getHistoryFilterForm.get('filterType'), getHistoryFilterForm.get('filterValue'));
-      this.$axios.post("/NBI/History/?????", getHistoryFilterForm, {
+      this.$axios.post("/NBI/BatchHistory/getBatchHistoryWithFilter", getHistoryFilterForm, {
          headers: {'Content-Type': 'multipart/form-data'}
       }).then((response) => {
         if (response.data === 1){
@@ -126,6 +174,7 @@ export default {
           this.$bus.$emit("changeStatus",{status: false, uname:''});
         }
         else {
+          console.log(response.data);
           this.loadHistory(response.data.info,response.data.totalPage,response.data.totalBatch)
         }
       })
