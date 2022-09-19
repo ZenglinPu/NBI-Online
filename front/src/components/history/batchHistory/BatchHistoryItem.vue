@@ -139,7 +139,7 @@ export default {
         }
       })
     },
-    deleteDetail(GID) {
+    deleteDetail(BID) {
       this.$confirm('确认删除？（操作不可逆）')
       .then(() => {
         let deleteImageForm = new FormData();
@@ -147,8 +147,8 @@ export default {
         deleteImageForm.append("uid", this.getUID());
         deleteImageForm.append("token", this.getToken());
         //当前页面
-        deleteImageForm.append("gid", GID);
-        this.$axios.post("/NBI/History/deleteImage/", deleteImageForm, {
+        deleteImageForm.append("bid", BID);
+        this.$axios.post("todo", deleteImageForm, {
          headers: {'Content-Type': 'multipart/form-data'}
         }).then((response) => {
           if (response.data === 1){
