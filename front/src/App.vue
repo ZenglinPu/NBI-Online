@@ -26,7 +26,7 @@ export default {
   },
   data(){
     return {
-      functionPage: 1,
+      functionPage: 2,
     }
   },
   methods:{
@@ -53,13 +53,13 @@ export default {
     },
     switchFunctionPage(w){
       this.functionPage = w;
-      let functionPage = "/ImageProcess";
+      let functionPage = "";
       if (w===2){
         functionPage = "/UserCenter";
       }
-      else if (w===3){
-        functionPage = "/HistoryData";
-      }
+      // else if (w===3){
+      //   functionPage = "/HistoryData";
+      // }
       this.$router.push({
         path: functionPage,
       })
@@ -79,7 +79,7 @@ export default {
     singleOrBatchHistory(w) {
       let functionPage = "/HistoryData";
       if (w===1){
-        functionPage = "/HistoryData";
+        functionPage = "/HistoryData/SingleImageData";
       }
       else if (w===2){
         functionPage = "/HistoryData/BatchHistoryData";
@@ -98,9 +98,9 @@ html,body{
   margin: 0;
   padding: 0;
   min-width: 1500px;
-  max-width: 1700px;
+  /* max-width: 1700px; */
   min-height: 700px;
-  max-height: 800px;
+  /* max-height: 800px; */
 }
 #headerContainer{
   width: 100%;

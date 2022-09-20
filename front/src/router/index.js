@@ -21,10 +21,10 @@ const router = new vueRouter({
             path:"/",
             component:SingleImage,
         },
-        {
-            path:"/imageProcess",
-            component:SingleImage,
-        },
+        // {
+        //     path:"/imageProcess",
+        //     component:SingleImage,
+        // },
         {
             path:"/imageProcess/SingleImage",
             component:SingleImage,
@@ -34,7 +34,7 @@ const router = new vueRouter({
             component:MultiImage,
         },
         {
-            path:"/HistoryData",
+            path:"/HistoryData/SingleImageData",
             component:HistoryData,
         },
         {

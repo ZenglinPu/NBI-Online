@@ -26,7 +26,7 @@
         </div>
       <div id="switchBtnContainer">
         <div class="headerButton" :class="functionPage===1? selectedBtnClass:''"  @click="switchFunctionPage(1)">
-          <el-dropdown :hide-on-click="false" style="color: white;font-size: small">
+          <el-dropdown :hide-on-click="false" style="color: white;font-size: small" triger="click">
             <span class="el-dropdown-link">
               Image Process<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
@@ -43,7 +43,7 @@
 
         <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>User Center</p></div>
         <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)">
-          <el-dropdown :hide-on-click="false" style="color: white;font-size: small">
+          <el-dropdown :hide-on-click="false" style="color: white;font-size: small" triger="click">
             <span class="el-dropdown-link">
               History Data<i class="el-icon-arrow-down el-icon--right"></i>
             </span>

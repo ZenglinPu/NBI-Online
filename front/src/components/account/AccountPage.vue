@@ -193,7 +193,7 @@ export default {
             type: 'success'
           });
           setTimeout(()=>{
-            this.$router.push({path: "/ImageProcess"});
+            this.$router.push({path: "/UserCenter"});
           }, 2000);
         }
       });
