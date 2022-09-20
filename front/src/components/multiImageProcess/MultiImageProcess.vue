@@ -13,12 +13,14 @@
     <el-aside width="355px">
       <div class="aside-button">
         <div v-show="!isUploaded" class="uploadPackageBtn" @click="chooseNewPackage()">
-          <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
-          <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
+          <div style="height: 100%;width: 100%;display: flex;justify-content: center;align-items: center;flex-direction: column">
+            <i ref="uploadPackageIcon" class="el-icon-upload" style="color: darkgray;font-size: 80px"></i>
+            <div ref="uploadPackageFont" class="el-upload__text" style="color: dodgerblue;margin-top: 20px">点击上传</div>
+          </div>
         </div>
-        <div v-show="isUploaded" class="uploadPackageBtn" @mouseenter="reUploadBtnShow = true" @mouseleave="reUploadBtnShow=false">
+        <div v-show="isUploaded" class="uploadPackageBtn" @mouseenter="reUploadBtnShow = true">
           <img style="height: 45%" src="/static/img/packageIcon.png">
-          <el-button v-show="reUploadBtnShow" type="danger" style="width: 65%;transition: 0.2s ease; margin-top: -50%" @click="reUploadBtn">重新上传</el-button>
+          <el-button type="danger" style="width: 65%;transition: 0.2s ease; margin-top: 5%" @click="reUploadBtn">重新上传</el-button>
         </div>
         <div style="height: 10%;margin-top: 3%;width: 100%;text-align: center;color: #b6b6b6">只支持上传zip文件</div>
         <input @change="uploadNewPackage()" type="file" ref="compressPackageInput" style="visibility: hidden; height: 0">
@@ -69,7 +71,7 @@
           </el-col>
           <el-col :span="4">
             <div class="header-last">
-              <el-button v-show="isFinish" type="success" style="width: 90%;margin-right: 4%;height: 36px; font-family: 幼圆,serif;">查看处理结果</el-button>
+              <el-button v-show="isFinish" @click="showBatchResult()" type="success" style="width: 90%;margin-right: 4%;height: 36px; font-family: 幼圆,serif;">查看处理结果</el-button>
               <el-button v-show="!isFinish" @click="startProcess()" :disabled="!isPassCheck || isProcessing" type="danger" style="width: 90%;margin-right: 4%;height: 36px; font-family: 幼圆,serif;">{{ uploadBtnFont }}</el-button>
             </div>
           </el-col>
@@ -166,8 +168,8 @@ export default {
       isPassCheck: false,
       isProcessing: false,
       isFinish: false,
+      startCheckingInterval: false,
       uploadBtnFont: "开始处理",
-      reUploadBtnShow: false,
       activities: [
       {
         content: '等待上传',
@@ -222,11 +224,61 @@ export default {
     };
   },
   methods:{
+    showBatchResult(){
+      this.$router.push({
+        name: 'BatchImgData',
+        params: {
+          BID: this.batchID
+        }
+      })
+    },
     reUploadBtn(){
       this.isFinish = false;
       this.isUploaded = false;
       this.isPassCheck = false;
-
+      this.tableData = [];
+      this.uploadBtnFont = "开始处理";
+      this.startCheckingInterval = false;
+      this.activities = [
+      {
+        content: '等待上传',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        // icon: 'el-icon-check',
+        color: '#ff9854',
+        // color: '#0bbd87',
+        // color: '#0bbd87',
+      }, {
+        content: '上传压缩包',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        color: '#ff9854'
+      }, {
+        content: '检查压缩包',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        color: '#ff9854'
+      },{
+        content: '处理图片组',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        color: '#ff9854'
+      }, {
+        content: '处理完成',
+        timestamp: '',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-close',
+        color: '#ff9854'
+      }];
+      this.$refs.uploadPackageIcon.className = "el-icon-upload";
     },
     toInfoPage_batchProcess(){
       this.moreMessage.noBatch = false;
@@ -458,6 +510,7 @@ export default {
     },
     startCheckBatchStatus(){
       setInterval(()=>{
+        if (this.startCheckingInterval){
           let statusCheckForm = new FormData();
           // 身份识别数据
           statusCheckForm.append("uid", this.getUID());
@@ -475,6 +528,7 @@ export default {
                 response.data.batchSize,
             );
           })
+        }
       }, 5000);
     },
     uploadNewPackage(){
@@ -531,7 +585,6 @@ export default {
           this.moreMessage.noBatch = true;
         }
         else{
-          // console.log(response.data);
           this.batchTitle = response.data.batchName;
           this.batchID = response.data.batchID
           this.isUploaded = true;
@@ -539,7 +592,8 @@ export default {
           this.activities[0].color = "#0bbd87";
           this.activities[1].icon = "el-icon-loading";
           this.activities[1].color = "#ff9854";
-
+          
+          this.startCheckingInterval = true;
           this.startCheckBatchStatus();
         }
       });
@@ -578,6 +632,7 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s ease;
+  overflow: hidden;
 }
 
 .uploadPackageBtn:hover{

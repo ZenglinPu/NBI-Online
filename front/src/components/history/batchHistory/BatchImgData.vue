@@ -2,7 +2,7 @@
   <div id="history-container">
     <HistoryQuery/>
     <div id="history-content" v-show="total > 0">
-      <BatchImgList/>
+      <BatchImgList :BID="BID"/>
       <HistoryPagination
         :total="total"
         :algin="'right'"
@@ -34,6 +34,7 @@ export default {
       totalImage: 1
     }
   },
+  props: ['BID'],
   computed: {
     total() {
       return this.totalImage;

@@ -126,7 +126,7 @@ export default {
       rules: {
         sampleName: [
           {required: true, message: '请输入标本名称', trigger: 'blur'},
-          {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+          {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
         ],
         partName: [
           {required: true, message: '请选择标本部位', trigger: 'change'}
@@ -223,7 +223,11 @@ export default {
                 type: 'warning'
               });
             } else {
-              alert('submit!');
+              this.$message({
+                message: '已更新标本附加信息',
+                type: 'success'
+              })
+              // alert('submit!');
               // console.log(response.data)
             }
           });
