@@ -32,7 +32,7 @@ class batchProcess:
         self.srcFolderName = None
         self.imgList = []
         self.uploadTime = time.time()
-        self.expireTime = time.time() + 7*24*60*60  # 7天过期
+        self.expireTime = time.time() + 366*24*60*60  # 366天过期
         self.checkTime = None
         self.finishTime = None
         self.batchSize = 0
