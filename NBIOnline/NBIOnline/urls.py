@@ -39,7 +39,6 @@ urlpatterns = [
     path(r'NBI/HistoryDetail/', historyImgInfo, name="HistoryImgInfo"),
     path(r'NBI/History/deleteImage/', deleteHistoryImage, name="deleteOneImage"),
     path(r'NBI/History/getHistoryWithFilter/', historyFilter),
-    # path(r'NBI/History/batchDisplay/', batchDisplay, name='batchDisplay'),
 
     # """Batch Processing"""
     path(r"NBI/Batch/upload/compressPack/", batchUpload_compress, name="upload compress package"),
