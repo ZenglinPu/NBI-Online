@@ -14,7 +14,7 @@
 
     <el-form-item label="术前诊断" prop="preDiagnosis">
       <el-select v-model="infoForm.preDiagnosis" multiple filterable allow-create default-first-option
-                 placeholder="请选择术前诊断">
+                 placeholder="请选择术前诊断" style="width: 320px">
         <el-option v-for="item in preDiagnosisOptions" :key="item.value" :label="item.label"
                    :value="item.value">
         </el-option>
@@ -23,9 +23,9 @@
 
     <el-form-item label="病理诊断" prop="pathologic">
       <el-select v-model="infoForm.pathologic" multiple filterable allow-create default-first-option
-                 placeholder="请选择诊断">
+                 placeholder="请选择诊断" style="width: 320px">
         <el-option v-for="item in pathologicOptions" :key="item.value" :label="item.label"
-                   :value="item.value">
+                   :value="item.value" >
         </el-option>
       </el-select>
     </el-form-item>
