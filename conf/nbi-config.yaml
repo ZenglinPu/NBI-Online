@@ -30,6 +30,8 @@ gc_mode: False
 # Default expire time for unprocessed image (hours)
 gc_unprocessed_image_expire_time: 24
 
+# Default expire time for batch images (days)
+gc_batch_image_expire_time: 366
 
 ########################################
 #

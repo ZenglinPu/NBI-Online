@@ -4,6 +4,7 @@ from bson import ObjectId
 
 from .db_ImageData import getImageInfoByID
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
+from ..configLoader import nbi_conf
 
 
 # '''
@@ -32,7 +33,7 @@ class batchProcess:
         self.srcFolderName = None
         self.imgList = []
         self.uploadTime = time.time()
-        self.expireTime = time.time() + 366*24*60*60  # 366天过期
+        self.expireTime = time.time() + nbi_conf.configs['gc_batch_image_expire_time'] * 24 * 60 * 60  # 默认366天过期
         self.checkTime = None
         self.finishTime = None
         self.batchSize = 0
