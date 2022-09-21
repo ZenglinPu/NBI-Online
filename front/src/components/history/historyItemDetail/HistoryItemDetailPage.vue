@@ -95,7 +95,7 @@ export default {
     this.$bus.$on("getAdjustImage",(data)=>{
       this.imageShowInfo.NBIImageName = "/static/Data/NBI/" + data.imageNBIName;
       this.imageShowInfo.srcList.push("/static/Data/NBI/" + data.imageNBIName);
-      console.log("这里是hitoryItemDetailPage，更新后的srcList：",this.imageShowInfo.srcList)
+      // console.log("这里是hitoryItemDetailPage，更新后的srcList：",this.imageShowInfo.srcList)
     })
   },
   beforeDestroy() {
@@ -152,7 +152,18 @@ export default {
       window.history.back();
     },
     downloadResult() {
-      return undefined;
+      this.$message({
+        showClose: true,
+        message: '已开始下载。',
+        type: 'success',
+      });
+      this.downloadImage(this.imageShowInfo.NBIImageName, "resultNBI.jpg");
+    },
+    downloadImage(imgSrc, fileName){
+      let alink = document.createElement("a");
+      alink.href = imgSrc;
+      alink.download = fileName; //fileName保存提示中用作预先填写的文件名
+      alink.click();
     },
     deleteDetail() {
       this.$confirm('确认删除？（操作不可逆）')
