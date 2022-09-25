@@ -1,11 +1,12 @@
 import datetime
 import json
 from django.http import HttpResponse
-import pymongo
 from ..userManagement.token import TokenCheckLogin, tokenCheck, logoutInToken
 from ..userManagement.md5 import transToMD5
 from ..dataManagement.db_Token import UserToken
 from ..dataManagement.db_User import getUnameByUID
+
+from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
 
 
 # 根据uid注销登录，把token改过期即可
@@ -50,9 +51,8 @@ def loginCheck(request):
 
 
 def checkUserExist(uid):
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     result = table.find({"UID": uid})
     uname = None
     if result.count() == 0:
@@ -67,9 +67,8 @@ def checkUserExist(uid):
 
 def checkUserPW(uid, pw):
     inputPW = transToMD5(pw)
-    conn = pymongo.MongoClient(
-        'mongodb://{}:{}@{}:{}/?authSource={}'.format("root", "buptweb007", "49.232.229.126", "27017", "admin"))
-    table = conn.nbi.UserInfo
+    conn = getConnection()
+    table = getTable(conn, NBITABLE.UserInfo)
     result = table.find_one({"UID": uid})
     if str(result.get("pwd")) != inputPW:
         return False
