@@ -7,7 +7,7 @@ import os
 
 from .db_batchProcess import getAllSrcImageInfoByBatchID
 from ..dataManagement.db_connection import getConnection, getTable, NBITABLE
-
+import shutil
 
 # 获取用户修改的上一张图片数据
 def getLastImage(user):
@@ -224,11 +224,14 @@ def deleteAllInfoOfImageBy_id(_id):
 def deleteAllExpiredImages():
     conn = getConnection()
     table = getTable(conn, NBITABLE.PhotoInfo)
+    batch_table = getTable(conn, NBITABLE.BatchProcess)
     current_time = time.time()
 
     # 根据时间戳判断是否过期
     for expired_image in table.find({"expireTime": {"$lt": current_time}}):
         deleteAllInfoOfImageBy_id(expired_image["_id"])
+    for expired_batch in batch_table.find({"expireTime": {"$lt": current_time}}):
+        deleteBacthData(expired_batch["_id"])
     # conn.close()
 
 
@@ -474,6 +477,7 @@ def deleteBacthData(_id):
     table_BatchProcess = getTable(conn, NBITABLE.BatchProcess)
     ret = True
     batch_info = table_BatchProcess.find_one({"_id": ObjectId(_id)})
+    srcFolderName = batch_info.get('srcFolderName')
     # print(info_image)
     # print(info_imageAddition)
     try:
@@ -482,7 +486,10 @@ def deleteBacthData(_id):
         table_BatchProcess.delete_one({"_id": ObjectId(_id)})
         for gid in gid_list:
             ret &= deleteAllInfoOfImageBy_id(gid)
-            print(ret)
+            # print(ret)
+        out_folder_path = "../NBIOnline/static/Data/Batch/" + srcFolderName
+        if os.path.exists(out_folder_path):
+            shutil.rmtree(out_folder_path)  # 若输出文件夹以存在，会删除原先的文件夹！！！
         return True
     except Exception as e:
         return False
