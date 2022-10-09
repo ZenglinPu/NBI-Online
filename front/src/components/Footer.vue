@@ -4,13 +4,13 @@
       <div class="footerImage-container">
         <img alt="图片加载失败" class="footerIcon" src="@/assets/icon01.png">
       </div>
-      <p class="footerText">北京大学第一医院</p>
+      <!-- <p class="footerText">北京大学第一医院</p> -->
     </div>
     <div class="info-container">
       <div class="footerImage-container">
         <img alt="图片加载失败" class="footerIcon" src="@/assets/icon02.png">
       </div>
-      <p class="footerText">北京邮电大学</p>
+      <!-- <p class="footerText">北京邮电大学</p> -->
     </div>
   </div>
 </template>
