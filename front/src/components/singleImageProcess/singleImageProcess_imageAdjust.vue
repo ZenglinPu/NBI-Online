@@ -75,7 +75,7 @@
                     </div>
                     <div style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
                         <input @change="showInfo()" type="range" id="saturationAdjustRange" min="0" max="200" v-model="saturationOffset">
-                        <p style="font-family: STHeiti;margin-left: 12px; color: #264b5d; width: 50px;height: 100%;overflow: hidden;" id="saturationOffsetValue">{{saturationOffset}}</p>
+                        <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;height: 100%;overflow: hidden;" id="saturationOffsetValue">{{saturationOffset}}</p>
                         <el-button icon="el-icon-refresh-right" circle @click="saturationOffset=100"></el-button>
                     </div>
                 </div>

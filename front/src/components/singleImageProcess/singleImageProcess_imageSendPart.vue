@@ -71,18 +71,18 @@
       </div>
       <div class="innerTitle" style="border-top: 1px #d0d0d0 solid; margin-top: 5px">
           <p style="overflow: hidden;width:13%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: flex-start;margin-left: 3%">附加信息</p>
-          <p style="margin-left: 5%;color: rgb(19, 124, 0);font-family: 幼圆,serif">*非必须</p>
+          <!-- <p style="margin-left: 5%;color: rgb(19, 124, 0);font-family: 幼圆,serif">*非必须</p> -->
       </div>
       <div id="imgSend_addInfoContainer">
         <div style="width: 50%;height: 100%; display: block;justify-content: left;">
             <div class="addInfo">
-                <p class="addInfo_formLabel">标本名称：</p>
+                <p class="addInfo_formLabel">标本名称：<span style="margin-left: 5%;color: red;font-family: 幼圆,serif">*</span></p>
                 <input v-model="additionInfo.sampleName" class="addInfo_formInput" id="addInfo_sampleName" AUTOCOMPLETE="off" type="text" placeholder="输入标本名称"/>
                 <p style="color: red;width: 5%;text-align: center;"></p>
             </div>
             <div id="addInfo_bodyPart_Container" style="display: flex;flex-direction: column;">
                 <div class="addInfo">
-                    <p class="addInfo_formLabel">    部位：</p>
+                    <p class="addInfo_formLabel">&emsp;部位：&emsp;<span style="margin-left: 5%;color: red;font-family: 幼圆,serif">*</span></p>
                     <select v-model="additionInfo.part" class="addInfo_choose" id="addInfo_bodyPart" @change="addInfoPartChange()">
                         <option>    食管</option>
                         <option>    胃</option>
@@ -99,7 +99,7 @@
                 </div>
             </div>
             <div class="addInfo">
-                <p class="addInfo_formLabel">        备注：</p>
+                <p class="addInfo_formLabel">&emsp;备注：&emsp;<span style="margin-left: 5%;color: rgb(19, 124, 0);font-family: 幼圆,serif">*</span></p>
                 <div style="width: 60%;height: 100px;display: flex;justify-content: center;align-items: center;overflow: hidden;">
                     <textarea v-model="additionInfo.remark" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;height: 92%; width: 100%;resize: none;" placeholder="备注"></textarea>
                 </div>
@@ -109,7 +109,10 @@
         <div style="width: 50%; height: 100%; display: flex;flex-direction: column;">
             <div id="addInfo_diagnoseBefore_Container" style="display: flex;flex-direction: column;">
                 <div class="addInfo">
-                    <p class="addInfo_formLabel">术前诊断：<br>(可按住ctrl多选)</p>
+                    <div class="addInfoInner">
+                      <p class="addInfo_formLabel_special" style="margin: 0px;">术前诊断：<span style="margin-left: 5%;color: red;font-family: 幼圆,serif">*</span></p>
+                      <p class="addInfo_formLabel_special" style="color: rgb(182, 182, 182);font-size: 10px;margin: 0px;">按住Shift/Ctrl多选</p>
+                    </div>
                     <select multiple="multiple" style="width: 60%;height: 200px;" id="addInfo_diagnoseBefore" @change="addInfoDiagnoseBeforeChange()">
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    早癌</option>
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    LGIN</option>
@@ -205,6 +208,22 @@ export default {
         });
         return;
       }
+      if (this.additionInfo.sampleName.length == 0){
+        this.$message({
+          showClose: true,
+          message: '必须填写标本名称',
+          type: 'error'
+        });
+        return;
+      }
+      if (this.additionInfo.part.length == 0 || (this.additionInfo.part === '其他' && this.additionInfo.part_other.length == 0)){
+        this.$message({
+          showClose: true,
+          message: '必须选择并完整填写标本部位',
+          type: 'error'
+        });
+        return;
+      }
       let uploadForm = new FormData();
       // 图片数据
       uploadForm.append("blueImage", document.getElementById("blueImageButton").files[0]);
@@ -230,6 +249,14 @@ export default {
               chooseResult.push(this.$refs.addInfo_diagnoseBefore_other.value);//这个是获取多选框中的值
             }
           }
+      }
+      if (chooseResult.length == 0){
+        this.$message({
+          showClose: true,
+          message: '必须选择术前诊断',
+          type: 'error'
+        });
+        return;
       }
       uploadForm.append("diagnoseBefore", chooseResult);
       let config = {
@@ -689,12 +716,12 @@ export default {
 }
 .addInfo_formLabel{
     width: 40%;
-    height: 30px;
+    height: 26px;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-  font-size: small;
+    font-size: small;
 }
 .addInfo_formInput{
     width: 60%;
@@ -728,5 +755,24 @@ export default {
 }
 .fontLink:hover{
   color: #2a3ff5;
+}
+
+.addInfoInner {
+  width: 40%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.addInfo_formLabel_special {
+  width: 100%;
+  height: 26px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: small;
 }
 </style>

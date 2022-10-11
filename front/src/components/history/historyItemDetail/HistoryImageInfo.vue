@@ -39,6 +39,7 @@
           <el-option label="粘膜固有层" value="粘膜固有层"></el-option>
           <el-option label="粘膜肌层" value="粘膜肌层"></el-option>
           <el-option label="粘膜下层" value="粘膜下层"></el-option>
+          <el-option label="固有肌层" value="固有肌层"></el-option>
         </el-select>
         <template slot="append">μm</template>
       </el-input>
@@ -52,7 +53,11 @@
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="水平切缘" prop="cuttingEdge">
-      <el-switch v-model="infoForm.cuttingEdge"></el-switch>
+      <!-- <el-switch v-model="infoForm.cuttingEdge"></el-switch> -->
+      <el-radio-group v-model="infoForm.cuttingEdge">
+        <el-radio :label="false">阴性</el-radio>
+        <el-radio :label="true">阳性</el-radio>
+      </el-radio-group>
     </el-form-item>
     <el-form-item label="备注" prop="remark">
       <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="请输入备注"
@@ -126,20 +131,26 @@ export default {
       rules: {
         sampleName: [
           {required: true, message: '请输入标本名称', trigger: 'blur'},
-          {min: 1, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+          {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'}
         ],
         partName: [
           {required: true, message: '请选择标本部位', trigger: 'change'}
         ],
         preDiagnosis: [
-          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
+          {type: 'array', required: true, message: '请至少选择一个术前诊断', trigger: 'change'}
         ],
         pathologic: [
-          {type: 'array', required: true, message: '请至少选择一个诊断', trigger: 'change'}
+          {type: 'array', required: true, message: '请至少选择一个病理诊断', trigger: 'change'}
+        ],
+        infiltration: [
+          {required: true, message: '请选择一个浸润深度', trigger: 'change'}
         ],
         differentiation: [
           {type: 'array', required: true, message: '请至少选择一个分化程度', trigger: 'change'}
         ],
+        cuttingEdge: [
+          {required: true, message: '请选择水平切缘性状', trigger: 'change'}
+        ]
       }
     };
   },
