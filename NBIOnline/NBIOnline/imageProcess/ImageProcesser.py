@@ -220,7 +220,7 @@ def processImageByID(uid, _id):
     # 通过数据库找到gid的图片信息
     imgInfo = getInfoByUIDAndGID(uid, _id)
 
-    processResult, resultName, resultImage = generateNBIImage_easy(
+    processResult, resultName, resultImage, _ = generateNBIImage_easy(
         image_blue_name=imgInfo.get("Image_Blue"),
         image_green_name=imgInfo.get("Image_Green"),
         user=uid,

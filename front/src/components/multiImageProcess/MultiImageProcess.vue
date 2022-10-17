@@ -233,6 +233,7 @@ export default {
       })
     },
     reUploadBtn(){
+      this.isProcessing = false;
       this.isFinish = false;
       this.isUploaded = false;
       this.isPassCheck = false;
