@@ -30,7 +30,7 @@
             <span class="el-dropdown-link">
               Image Process<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu slot="dropdown" triger="click">
               <el-dropdown-item>
                 <div style="font-family: STHeiti" @click="singleOrMultiSwitch(1)">Single Image Process</div>
               </el-dropdown-item>
@@ -47,7 +47,7 @@
             <span class="el-dropdown-link">
               History Data<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu slot="dropdown" triger="click">
               <el-dropdown-item>
                 <div style="font-family: STHeiti" @click="singleOrBatchHistorySwitch(1)">Single Image History</div>
               </el-dropdown-item>
