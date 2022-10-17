@@ -36,7 +36,7 @@
                       <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                     </el-popover>
                     <p style="font-family: 幼圆,serif;">自动调整通道</p>
-                    <input type="checkbox" ref="isAutoChannel">
+                    <input @change="autoChannel()" type="checkbox" ref="isAutoChannel">
                   </div>
                   <div style="margin-top: 25px;font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
                     <el-popover
@@ -47,7 +47,7 @@
                       <el-button style="cursor: help;margin-left: 20px;margin-right: 10px;" size="small" slot="reference" icon="el-icon-link" circle></el-button>
                     </el-popover>
                     <p style="font-family: 幼圆,serif;">自动调整亮度</p>
-                    <input type="checkbox" ref="isAutoBrightness">
+                    <input @change="autoBrightness" type="checkbox" ref="isAutoBrightness">
                   </div>
                 </div>
                 <div id="mainControlRange">
@@ -71,7 +71,7 @@
                             <p style="height: 100%;font-size: small;width: 50%;text-align: right;color: rgb(0, 174, 255);font-family: Arial, Helvetica, sans-serif;">青色增强</p>
                         </div>
                         <div style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
-                            <input type="range" id="channelAdjustRange" min="-30" max="30" v-model="channelOffset">
+                            <input @change="manualChannel()" type="range" id="channelAdjustRange" min="-30" max="30" v-model="channelOffset">
                         </div>
                     </div>
                   </div>
@@ -95,7 +95,7 @@
                             <p style="width: 50%;text-align: right;font-family: Arial, Helvetica, sans-serif;">提高亮度</p>
                         </div>
                         <div style="width:100%; height: 70%;display: flex;flex-direction: row;align-items: center;justify-content: center">
-                            <input type="range" id="brightnessAdjustRange" class="checke" min="-80" max="80" v-model="brightnessOffset">
+                            <input @change="manualBrightness()" type="range" id="brightnessAdjustRange" min="-80" max="80" v-model="brightnessOffset">
                         </div>
                     </div>
                   </div>
@@ -144,6 +144,24 @@ export default {
     this.$bus.$off("getAdjustImageInfo");
   },
   methods:{
+    // 当拖动亮度滑块，则不使用自动调整亮度
+    manualBrightness(){
+      this.$refs.isAutoBrightness.checked = false;
+    },
+    autoBrightness(){
+      if (this.$refs.isAutoBrightness.checked) {
+        this.brightnessOffset = 0;
+      }
+    },
+    // 拖动通道滑块，则不使用自动调整通道强度功能
+    manualChannel(){
+      this.$refs.isAutoChannel.checked = false;
+    },
+    autoChannel(){
+      if (this.$refs.isAutoChannel.checked) {
+        this.channelOffset = 0;
+      }
+    },
     // cookie
     getCookie(objName){//获取指定名称的cookie的值
       const arrStr = document.cookie.split("; ");
@@ -231,7 +249,8 @@ export default {
           });
         }
         else{
-            this.showResultImage(response.data);
+          this.brightnessOffset = parseInt(response.data.brightnessAdjustValue);
+          this.showResultImage(response.data);
         }
         this.isGenerating = false;
       });

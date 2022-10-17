@@ -139,7 +139,7 @@ def generateNBIImage_easy(image_blue_name, image_green_name, user, channelOffset
     resultImage = None
     try:
         # 输入cv2图片，生成一个cv2类型的图片，存储到指定位置
-        resultImage = getNBIImage_easy(
+        resultImage, brightnessAdjustValue = getNBIImage_easy(
             image_blue=image_blue,
             image_green=image_green,
             isAutoCutImage=True,  # TODO
@@ -152,8 +152,8 @@ def generateNBIImage_easy(image_blue_name, image_green_name, user, channelOffset
     except Exception as e:
         # 返回0表示图片处理过程中出现问题
         print(e)
-        return False, resultName, resultImage
-    return True, resultName, resultImage
+        return False, resultName, resultImage, None
+    return True, resultName, resultImage, brightnessAdjustValue
 
 
 def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset, brightnessOffset, isAutoChannel,
@@ -165,7 +165,7 @@ def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset
     resultImage = None
     try:
         # 输入cv2图片，生成一个cv2类型的图片，存储到指定位置
-        resultImage = getNBIImage_full(
+        resultImage, brightnessAdjustValue = getNBIImage_full(
             image_blue=image_blue,
             image_green=image_green,
             isAutoCutImage=True,  # TODO
@@ -181,8 +181,8 @@ def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset
     except Exception as e:
         # 返回0表示图片处理过程中出现问题
         print(e)
-        return False, resultName, resultImage
-    return True, resultName, resultImage
+        return False, resultName, resultImage, None
+    return True, resultName, resultImage, brightnessAdjustValue
 
 
 # 将RAW格式的输入数据转化为jpg储存

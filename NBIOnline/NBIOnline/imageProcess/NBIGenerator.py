@@ -40,14 +40,16 @@ def getNBIImage_easy(image_blue, image_green, isAutoCutImage=True, isAutoBrightn
     mergeImage = cv2.merge([gray_blue, gray_blue, gray_green])
 
     # 输出前自动调整图片整体亮度以便于观测
+    # 自动调整亮度和滑块是互斥操作，同时只会有一种处理方式生效
     if isAutoBrightness:
-        mergeImage = aug(mergeImage)
-
-    # 根据输入再次调整图片亮度
-    mergeImage = updateBrightness(mergeImage, BrightnessOffset)
+        mergeImage, brightnessAdjustValue = aug(mergeImage)
+    else:
+        # 根据输入再次调整图片亮度
+        mergeImage = updateBrightness(mergeImage, BrightnessOffset)
+        brightnessAdjustValue = BrightnessOffset
 
     print("Get NBI Image Success.")
-    return mergeImage
+    return mergeImage, brightnessAdjustValue
 
 
 def getNBIImage_full(image_blue, image_green, isAutoCutImage=True, isAutoBrightness=False, isAutoChannel=False,
@@ -84,13 +86,15 @@ def getNBIImage_full(image_blue, image_green, isAutoCutImage=True, isAutoBrightn
 
     # 输出前自动调整图片整体亮度以便于观测
     if isAutoBrightness:
-        mergeImage = aug(mergeImage)
-
-    # 根据输入调整图片亮度，对比度，明度，饱和度
-    mergeImage = updateImageWithHSV(mergeImage, BrightnessOffset, contrast, luminosity, saturation)
+        mergeImage, brightnessAdjustValue = aug(mergeImage)
+        mergeImage = updateImageWithHSV(mergeImage, 0, contrast, luminosity, saturation)
+    else:
+        # 根据输入调整图片亮度，对比度，明度，饱和度
+        mergeImage = updateImageWithHSV(mergeImage, BrightnessOffset, contrast, luminosity, saturation)
+        brightnessAdjustValue = BrightnessOffset
 
     print("Get NBI Image Success.")
-    return mergeImage
+    return mergeImage, brightnessAdjustValue
 
 
 # 调整图片亮度，对比度，明度，饱和度
@@ -175,7 +179,7 @@ def aug(src):
     # 将分位值区间拉伸到0到255，这⾥取了255*0.05与255*0.9是因为可能会出现像素值溢出的情况，所以最好不要设置为0到255。
     out = np.zeros(src.shape, src.dtype)
     cv2.normalize(src, out, 255 * 0.02, 255 * 0.88, cv2.NORM_MINMAX)
-    return out
+    return out, out.mean() - src.mean()
 
 
 def autoCutImage(image_blue, image_green):

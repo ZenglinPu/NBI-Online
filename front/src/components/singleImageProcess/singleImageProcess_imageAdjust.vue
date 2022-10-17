@@ -50,7 +50,7 @@
                         <p style="width: 50%;display: flex;justify-content: right;color: rgb(0, 0, 0);">高明度</p>
                     </div>
                     <div style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
-                        <input @change="showInfo()" type="range" id="numinosityAdjustRange" min="0" max="200" v-model="luminosityOffset">
+                        <input @change="showInfo()" type="range" id="numinosityAdjustRange" min="0" max="100" v-model="luminosityOffset">
                         <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;overflow: hidden;">{{luminosityOffset}}</p>
                         <el-button icon="el-icon-refresh-right" circle @click="luminosityOffset=100"></el-button>
                     </div>

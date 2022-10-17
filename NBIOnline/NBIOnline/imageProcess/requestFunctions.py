@@ -146,7 +146,7 @@ def updateInputAndGetNBI(request):
         imgInfo = getInfoByUIDAndGID(user, gid)
         # 生成新NBI图片
         if mode == "easy":
-            processResult, resultName, resultImage = generateNBIImage_easy(
+            processResult, resultName, resultImage, brightnessAdjustValue = generateNBIImage_easy(
                 image_blue_name=imgInfo.get("Image_Blue"),
                 image_green_name=imgInfo.get("Image_Green"),
                 user=user,
@@ -161,7 +161,7 @@ def updateInputAndGetNBI(request):
             luminosityOffset = int(request.POST.get("luminosityOffset"))  # 明度
             saturationOffset = int(request.POST.get("saturationOffset"))  # 饱和度
 
-            processResult, resultName, resultImage = generateNBIImage_full(
+            processResult, resultName, resultImage, brightnessAdjustValue = generateNBIImage_full(
                 image_blue_name=imgInfo.get("Image_Blue"),
                 image_green_name=imgInfo.get("Image_Green"),
                 user=user,
@@ -215,12 +215,21 @@ def updateInputAndGetNBI(request):
             if not imgInfo.get("isGenerated"):
                 updateDict['expireTime'] = imgInfo.get("expireTime") + 24 * 60 * 60 * 366
                 updateDict['isGenerated'] = True
-            ret = {"resultImage": resultName, "showImage": cname}
+            ret = {
+                "resultImage": resultName,
+                "showImage": cname,
+                "brightnessAdjustValue": brightnessAdjustValue,
+            }
         else:
             if not imgInfo.get("isGenerated"):
                 updateDict['expireTime'] = imgInfo.get("expireTime") + 24 * 60 * 60 * 30
                 updateDict['isGenerated'] = True
-            ret = {"resultImage": -1, "showImage": cname}  # 普通用户不返回高清图片名称，不能下载高清图片
+            ret = {
+                "resultImage": -1,
+                "showImage": cname,
+                "brightnessAdjustValue": brightnessAdjustValue,
+            }  # 普通用户不返回高清图片名称，不能下载高清图片
+
         updateImageData(imgInfo.get("_id"), updateDict)
 
         # 返回新的图片数据到前端
