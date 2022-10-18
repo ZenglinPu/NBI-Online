@@ -355,7 +355,7 @@ export default {
           });
         } else {
           this.updatePageNBIImage(response.data);
-          console.log("ImageInfoForm中拿到的数据", response.data)
+          this.brightnessOffset = parseInt(response.data.brightnessAdjustValue);
         }
         this.isGenerating = false;
       });
@@ -383,7 +383,7 @@ export default {
             type: 'error'
           });
         } else {
-          console.log("getLastAdjustArg得到的数据是", response.data, this.fromAdjust)
+          // console.log("getLastAdjustArg得到的数据是", response.data, this.fromAdjust)
           this.channelOffset = response.data.channelOffset;
           this.brightnessOffset = response.data.brightness;
           this.contrastOffset = response.data.contrast;
