@@ -77,8 +77,8 @@ def batchImagePreProcessing(*args):
             if isFindGreen and isFindBlue:
                 totalPare += 1
                 imgList.append(str(transToStorage(originPath, toMoveList, args[2])))
-                for i in toMoveList:
-                    os.remove(originPath+'/'+i)
+                for moveAbleImage in toMoveList:
+                    os.remove(originPath+'/'+moveAbleImage)
             else:
                 # 检查没有通过，通过_id更新数据库
                 updateBatchInfo(batchID, {'batchSize': totalPare, 'checkTime': time.time(), 'status': 3, 'imgList': '|'.join(imgList)})

@@ -46,7 +46,7 @@ urlpatterns = [
     path(r"NBI/Batch/getOriginImage/", getInitImageInfo, name="get batch info after passing package check"),
     path(r"NBI/Batch/startProcess/", startBatchProcess, name="start batch process"),
 
-    # Batch History Display
+    # """Batch History Display"""
     path(r"NBI/BatchHistory/batchDisplay/", batchHistoryDisplay, name="batchHistoryDisplay"),
     path(r'NBI/BatchHistory/getBatchHistoryWithFilter/', batchHistoryWithFilter),
     path(r'NBI/BatchHistory/deleteBatch/', deleteBatchData, name="deleteBatch"),

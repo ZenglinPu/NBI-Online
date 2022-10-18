@@ -11,8 +11,7 @@ from ..dataManagement.dbFunction import getBatchStatusByID, getOriginImage, dele
 from ..dataManagement.db_batchProcess import batchProcess, getBatchInfo, updateBatchInfo
 from ..userManagement.token import tokenCheck
 from ..userManagement.userRank import getUserRankByUID
-from io import BytesIO
-from django.core.files.uploadedfile import InMemoryUploadedFile
+
 
 # 上传压缩包
 def batchUpload_compress(request):
