@@ -1,11 +1,7 @@
 # 每24小时去除数据库中已经过期的图片数据及其磁盘中的图片本身
-import time
-
 from apscheduler.schedulers.background import BackgroundScheduler
 from ..dataManagement.dbFunction import deleteAllExpiredImages
 
-
-# TODO: 担心删除有用数据，故尚未实际启动
 class GCTask:
     def __init__(self, gc=False):
         super().__init__()
@@ -21,7 +17,7 @@ class GCTask:
         pass
 
     def start(self, hours=24):
-        if self.gc == True:
+        if self.gc:
             self.job = self.scheduler.add_job(self.GCImageData, trigger='interval', hours=hours, id='gc')
             print("Start image GC")
         else:
@@ -35,4 +31,3 @@ class GCTask:
 
     def shutdown(self):
         self.scheduler.shutdown()
-

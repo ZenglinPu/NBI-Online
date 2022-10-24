@@ -2,14 +2,16 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic.base import TemplateView
 
+from .batchHistoryManagement.bacthHistory import batchHistoryDisplay, batchHistoryWithFilter, deleteBatchData
+from .batchHistoryManagement.batchImgDisplay import batchInfoDisplay, batchImgDataWithFilter
 from .batchProcessing.batchRequest import batchUpload_compress, getBatchStatus, getInitImageInfo, startBatchProcess
-from .userManagement.register import sendValidCodeEmail, registerNewUser
+from .historyManagement.history import historyDisplay, deleteHistoryImage, historyFilter, modifyInfo
+from .imageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo, \
+    getLastAdjustArg
 from .userManagement.login import loginCheck, checkByToken, logoutCheck
-from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, updateNewPwd
-from .imageProcess.requestFunctions import updateInputAndGetNBI, uploadImage, chooseLastImage, historyImgInfo,getLastAdjustArg
-from .historyManagement.history import historyDisplay, deleteHistoryImage, historyFilter, modifyInfo, batchDisplay
-from .batchHistoryManagement.bacthHistory import batchHistoryDisplay,batchHistoryWithFilter,deleteBatchData
-from .batchHistoryManagement.batchImgDisplay import batchInfoDisplay,batchImgDataWithFilter
+from .userManagement.register import sendValidCodeEmail, registerNewUser
+from .userManagement.userCenterFunctions import getUserInfo, updateNewUName, updateNewAddInfo, checkInviteCode, \
+    updateNewPwd
 
 urlpatterns = [
     path(r'NBI/admin/', admin.site.urls),

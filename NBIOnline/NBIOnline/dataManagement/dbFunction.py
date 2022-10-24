@@ -220,7 +220,6 @@ def deleteAllInfoOfImageBy_id(_id):
 
 
 # 删除所有过期图片
-# TODO: 目前仅删除图片本身以及其在两个图片数据表中数据，未对batch_process表数据进行处理
 def deleteAllExpiredImages():
     conn = getConnection()
     table = getTable(conn, NBITABLE.PhotoInfo)
@@ -232,7 +231,6 @@ def deleteAllExpiredImages():
         deleteAllInfoOfImageBy_id(expired_image["_id"])
     for expired_batch in batch_table.find({"expireTime": {"$lt": current_time}}):
         deleteBacthData(expired_batch["_id"])
-    # conn.close()
 
 
 # 字符串相似度

@@ -250,7 +250,7 @@ export default {
             }
           }
       }
-      if (chooseResult.length == 0){
+      if (chooseResult.length === 0){
         this.$message({
           showClose: true,
           message: '必须选择术前诊断',
