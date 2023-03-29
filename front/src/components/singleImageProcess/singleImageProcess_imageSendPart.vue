@@ -21,13 +21,15 @@
       </span>
     </el-dialog>
     <div class="subTitle">
-      <p style="font-weight: bold;height: 50%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: center;margin-left: 2%;">图片上传(Image Upload):</p>
+      <div class="subTitle_header">
+        <i class="el-icon-arrow-up"></i>&ensp;图片上传(Image Upload)
+      </div>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div id="uploadBtnContainer">
           <el-button icon="el-icon-upload2" type="primary" ref="uploadBtn" @click="uploadNewImage()" style="width: 90%;border-radius: 5px;font-size: small">开始上传</el-button>
         </div>
         <div id="uploadStatus">
-            <p ref="uploadStatus" :class="uploadStatus_class">等待上传</p>
+            <div ref="uploadStatus" :class="uploadStatus_class">等待上传</div>
         </div>
         <div id="chooseLastImageBtn" @click="chooseLastImage()">
             <p>选择上次上传图片>>></p>
@@ -42,7 +44,7 @@
       <div id="imgSendContainer">
           <div id="imgSendPart_blue" @click="chooseBlueImage()">
               <div id="blueImageShowField">
-                  <img ref="imageShow_blue" src="@/assets/uploadicon.png" id="icon_blue" class="uploadIcon" alt="图片加载失败">
+                  <img ref="imageShow_blue" src="@/assets/uploadicon_white.png" id="icon_blue" class="uploadIcon" alt="图片加载失败">
               </div>
               <div style="width: 100%; height: 16%;">
                   <div ref="blueImageShowBtn" class="uploadButton" @click="chooseBlueImage()">选择蓝色光源图片(415nm)</div>
@@ -52,24 +54,24 @@
           </div>
           <div id="imgSendPart_green" @click="chooseGreenImage()">
               <div id="greenImageShowField">
-                  <img ref="imageShow_green" src="@/assets/uploadicon.png" id="icon_green" class="uploadIcon" alt="图片加载失败">
+                  <img ref="imageShow_green" src="@/assets/uploadicon_white.png" id="icon_green" class="uploadIcon" alt="图片加载失败">
               </div>
               <div style="width: 100%; height: 16%;">
-                  <div ref="greenImageShowBtn" class="uploadButton" id="greenImageButton_Show" @click="chooseGreenImage()" style="color: rgb(49,143,63)">选择绿色光源图片(540nm)</div>
+                  <div ref="greenImageShowBtn" class="uploadButton" id="greenImageButton_Show" @click="chooseGreenImage()">选择绿色光源图片(540nm)</div>
                   <input ref="greenImageChooseBtn" id="greenImageButton" type="file" style="margin-top: 400px" @change="greenImageShowChange()">
               </div>
           </div>
           <div id="imgSendPart_white" @click="chooseWhiteImage()">
               <div id="whiteImageShowField">
-                  <img ref="imageShow_white" src="@/assets/uploadicon.png" id="icon_white" class="uploadIcon" alt="图片加载失败">
+                  <img ref="imageShow_white" src="@/assets/uploadicon_white.png" id="icon_white" class="uploadIcon" alt="图片加载失败">
               </div>
               <div style="width: 100%; height: 16%;">
-                  <div ref="whiteImageShowBtn" class="uploadButton" id="whiteImageButton_Show" @click="chooseWhiteImage()" style="background-color: rgba(255, 255, 255, 0.4); color: black;border: 2px solid #323232;">选择白色光源图片(非必须)</div>
+                  <div ref="whiteImageShowBtn" class="uploadButton" id="whiteImageButton_Show" @click="chooseWhiteImage()">选择白色光源图片(非必须)</div>
                   <input ref="whiteImageChooseBtn" id="whiteImageButton" type="file" style="margin-top: 400px" @change="whiteImageShowChange()">
               </div>
           </div>
       </div>
-      <div class="innerTitle" style="border-top: 1px #d0d0d0 solid; margin-top: 5px">
+      <div class="innerTitle" style="border-top: 1px solid #DCDFE6; margin-top: 5px">
           <p style="overflow: hidden;width:13%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: flex-start;margin-left: 3%">附加信息</p>
           <!-- <p style="margin-left: 5%;color: rgb(19, 124, 0);font-family: 幼圆,serif">*非必须</p> -->
       </div>
@@ -101,7 +103,7 @@
             <div class="addInfo">
                 <p class="addInfo_formLabel">&emsp;备注：&emsp;<span style="margin-left: 5%;color: rgb(19, 124, 0);font-family: 幼圆,serif">*</span></p>
                 <div style="width: 60%;height: 100px;display: flex;justify-content: center;align-items: center;overflow: hidden;">
-                    <textarea v-model="additionInfo.remark" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;height: 92%; width: 100%;resize: none;" placeholder="备注"></textarea>
+                    <textarea v-model="additionInfo.remark" style="font-family: Arial, Helvetica, sans-serif; font-size: 14px;height: 92%; width: 100%;resize: none;border-radius: 4px;border: 1px solid #c8cccf;" placeholder="备注"></textarea>
                 </div>
                 <p style="color: red;width: 5%;text-align: center;"></p>
             </div>
@@ -113,7 +115,7 @@
                       <p class="addInfo_formLabel_special" style="margin: 0px;">术前诊断：<span style="margin-left: 5%;color: red;font-family: 幼圆,serif">*</span></p>
                       <p class="addInfo_formLabel_special" style="color: rgb(182, 182, 182);font-size: 10px;margin: 0px;">按住Shift/Ctrl多选</p>
                     </div>
-                    <select multiple="multiple" style="width: 60%;height: 200px;" id="addInfo_diagnoseBefore" @change="addInfoDiagnoseBeforeChange()">
+                    <select multiple="multiple" style="width: 60%;height: 200px;border: 1px solid #c8cccf;border-radius: 4px;" id="addInfo_diagnoseBefore" @change="addInfoDiagnoseBeforeChange()">
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    早癌</option>
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    LGIN</option>
                         <option name="addInfo_diagnoseBefore_c" class="addInfo_choose" style="width: 100%; display: flex;align-items: center;justify-content: left;">    腺瘤</option>
@@ -498,7 +500,7 @@ export default {
     justify-content: left;
     width: 100%;
     height: 100px;
-    border-bottom: 1px #cbcbcb solid;
+    border-bottom: 1px solid #DCDFE6;
     overflow: hidden;
 }
 #uploadBtnContainer{
@@ -521,16 +523,18 @@ export default {
     justify-content: center;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
-    color: rgb(37, 70, 255);
+    color: rgb(56, 180, 218);
     transition: 0.3s ease;
     font-size: small;
-    border:rgb(37, 70, 255) 1px solid ;
+    border:rgb(158, 230, 251) 1px solid ;
+    background-color: rgb(240, 250, 253);
     border-radius: 3px;
 }
 
 #chooseLastImageBtn:hover{
-    color: rgb(91, 115, 255);
-    border:rgb(91, 115, 255) 1px solid ;
+    color: #fff;
+    border:rgb(255, 255, 255) 1px solid ;
+    background-color: rgb(156, 173, 255);
 }
 
 #uploadStatus{
@@ -544,16 +548,43 @@ export default {
 .uploadStatus_red{
   font-family: 幼圆,serif;
   font-weight: bold;
+  font-size: 12px;
+  width: 78px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  background-color: #fef0f0;
+  border-color: #fde2e2;
   color: rgb(217, 8, 8);
 }
 .uploadStatus_yellow{
   font-family: 幼圆,serif;
   font-weight: bold;
+  font-size: 12px;
+  width: 78px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  background-color: #fdf6ec;
+  border-color: #faecd8;
   color: rgb(255, 183, 82);
 }
 .uploadStatus_green{
   font-family: 幼圆,serif;
   font-weight: bold;
+  font-size: 12px;
+  width: 78px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  border: 1px solid #d9ecff;
+  border-radius: 4px;
+  background-color: #f0f9eb;
+  border-color: #e1f3d8;
   color: rgb(34, 255, 0);
 }
 
@@ -584,8 +615,10 @@ export default {
 }
 #blueImageShowField{
   background-color: rgba(154, 198, 255, 0.95);
-  border: 2px solid rgba(0, 0, 0, 0.8);
-  width: 98%;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid rgba(129, 183, 255, 0.95);
+  border-bottom: none;
+  width: 99%;
   height:80%;
   display: flex;
   justify-content: center;
@@ -594,7 +627,7 @@ export default {
   cursor: pointer;
 }
 #blueImageShowField:hover{
-    background-color: rgba(154, 198, 255, 0.5);
+  opacity: 75%;
 }
 
 #imgSendPart_green{
@@ -608,8 +641,10 @@ export default {
 
 #greenImageShowField{
   background-color: rgba(154, 255, 171, 0.95);
-  border: 2px solid rgba(0, 0, 0, 0.8);
-  width: 98%;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid rgba(117, 255, 140, 0.95);
+  border-bottom: none;
+  width: 99%;
   height:80%;
   display: flex;
   justify-content: center;
@@ -618,7 +653,7 @@ export default {
   cursor: pointer;
 }
 #greenImageShowField:hover{
-    background-color: rgba(154, 255, 171, 0.5);
+  opacity: 50%;
 }
 
 #imgSendPart_white{
@@ -631,9 +666,11 @@ export default {
 }
 
 #whiteImageShowField{
-  background-color: rgba(154, 255, 171, 0);
-  border: 2px solid rgba(0, 0, 0, 0.8);
-  width: 98%;
+  background-color: #f5f5fc;
+  border-radius: 3px 3px 0 0;
+  border: 1px solid #e8e8fb;
+  border-bottom: none;
+  width: 99%;
   height:80%;
   display: flex;
   justify-content: center;
@@ -642,7 +679,7 @@ export default {
   cursor: pointer;
 }
 #whiteImageShowField:hover{
-    background-color: rgba(228, 228, 228, 0.15);
+  background-color: #d5d5dd95;
 }
 
 .innerTitle{
@@ -662,14 +699,16 @@ export default {
     align-items: center;
     flex: 1 1 auto;
     height: 95%;
-    border: 2px solid black;
-    border-radius: 5px;
+    background: #e8f2fe;
+    border: 2px solid rgba(129, 183, 255, 0.95);
+    border-top: 2px solid rgba(154, 198, 255, 0.95) ;
+    border-radius: 0 0 5px 5px;
     text-align: center;
     position: relative;
     overflow: hidden;
     font-family: STHeiti,serif;
     font-size: smaller;
-    color: blue;
+    color: #006eff;
 }
 .uploadButton:after {
     position: absolute;
@@ -679,7 +718,7 @@ export default {
     left: 50%;
     bottom: 0;
     height: 3px;
-    background: #ff906c;
+    background: #0091ff;
 }
 .uploadButton:hover {
     cursor: pointer;
@@ -687,6 +726,26 @@ export default {
 .uploadButton:hover:after {
     width: 100%;
     left: 0;
+}
+
+#greenImageButton_Show {
+  color: rgb(49,143,63);
+  background: rgba(240, 255, 243, 0.95);
+  border: 2px solid rgba(117, 255, 140, 0.95);
+  border-top: 2px solid rgba(154, 255, 171, 0.95);
+}
+#greenImageButton_Show:after {
+  background: rgb(89, 255, 114);
+}
+
+#whiteImageButton_Show {
+  color: #7272ff;
+  background-color: #fefeff;
+  border: 2px solid #e3e3ff;
+  border-top: 2px solid #f5f5fc;
+}
+#whiteImageButton_Show:after {
+  background: #b7b7cd;
 }
 
 .uploadIcon{
@@ -774,5 +833,18 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: small;
+}
+
+.subTitle_header {
+  font-weight: bold;
+  width: 100%;
+  height: 50%;
+  /* font-family: 幼圆,serif; */
+  color: #363636;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 0 0 0 2%;
+  background: linear-gradient(180deg,#f5f5fc,rgba(255,255,255,0) 100%);
 }
 </style>

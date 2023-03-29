@@ -28,7 +28,7 @@
                     <div style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
                         <input @change="showInfo()" type="range" id="contrastAdjustRange" min="0" max="200" v-model="contrastOffset">
                         <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;overflow: hidden;">{{contrastOffset}}</p>
-                        <el-button icon="el-icon-refresh-right" circle @click="contrastOffset=100"></el-button>
+                        <el-button icon="el-icon-refresh-right" circle @click="contrastOffset=100" style="margin-top: -16px;"></el-button>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <div style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
                         <input @change="showInfo()" type="range" id="numinosityAdjustRange" min="0" max="100" v-model="luminosityOffset">
                         <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;overflow: hidden;">{{luminosityOffset}}</p>
-                        <el-button icon="el-icon-refresh-right" circle @click="luminosityOffset=100"></el-button>
+                        <el-button icon="el-icon-refresh-right" circle @click="luminosityOffset=100" style="margin-top: -16px;"></el-button>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                     <div style="width:100%; height: 40%;display: flex;flex-direction: row;justify-content: center;align-items: center">
                         <input @change="showInfo()" type="range" id="saturationAdjustRange" min="0" max="200" v-model="saturationOffset">
                         <p style="font-family: STHeiti,serif;margin-left: 12px; color: #264b5d; width: 50px;height: 100%;overflow: hidden;" id="saturationOffsetValue">{{saturationOffset}}</p>
-                        <el-button icon="el-icon-refresh-right" circle @click="saturationOffset=100"></el-button>
+                        <el-button icon="el-icon-refresh-right" circle @click="saturationOffset=100" style="margin-top: -16px;"></el-button>
                     </div>
                 </div>
             </div>
@@ -173,7 +173,7 @@ input[type="checkbox"] {
     width: 100%;
     height: 100%;
     display: flex;
-    border-right: 1px gray solid;
+    border-right: 1px #DCDFE6 solid;
     justify-content: center;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -181,7 +181,7 @@ input[type="checkbox"] {
 #controlPanelPart{
     width: 100%;
     height: 100%;
-    padding-top: 5px;
+    /* padding-top: 5px; */
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -190,10 +190,10 @@ input[type="checkbox"] {
 }
 .adjustContainer{
   width: 100%;
-  height: 60px;
+  height: 65px;
   display: flex;
   flex-direction: row;
-  border-top: #bdbdbd 1px solid;
-  border-bottom: #bdbdbd 1px solid;
+  /* border-top: #DCDFE6 1px solid; */
+  border-bottom: #DCDFE6 1px solid;
 }
 </style>

@@ -2,5 +2,8 @@ front/dist/
 .github
 .idea
 NBIOnline/static/Data
-front/node_modeles
+front/node_modules
 **/__pycache__
+.history/
+.bin/
+.cache/
