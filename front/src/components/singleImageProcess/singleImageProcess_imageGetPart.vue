@@ -390,7 +390,7 @@ export default {
     width: 70%;
     height: 95%;
     /* background-color: rgba(126, 126, 126, 0.25); */
-    background: linear-gradient(180deg,#f5f5fc,rgba(255,255,255,0) 100%);
+    background: linear-gradient(180deg,#e6e6f0,#cfcfdd95 100%);
     border: 2px solid #DCDFE6;
     border-radius: 3px;
     /* border-radius: 40px; */
@@ -457,5 +457,9 @@ input[type="checkbox"] {
   align-items: center;
   padding: 0 0 0 2%;
   background: linear-gradient(180deg,#f5f5fc,rgba(255,255,255,0) 100%);
+}
+
+#outImageDefault {
+  color: #a7a7a7;
 }
 </style>

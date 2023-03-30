@@ -4,7 +4,7 @@
       <c_header :singleOrMulti="singleOrMulti" :singleOrBatchHistory="singleOrBatchHistory" :switchFunctionPage="switchFunctionPage" :functionPage="functionPage" :accountPage="accountPage"></c_header>
     </div>
     <div id="mainFunctionContainer">
-      <keep-alive include="SingleImageProcess,MultiImageProcess">
+      <keep-alive include="SingleImageProcess,MultiImageProcess,P_AccountPage">
         <router-view></router-view>
       </keep-alive>
     </div>
@@ -46,10 +46,18 @@ export default {
       document.cookie = name + "=" + value + _expires + path;
     },
     accountPage(w){
-      this.$router.push({
-        path: "/AccountPage",
-        query: {w: w},
-      })
+      // console.log('这是app');
+      // console.log(w);
+      if (w==1) {
+        this.$router.push({
+            name: 'Login'
+        })
+      } else {
+        this.$router.push({
+            name: 'Register'
+        })
+      }
+      this.$bus.$emit('accountPageSlide', w)
     },
     switchFunctionPage(w){
       this.functionPage = w;

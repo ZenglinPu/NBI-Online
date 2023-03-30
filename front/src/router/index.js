@@ -58,8 +58,16 @@ const router = new vueRouter({
             component:UserCenter,
         },
         {
+            name:'Login',
             path:"/AccountPage",
-            component:AccountPage,
+            component: AccountPage,
+            props: {w: 1},
+        },
+        {
+            name:'Register',
+            path:"/AccountPage",
+            component: AccountPage,
+            props: {w: 2},
         },
         {
             path:"/Info",

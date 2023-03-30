@@ -523,7 +523,7 @@ export default {
     justify-content: center;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
-    color: rgb(56, 180, 218);
+    color: rgb(28 149 187);
     transition: 0.3s ease;
     font-size: small;
     border:rgb(158, 230, 251) 1px solid ;
@@ -739,7 +739,7 @@ export default {
 }
 
 #whiteImageButton_Show {
-  color: #7272ff;
+  color: #000092;
   background-color: #fefeff;
   border: 2px solid #e3e3ff;
   border-top: 2px solid #f5f5fc;

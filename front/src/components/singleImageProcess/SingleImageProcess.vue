@@ -44,6 +44,6 @@ export default {
 #imageShowPartContainer{
   width: 60%;
   height: 100%;
-  border: 2px dodgerblue dashed;
+  border-left: 2px dodgerblue dashed;
 }
 </style>
