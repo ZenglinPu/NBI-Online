@@ -1,6 +1,6 @@
 <template>
   <div id="singleImage_adjust-container">
-    <div id="controlPanelPart">
+    <div id="controlPanelPart" v-show="consoleMode===0">
         <div style="height: 100%;width: 18%;font-size: small;font-family: 幼圆,serif;">
             <div id="openFunctionContainer">
                 <p style="padding-left: 3%;padding-right: 5px;">开启图片调整功能</p>
@@ -82,6 +82,10 @@
             </div>
         </div>
     </div>
+    <div id="controlPanelPart" v-show="consoleMode===1">
+      也许这是一个进度条，但我还没想好怎么布局！。。。比如：
+      <el-progress type="dashboard" percentage=50></el-progress>
+    </div>
   </div>
 </template>
 
@@ -93,6 +97,7 @@ export default {
       contrastOffset: 100,
       luminosityOffset: 100,
       saturationOffset: 100,
+      consoleMode: 0
     }
   },
   mounted() {
@@ -106,9 +111,13 @@ export default {
       //发送数据到send
       this.$bus.$emit("getAdjustImageInfo", toSend);
     })
+    this.$bus.$on("changeConsoleMode",(data)=>{
+      this.consoleMode = data;
+    })
   },
   beforeDestroy() {
     this.$bus.$off("sendAdjustImageInfo");
+    this.$bus.$off("changeConsoleMode");
   },
   methods:{
     showInfo(){

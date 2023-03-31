@@ -666,7 +666,7 @@ export default {
 }
 
 #whiteImageShowField{
-  background-color: #f5f5fc;
+  background-color: #e6e6f0;
   border-radius: 3px 3px 0 0;
   border: 1px solid #e8e8fb;
   border-bottom: none;
@@ -679,7 +679,7 @@ export default {
   cursor: pointer;
 }
 #whiteImageShowField:hover{
-  background-color: #d5d5dd95;
+  background-color: #c6c6ce95;
 }
 
 .innerTitle{

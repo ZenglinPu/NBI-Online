@@ -29,7 +29,7 @@
             </div>
             <div id="mainControlPart">
                 <div id="mainControlBtn">
-                  <div style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
+                  <!-- <div style="font-family: Arial, Helvetica, sans-serif;width:85%; display:flex;flex-direction: row;height:20%; justify-content: center;align-items: center;">
                     <el-popover
                       placement="top-start"
                       width="100"
@@ -50,6 +50,13 @@
                     </el-popover>
                     <p style="font-family: 幼圆,serif;">自动调整亮度</p>
                     <input @change="autoBrightness" type="checkbox" ref="isAutoBrightness">
+                  </div> -->
+                  <div class="autoConsole">
+                    <div class="outerCon outerLeft" :class="consoleMode===0? selectedBtnLeft:''"><button class="consoleBtn consoleLeft" autofocus @click="switchConsoleMode(0)"><i class="el-icon-setting"></i>手动调整</button></div>
+                    <div class="outerCon outerRight" :class="consoleMode===1? selectedBtnRight:''"><button class="consoleBtn consoleRight" @click="switchConsoleMode(1)"><i class="iconfont icon-zhinengyouhua" style="font-weight: normal;"></i>智能调整</button></div>
+                    <!-- <div class="outer">
+                      <div class="inner">Click Me!</div>
+                    </div> -->
                   </div>
                 </div>
                 <div id="mainControlRange">
@@ -127,6 +134,9 @@ export default {
       recordRealResult: "",
       isShowResult: false,
       imageResultSrc: "",
+      consoleMode: 0,
+      selectedBtnLeft: 'selectedBtnLeft',
+      selectedBtnRight: 'selectedBtnRight'
     }
   },
   mounted() {
@@ -146,6 +156,10 @@ export default {
     this.$bus.$off("getAdjustImageInfo");
   },
   methods:{
+    switchConsoleMode(newMod) {
+      this.consoleMode = newMod;
+      this.$bus.$emit("changeConsoleMode", newMod);
+    },
     // 当拖动亮度滑块，则不使用自动调整亮度
     manualBrightness(){
       this.$refs.isAutoBrightness.checked = false;
@@ -299,6 +313,11 @@ export default {
 </script>
 
 <style scoped>
+button {
+  border: none;
+  outline: none;
+}
+
 #ShowResult{
   width: 100%;
   height: 100%;
@@ -461,5 +480,141 @@ input[type="checkbox"] {
 
 #outImageDefault {
   color: #a7a7a7;
+}
+
+.outerCon {
+  width: 115px;
+  height: 40px;
+  display: inline-block;
+  position: relative;
+  transition: .3s ease;
+}
+.outerLeft {
+  border-left: transparent 4px solid;
+  border-top: transparent 4px solid;
+  border-radius: 12px 0 0 8px;
+}
+.selectedBtnLeft {
+  border-left: #4b4b4b 4px solid;
+  border-top: #4b4b4b 4px solid;
+}
+.outerRight {
+  border-right: transparent 4px solid;
+  border-bottom: transparent 4px solid;
+  border-radius: 0 8px 12px 0;
+}
+.selectedBtnRight {
+  border-right: #d9d9d9 4px solid;
+  border-bottom: #d9d9d9 4px solid;
+}
+.consoleBtn {
+  cursor: pointer;
+  width: 115px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  /* background-color: #f3f3f3; */
+  opacity: 20%;
+  transition: .3s ease;
+}
+.consoleBtn:active, .consoleBtn:focus {
+  opacity: 100%;
+}
+.consoleLeft {
+  border-radius: 8px 0 0 8px;
+  color: #3a3a3a;
+  background: linear-gradient(-65deg, transparent 17px, #f3f3f3 0) right;
+  clip-path: polygon(
+      0 0,
+      100% 0,
+      calc(100% - 17px) 100%,
+      0 100%
+  );
+}
+.consoleRight {
+  border-radius: 0 8px 8px 0;
+  color: #fff;
+  background: linear-gradient(115deg, transparent 17px, #3a3a3a 0) left;
+  clip-path: polygon(
+      17px 0,
+      100% 0,
+      100% 100%,
+      0 100%
+  );
+}
+.consoleLeft:after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  transform: rotate(25deg);
+  box-shadow: 0 0 10px 3px rgba(122, 122, 122, 0.55);
+  bottom: -9px;
+  right: -31px;
+}
+.consoleRight:before {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  transform: rotate(25deg);
+  box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.55);
+  top: -9px;
+  left: -31px;
+}
+
+.outer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 45px;
+    background: linear-gradient(-45deg, transparent 12px, #5bdcfa 0)
+            right,
+        linear-gradient(135deg, transparent 12px, #5bdcfa 0) left;
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 5px 12px rgba(149, 224, 242, 0.45));
+}
+.inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    background: linear-gradient(-45deg, transparent 12px, #011032 0)
+            right,
+        linear-gradient(135deg, transparent 12px, #011032 0) left;
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 14px 3px rgba(146, 244, 243, 0.55);
+    clip-path: polygon(
+        0 17px,
+        17px 0,
+        100% 0,
+        100% calc(100% - 17px),
+        calc(100% - 17px) 100%,
+        0 100%
+    );
+    color: #fff;
+}
+.inner:before,
+.inner:after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    transform: rotate(45deg);
+    box-shadow: 0 0 14px 3px rgba(146, 244, 243, 0.55);
+}
+.inner:before {
+    left: -28px;
+    top: -28px;
+}
+.inner:after {
+    bottom: -28px;
+    right: -28px;
 }
 </style>
