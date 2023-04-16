@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ..dataManagement.db_User import addSumGenerate
 from ..userManagement.token import tokenCheck
-from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage
+from .ImageProcesser import compressImage, generateNBIImage_easy, generateNBIImage_full, storeInputImage, generateNBIImage_auto
 from ..dataManagement.dbFunction import deleteOneImage, getAdditionalInfoBy_id, getAllImageInfoBy_id, getLastImage, \
     getInfoByUIDAndGID
 from ..dataManagement.db_ImageData import imageData, updateImageData
@@ -145,6 +145,7 @@ def updateInputAndGetNBI(request):
         # 通过数据库找到gid的图片信息
         imgInfo = getInfoByUIDAndGID(user, gid)
         # 生成新NBI图片
+        print("Mode:"+mode)
         if mode == "easy":
             processResult, resultName, resultImage, brightnessAdjustValue = generateNBIImage_easy(
                 image_blue_name=imgInfo.get("Image_Blue"),
@@ -172,6 +173,15 @@ def updateInputAndGetNBI(request):
                 contrast=contrastOffset,
                 luminosity=luminosityOffset,
                 saturation=saturationOffset,
+            )
+            cname = compressImage(resultImage, resultName, 15)
+        elif mode == "auto":
+            processResult, resultName, resultImage, brightnessAdjustValue = generateNBIImage_auto(
+                image_blue_name=imgInfo.get("Image_Blue"),
+                image_green_name=imgInfo.get("Image_Green"),
+                user=user,
+                channelOffset=channelOffset,
+                brightnessOffset=brightnessOffset,
             )
             cname = compressImage(resultImage, resultName, 15)
         else:
@@ -208,6 +218,15 @@ def updateInputAndGetNBI(request):
                 "luminosity": int(request.POST.get("luminosityOffset")),  # 明度
                 "saturation": int(request.POST.get("saturationOffset")),  # 饱和度
                 "channelOffset": channelOffset,
+            }
+        elif mode == "auto":
+            updateDict = {
+                "Image_Result": resultName,
+                "Image_Compress": cname,
+                "lastChangeTime": time.time(),
+                "channelOffset": channelOffset,
+                'isAutoBrightness': isAutoBrightness,
+                'brightness': brightnessOffset,
             }
         # 根据用户等级判断刚刚生成的图片保留多久
         # 高级用户保存一年，低级用户30天

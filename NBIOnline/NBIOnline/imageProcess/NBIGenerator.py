@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from ..IAT_enhance.autoEnhancer import autoImageUpdater
+
 
 # get NBI Image
 def getNBIImage_easy(image_blue, image_green, isAutoCutImage=True, isAutoBrightness=False, isAutoChannel=False,
@@ -92,6 +94,46 @@ def getNBIImage_full(image_blue, image_green, isAutoCutImage=True, isAutoBrightn
         # 根据输入调整图片亮度，对比度，明度，饱和度
         mergeImage = updateImageWithHSV(mergeImage, BrightnessOffset, contrast, luminosity, saturation)
         brightnessAdjustValue = BrightnessOffset
+
+    print("Get NBI Image Success.")
+    return mergeImage, brightnessAdjustValue
+
+
+def getNBIImage_auto(image_blue, image_green, isAutoCutImage=True,
+                     ChannelOffset=0, BrightnessOffset=0):
+    print("Input Image Size:\n\tBlue Image:{b}\n\tGreen Image:{g}".format(b=image_blue.size, g=image_green.size))
+    if not image_blue.size == image_green.size:
+        print("The Image Size Should be the same")
+        if isAutoCutImage:
+            print("Auto Cute Image to Same Size.")
+            # 自动裁剪
+            image_blue, image_green = autoCutImage(image_blue, image_green)
+        else:
+            return
+
+    image_blue = pillow2cv2(image_blue)
+    image_green = pillow2cv2(image_green)
+
+    # 得到灰度图片
+    gray_blue, gray_green = getGrayImage(image_blue, image_green)
+
+    # 根据输入再次调整通道
+    gray_blue = updateBrightness(gray_blue, ChannelOffset)
+    gray_green = updateBrightness(gray_green, -1 * ChannelOffset)
+
+    # 融合通道
+    # r来自绿色灰度，g和b来自蓝色灰度
+    # merge 是按照BGR格式合并
+    mergeImage = cv2.merge([gray_blue, gray_blue, gray_green])
+
+    # 输出前自动调整图片
+    print("#Ready Into AutoUpdater#")
+    mergeImage = autoImageUpdater(mergeImage)
+    print("#Already Out of AutoUpdater#")
+
+    # 根据输入再次调整图片亮度
+    mergeImage = updateBrightness(mergeImage, BrightnessOffset)
+    brightnessAdjustValue = BrightnessOffset
 
     print("Get NBI Image Success.")
     return mergeImage, brightnessAdjustValue

@@ -6,8 +6,8 @@ import os
 import math
 
 from timm.models.layers import trunc_normal_
-from model.blocks import CBlock_ln, SwinTransformerBlock
-from model.global_net import Global_pred
+from ..model.blocks import CBlock_ln, SwinTransformerBlock
+from ..model.global_net import Global_pred
 # from blocks import CBlock_ln, SwinTransformerBlock
 # from global_net import Global_pred
 
@@ -129,7 +129,7 @@ class IAT(nn.Module):
         return torch.clamp(image, 1e-8, 1.0)
 
     def forward(self, img_low):
-        #print(self.with_global)
+        # print(self.with_global)
         if self.use_checkpoint:
             mul, add = checkpoint(self.local_net, img_low)
         else:

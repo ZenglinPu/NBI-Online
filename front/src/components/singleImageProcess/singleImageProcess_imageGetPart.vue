@@ -158,6 +158,7 @@ export default {
   methods:{
     switchConsoleMode(newMod) {
       this.consoleMode = newMod;
+      console.log(this.consoleMode)
       this.$bus.$emit("changeConsoleMode", newMod);
     },
     // 当拖动亮度滑块，则不使用自动调整亮度
@@ -213,31 +214,49 @@ export default {
       this.isGenerating = true;
       this.getAdjustImageInfo();
       let getResultForm = new FormData();
-      if (!this.fromAdjust.isOpen){
-        //简单生成
+      if (this.consoleMode === 0) {
+        if (!this.fromAdjust.isOpen){
+          //简单生成
+          getResultForm.append("token", this.getToken());
+          getResultForm.append("user", this.getUID());
+          getResultForm.append("gid", this.gid_fromSend);
+          getResultForm.append("channelOffset", this.channelOffset);
+          getResultForm.append("brightnessAdjust", this.brightnessOffset);
+          // getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
+          // getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
+          getResultForm.append("isAutoChannel", false);
+          getResultForm.append("isAutoBrightness", false);
+          getResultForm.append("mode", "easy")
+        }
+        else{
+          //带有处理信息的生成
+          getResultForm.append("token", this.getToken());
+          getResultForm.append("user", this.getUID());
+          getResultForm.append("gid", this.gid_fromSend);
+          getResultForm.append("channelOffset", this.channelOffset);
+          getResultForm.append("brightnessAdjust", this.brightnessOffset);
+          // getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
+          // getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
+          getResultForm.append("isAutoChannel", false);
+          getResultForm.append("isAutoBrightness", false);
+          getResultForm.append("contrastOffset", this.fromAdjust.contrastOffset);
+          getResultForm.append("luminosityOffset", this.fromAdjust.luminosityOffset);
+          getResultForm.append("saturationOffset", this.fromAdjust.saturationOffset);
+          getResultForm.append("mode", "full");
+        }
+      }
+      else {
+        //智能调整生成
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
         getResultForm.append("gid", this.gid_fromSend);
         getResultForm.append("channelOffset", this.channelOffset);
         getResultForm.append("brightnessAdjust", this.brightnessOffset);
-        getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
-        getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("mode", "easy")
+        getResultForm.append("isAutoChannel", false);
+        getResultForm.append("isAutoBrightness", false);
+        getResultForm.append("mode", "auto")
       }
-      else{
-        //带有处理信息的生成
-        getResultForm.append("token", this.getToken());
-        getResultForm.append("user", this.getUID());
-        getResultForm.append("gid", this.gid_fromSend);
-        getResultForm.append("channelOffset", this.channelOffset);
-        getResultForm.append("brightnessAdjust", this.brightnessOffset);
-        getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
-        getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("contrastOffset", this.fromAdjust.contrastOffset);
-        getResultForm.append("luminosityOffset", this.fromAdjust.luminosityOffset);
-        getResultForm.append("saturationOffset", this.fromAdjust.saturationOffset);
-        getResultForm.append("mode", "full");
-      }
+
       let config = {
          headers: {'Content-Type': 'multipart/form-data'}
       };
