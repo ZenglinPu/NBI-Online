@@ -4,6 +4,10 @@
       <div class="controlTitle">
         <div id="openFunctionContainer">
           <p style="padding-right: 5px;">图片调整</p>
+          <div class="autoConsole">
+            <div class="outerCon outerLeft" :class="consoleMode===0? selectedBtnLeft:''"><button class="consoleBtn consoleLeft" autofocus @click="switchConsoleMode(0)"><i class="el-icon-setting"></i>手动</button></div>
+            <div class="outerCon outerRight" :class="consoleMode===1? selectedBtnRight:''"><button class="consoleBtn consoleRight" @click="switchConsoleMode(1)"><i class="iconfont icon-zhinengyouhua" style="font-weight: normal;"></i>智能</button></div>
+          </div>
         </div>
       </div>
       <div id="mainControlPart">
@@ -89,12 +93,15 @@
           </div>
         </div>
       </div>
-      <div class="moreControlTitle">
+      <div class="moreControlTitle" v-show="consoleMode===0">
         更多操作&emsp;
         <input type="checkbox" ref="isAdjustImage" @change="changeMoreFunctionActive()">
         <span>启用更多</span>
       </div>
-      <div id="moreFunctionControlRange" :style="moreFunctionShow">
+      <div class="moreControlTitle" v-show="consoleMode===1">
+        操作进度&emsp;
+      </div>
+      <div id="moreFunctionControlRange" :style="moreFunctionShow" v-show="consoleMode===0">
         <div class="adjustContainer">
           <div style="width: 20%;display: flex;justify-content: center;align-items: center;">
             <p style="font-family: 幼圆,serif ">&emsp;对比度</p>
@@ -168,6 +175,20 @@
           </div>
         </div>
       </div>
+      <div class="progress-container" v-show="consoleMode===1">
+        <div class="progress-status-inner">
+            <el-steps direction="vertical" :active="-1" process-status="finish" finish-status="success">
+                <el-step ref="el_step_channel" :title="this.showChannelOffset" icon="el-icon-setting"></el-step>
+                <el-step title="生成图片" icon="el-icon-picture-outline-round"></el-step>
+                <el-step title="自动调优" icon="el-icon-magic-stick"></el-step>
+                <el-step ref="el_step_brightness" :title="this.showBrightnessOffset" icon="el-icon-setting"></el-step>
+                <el-step title="更新数据" icon="el-icon-document-copy"></el-step>
+            </el-steps>
+        </div>
+        <div class="progress-bar-inner">
+          <el-progress type="dashboard" :percentage="percentage" :color="colors"></el-progress>
+        </div>
+      </div>
       <div id="generateBtn">
         <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
         <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">重新生成</button>
@@ -191,7 +212,18 @@ export default {
       isUploaded_fromSend: true,
       recordRealResult: "",
       imageResultSrc: "",
-      moreFunctionActive: false
+      moreFunctionActive: false,
+      consoleMode: 0,
+      selectedBtnLeft: 'selectedBtnLeft',
+      selectedBtnRight: 'selectedBtnRight',
+      percentage: 70,
+      colors: [
+        {color: '#f56c6c', percentage: 20},
+        {color: '#e6a23c', percentage: 40},
+        {color: '#5cb87a', percentage: 60},
+        {color: '#1989fa', percentage: 80},
+        {color: '#6f7ad3', percentage: 100}
+      ]
     }
   },
   computed: {
@@ -202,6 +234,12 @@ export default {
       else {
         return { 'opacity': '.4' };
       }
+    },
+    showChannelOffset(){
+        return '调整通道：偏移为'+this.channelOffset
+    },
+    showBrightnessOffset(){
+        return '调整亮度：偏移为'+this.brightnessOffset
     }
   },
   //   updated() {
@@ -391,6 +429,10 @@ export default {
           this.luminosityOffset = response.data.luminosity;
         }
       });
+    },
+    switchConsoleMode(newMod) {
+      this.consoleMode = newMod;
+      // console.log(newMod)
     }
   }
 }
@@ -479,13 +521,13 @@ input[type="checkbox"] {
 }
 
 .controlTitle {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 40px;
   line-height: 40px;
   padding-left: 20px;
   font-weight: bold;
-  border-left: 1px solid #e6e6e6;
-  border-right: 1px solid #e6e6e6;
+  /* border-left: 1px solid #e6e6e6; */
+  /* border-right: 1px solid #e6e6e6; */
   background-image: linear-gradient(180deg, #fbfbff 0%, #fff 100%);
 }
 
@@ -587,5 +629,132 @@ input[type="checkbox"] {
 
 #getResultImage:hover {
   opacity: .8;
+}
+
+
+.autoConsole {
+  margin-left: auto;
+  margin-right: 15px;
+}
+.autoConsole button {
+  border: none;
+  outline: none;
+}
+.outerCon {
+  width: 60px;
+  height: 20px;
+  display: inline-block;
+  position: relative;
+  transition: .3s ease;
+}
+.outerLeft {
+  border-left: transparent 2px solid;
+  /* border-top: transparent 2px solid; */
+  border-radius: 6px 0 0 4px;
+}
+.selectedBtnLeft {
+  border-left: #4b4b4b 2px solid;
+  /* border-top: #4b4b4b 2px solid; */
+}
+.outerRight {
+  border-right: transparent 2px solid;
+  /* border-bottom: transparent 2px solid; */
+  border-radius: 0 4px 6px 0;
+}
+.selectedBtnRight {
+  border-right: #d9d9d9 2px solid;
+  /* border-bottom: #d9d9d9 2px solid; */
+}
+.consoleBtn {
+  cursor: pointer;
+  width: 60px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  /* background-color: #f3f3f3; */
+  opacity: 20%;
+  transition: .3s ease;
+}
+.consoleBtn:active, .consoleBtn:focus {
+  opacity: 100%;
+}
+.consoleLeft {
+  border-radius: 4px 0 0 4px;
+  color: #3a3a3a;
+  background: linear-gradient(-75deg, transparent 6px, #f3f3f3 0) right;
+  clip-path: polygon(
+      0 0,
+      100% 0,
+      calc(100% - 6px) 100%,
+      0 100%
+  );
+}
+.consoleRight {
+  border-radius: 0 4px 4px 0;
+  color: #fff;
+  background: linear-gradient(105deg, transparent 6px, #3a3a3a 0) left;
+  clip-path: polygon(
+      6px 0,
+      100% 0,
+      100% 100%,
+      0 100%
+  );
+}
+.consoleLeft:after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: rotate(15deg);
+  box-shadow: 0 0 10px 0px rgba(122, 122, 122, 0.55);
+  bottom: -3px;
+  right: -17px;
+}
+.consoleRight:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: rotate(15deg);
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.55);
+  top: -3px;
+  left: -17px;
+}
+.iconfont {
+  font-size: 12px;
+}
+
+.progress-container {
+    flex-grow: 1; 
+    height: 180px;
+    z-index: 1;
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+    justify-content: center;
+    /* background: linear-gradient(180deg,rgba(255,255,255,0),#f5f5fc 5%); */
+}
+.progress-status-inner {
+    width: calc(50% - 70px);
+    height: calc(100% - 20px);
+    padding: 10px 35px;
+}
+.progress-bar-inner {
+    flex-grow: 1;
+    height: 100%;
+    position: relative
+}
+.progress-bar-inner .el-progress {
+    position:absolute; 
+    left:50%; 
+    top:50%; 
+    transform:translate(-50%,-50%);
+}
+.el-step >>> .el-step__title {
+    font-size: 13px;
+}
+.el-step >>> .el-step__head {
+    margin-right: 6px;
 }
 </style>

@@ -163,7 +163,8 @@ export default {
     },
     // 当拖动亮度滑块，则不使用自动调整亮度
     manualBrightness(){
-      this.$refs.isAutoBrightness.checked = false;
+      // this.$refs.isAutoBrightness.checked = false;
+      this.$bus.$emit("brightnessNumber", this.brightnessOffset);
     },
     autoBrightness(){
       if (this.$refs.isAutoBrightness.checked) {
@@ -172,7 +173,8 @@ export default {
     },
     // 拖动通道滑块，则不使用自动调整通道强度功能
     manualChannel(){
-      this.$refs.isAutoChannel.checked = false;
+      // this.$refs.isAutoChannel.checked = false;
+      this.$bus.$emit("channelNumber", this.channelOffset);
     },
     autoChannel(){
       if (this.$refs.isAutoChannel.checked) {
@@ -582,8 +584,11 @@ input[type="checkbox"] {
   top: -9px;
   left: -31px;
 }
+.iconfont {
+  font-size: 14px;
+}
 
-.outer {
+/* .outer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -635,5 +640,5 @@ input[type="checkbox"] {
 .inner:after {
     bottom: -28px;
     right: -28px;
-}
+} */
 </style>
