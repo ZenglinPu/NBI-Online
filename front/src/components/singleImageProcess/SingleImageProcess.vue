@@ -38,12 +38,12 @@ export default {
 #imageSendPartContainer{
   width: 40%;
   height: 100%;
-  border: 1px rgb(0, 149, 255) solid;
+  /* border: 1px rgb(0, 149, 255) solid; */
   border-right: none;
 }
 #imageShowPartContainer{
   width: 60%;
   height: 100%;
-  border: 1px rgb(0, 149, 255) solid;
+  border-left: 2px dodgerblue dashed;
 }
 </style>

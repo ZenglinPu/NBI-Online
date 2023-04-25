@@ -4,7 +4,7 @@ import time
 import cv2
 import rawpy
 from PIL import Image as pillowImage
-from .NBIGenerator import getNBIImage_full, getRandom, pillow2cv2, getNBIImage_easy
+from .NBIGenerator import getNBIImage_full, getRandom, pillow2cv2, getNBIImage_easy, getNBIImage_auto
 from ..configLoader import nbi_conf
 from ..dataManagement.dbFunction import getInfoByUIDAndGID, deleteOneImage
 from ..dataManagement.db_ImageData import updateImageData
@@ -178,6 +178,32 @@ def generateNBIImage_full(image_blue_name, image_green_name, user, channelOffset
             saturation=saturation,
         )
         cv2.imwrite(r"../NBIOnline/static/Data/NBI/{name}".format(name=resultName), resultImage)
+    except Exception as e:
+        # 返回0表示图片处理过程中出现问题
+        print(e)
+        return False, resultName, resultImage, None
+    return True, resultName, resultImage, brightnessAdjustValue
+
+
+def generateNBIImage_auto(image_blue_name, image_green_name, user, channelOffset, brightnessOffset):
+    image_blue = pillowImage.open(r"../NBIOnline/static/Data/Blue/{name}".format(name=image_blue_name))
+    image_green = pillowImage.open(r"../NBIOnline/static/Data/Green/{name}".format(name=image_green_name))
+    # 临时文件名，加上随机避免前端因为缓存而不更新图片
+    resultName = "result_{uid}{rand}.jpg".format(uid=user, rand=getRandom())
+    resultImage = None
+    try:
+        # 输入cv2图片，生成一个cv2类型的图片，存储到指定位置
+        resultImage, brightnessAdjustValue = getNBIImage_auto(
+            image_blue=image_blue,
+            image_green=image_green,
+            isAutoCutImage=True,  # TODO
+            ChannelOffset=channelOffset,
+            BrightnessOffset=brightnessOffset,
+        )
+        if resultImage is None:
+            raise MemoryError("输入图片尺寸过大")
+        else:
+            cv2.imwrite(r"../NBIOnline/static/Data/NBI/{name}".format(name=resultName), resultImage)
     except Exception as e:
         # 返回0表示图片处理过程中出现问题
         print(e)

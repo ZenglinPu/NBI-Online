@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "666901",
+      "name": "智能优化",
+      "font_class": "zhinengyouhua",
+      "unicode": "e69a",
+      "unicode_decimal": 59034
+    },
+    {
+      "icon_id": "24342138",
+      "name": "quit-line",
+      "font_class": "quit-line",
+      "unicode": "ea06",
+      "unicode_decimal": 59910
+    },
+    {
       "icon_id": "1526270",
       "name": "筛选",
       "font_class": "shaixuan",

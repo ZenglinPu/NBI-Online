@@ -6,7 +6,7 @@
         <p>返回</p>
       </div>
       <div
-          style="height: 100%;width: 30%;font-family: 幼圆,serif;font-size: large;font-weight: bolder;display: flex;justify-content: start;align-items: center;color: #2a2a2a">
+          style="height: 100%;width: 30%;font-size: large;font-weight: bolder;display: flex;justify-content: start;align-items: center;color: #434346">
         <p>&emsp;&emsp;标本名称:&emsp;{{ titleInfo.sampleName }}</p>
       </div>
       <div
@@ -265,7 +265,7 @@ export default {
   display: flex;
   justify-content: end;
   align-items: center;
-  color: #2e46ff;
+  color: #409EFF;
   transition: 0.3s ease;
   cursor: pointer;
 }

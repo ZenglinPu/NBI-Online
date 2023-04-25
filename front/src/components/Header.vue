@@ -26,8 +26,8 @@
         </div>
       <div id="switchBtnContainer">
         <div class="headerButton" :class="functionPage===1? selectedBtnClass:''"  @click="switchFunctionPage(1)">
-          <el-dropdown :hide-on-click="false" style="color: white;font-size: small" triger="click">
-            <span class="el-dropdown-link">
+          <el-dropdown :hide-on-click="false" style="font-size: small" triger="click">
+            <span class="el-dropdown-link" ref="imageProcess">
               Image Process<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" triger="click">
@@ -41,10 +41,10 @@
           </el-dropdown>
         </div>
 
-        <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p>User Center</p></div>
+        <div class="headerButton" :class="functionPage===2? selectedBtnClass:''"  @click="switchFunctionPage(2)"><p class="el-dropdown-link">User Center</p></div>
         <div class="headerButton" :class="functionPage===3? selectedBtnClass:''"  @click="switchFunctionPage(3)">
-          <el-dropdown :hide-on-click="false" style="color: white;font-size: small" triger="click">
-            <span class="el-dropdown-link">
+          <el-dropdown :hide-on-click="false" style="font-size: small" triger="click">
+            <span class="el-dropdown-link" ref="historyData">
               History Data<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown" triger="click">
@@ -62,10 +62,10 @@
           <div v-show="user.status" id="loginStatusContainer">
             <div class="accountName" title="用户中心" @click="switchFunctionPage(2)">{{ user.name }}</div>
           </div>
-          <div v-show="!user.status" id="accountStatusContainer">-->
+          <div v-show="!user.status" id="accountStatusContainer">
             <div class="accountBtn" title="登录" @click="accountPage(1)">Sign In</div>
             <div style="width: 2px; height: 50%;margin-left:10px;margin-right: 10px;background-color: #F8F8FF;"></div>
-            <div class="accountBtn" title="注册" @click="accountPage(2)">Sign Up</div>
+            <div class="accountBtn" title="注册" @click="accountPage(2)" style="border: #F8F8FF 1px solid;">Sign Up</div>
           </div>
         </div>
     </div>
@@ -173,9 +173,13 @@ export default {
     },
     singleOrMultiSwitch(w){
       this.singleOrMulti(w);
+      this.$refs.imageProcess.style.color = 'rgb(245, 225, 225)'
+      this.$refs.historyData.style.color = '#fff'
     },
     singleOrBatchHistorySwitch(w){
       this.singleOrBatchHistory(w);
+      this.$refs.historyData.style.color = 'rgb(245, 225, 225)'
+      this.$refs.imageProcess.style.color = '#fff'
     }
   }
 }
@@ -241,10 +245,11 @@ export default {
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
     flex-direction: row;
     overflow: hidden;
+    margin-right: 10%;
 }
 #loginStatusContainer{
     width: 100%;
@@ -257,22 +262,24 @@ export default {
     margin-right: 5%;
 }
 .accountBtn{
-  width: 30%;
+  width: 15%;
   height: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff0d5;
+  /* background-color: #2f296b; */
   font-family: STHeiti;
   font-size: small;
+  font-weight: bold;
   border-radius: 5px;
-  border: #F8F8FF 2px solid;
+  /* border: #F8F8FF 2px solid; */
   transition: 0.3s ease;
 }
 .accountBtn:hover{
   cursor: pointer;
-  background-color: #F8F8FF;
-  color: #2a2a2a;
+  background-color: #2f296b;
+  color: #ffffff;
 }
 .accountName{
   width: 50%;
@@ -290,9 +297,9 @@ export default {
   cursor: pointer;
 }
 .headerButton{
-    cursor: pointer;
+    /* cursor: pointer; */
     font-family: STHeiti;
-    height: 45%;
+    height: 95%;
     font-size: small;
     font-weight: bold;
     width: 28%;
@@ -303,10 +310,19 @@ export default {
     align-items: center;
     color: #ffffff;
     margin-left: 2%;
+    border-bottom: 3px transparent solid;
+}
+.el-dropdown-link {
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s ease;
+}
+.el-dropdown-link:hover {
+  color: rgb(245, 225, 225) !important;
 }
 .headerButton_selected{
     background: rgba(255, 255, 255, 0.16);
-    color: rgb(245, 225, 225);
-    border-bottom: 1px white solid;
+    /* color: rgb(245, 225, 225) !important; */
+    border-bottom: 3px rgb(245, 225, 225) solid;
 }
 </style>
