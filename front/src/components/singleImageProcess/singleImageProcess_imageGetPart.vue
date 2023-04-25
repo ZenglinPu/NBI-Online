@@ -8,6 +8,7 @@
         <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()"><i class="el-icon-document-add"></i>&ensp;生成图片</button>
+          <button @click="startCheckAutoStatus" ref="startProgressBtn" style="visibility: hidden; height: 0; width: 0; position: absolute; "></button>
           <el-popover
             placement="top-start"
             width="100"
@@ -136,13 +137,19 @@ export default {
       imageResultSrc: "",
       consoleMode: 0,
       selectedBtnLeft: 'selectedBtnLeft',
-      selectedBtnRight: 'selectedBtnRight'
+      selectedBtnRight: 'selectedBtnRight',
+      imageSize: 0,
+      startCheckingInterval: false,
+      timeoutTimer: null,
+      intervalTimer: null,
     }
   },
   mounted() {
     this.$bus.$on("getUploadedInfo",(data)=>{
       this.isUploaded_fromSend = data['uploadStatus'];
       this.gid_fromSend = data['gid'];
+      this.imageSize = data['size'];
+      console.log(this.imageSize);
     });
     this.$bus.$on("getAdjustImageInfo", (data)=>{
       this.fromAdjust.isOpen = data.isOpen;
@@ -154,6 +161,8 @@ export default {
   beforeDestroy() {
     this.$bus.$off("getUploadedInfo");
     this.$bus.$off("getAdjustImageInfo");
+    clearInterval(this.intervalTimer);
+    clearTimeout(this.timeoutTimer);
   },
   methods:{
     switchConsoleMode(newMod) {
@@ -215,6 +224,7 @@ export default {
       }
       this.isGenerating = true;
       this.getAdjustImageInfo();
+      this.$bus.$emit('showAutoProgress', {progress: 0, status: 5});
       let getResultForm = new FormData();
       if (this.consoleMode === 0) {
         if (!this.fromAdjust.isOpen){
@@ -256,7 +266,8 @@ export default {
         getResultForm.append("brightnessAdjust", this.brightnessOffset);
         getResultForm.append("isAutoChannel", false);
         getResultForm.append("isAutoBrightness", false);
-        getResultForm.append("mode", "auto")
+        getResultForm.append("mode", "auto");
+        this.$refs.startProgressBtn.click();
       }
 
       let config = {
@@ -284,10 +295,16 @@ export default {
             message: '图片处理错误！',
             type: 'error'
           });
+          this.startCheckingInterval = false;
+          this.$bus.$emit('showAutoProgress', {progress: 0, status: 6});
         }
         else{
           this.brightnessOffset = parseInt(response.data.brightnessAdjustValue);
           this.showResultImage(response.data);
+          if (this.startCheckingInterval === true) {
+            this.startCheckingInterval = false;
+            this.$bus.$emit('showAutoProgress', {progress: 0, status: 4});
+          }
         }
         this.isGenerating = false;
       });
@@ -328,6 +345,33 @@ export default {
       this.isShowResult = true;
       this.imageResultSrc = "/static/Data/Temp/"+data.showImage;
       this.recordRealResult = data.resultImage;
+    },
+    busAutoProgress(progress, status, delay) {
+      clearTimeout(this.timeoutTimer);
+      return new Promise((resolve) => {
+        this.timeoutTimer = setTimeout(()=>{
+          this.$bus.$emit('showAutoProgress', {progress: progress, status: status});
+          resolve();
+        }, delay);
+      });
+    },
+    startCheckAutoStatus(){
+      var speed;//0.1s内增加的百分比
+      const progressUpdate = async() => {
+        speed = (1/this.imageSize)*300000;
+        clearInterval(this.intervalTimer);
+        console.log(speed);
+        await this.busAutoProgress(10, 1, 50);
+        await this.busAutoProgress(15, 2, 200);
+        this.startCheckingInterval = true;
+        this.intervalTimer = setInterval(()=>{
+          if (this.startCheckingInterval){
+            let growth = (speed*Math.random()*2).toFixed(2);
+            this.$bus.$emit('showAutoProgress', {progress: growth, status: 3});
+          }
+        }, 100);
+      }
+      progressUpdate();
     },
   }
 }

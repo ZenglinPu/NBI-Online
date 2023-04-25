@@ -183,7 +183,8 @@ def updateInputAndGetNBI(request):
                 channelOffset=channelOffset,
                 brightnessOffset=brightnessOffset,
             )
-            cname = compressImage(resultImage, resultName, 15)
+            if processResult:
+                cname = compressImage(resultImage, resultName, 15)
         else:
             return HttpResponse(3)
 

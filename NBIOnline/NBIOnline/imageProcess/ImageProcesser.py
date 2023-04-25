@@ -200,7 +200,10 @@ def generateNBIImage_auto(image_blue_name, image_green_name, user, channelOffset
             ChannelOffset=channelOffset,
             BrightnessOffset=brightnessOffset,
         )
-        cv2.imwrite(r"../NBIOnline/static/Data/NBI/{name}".format(name=resultName), resultImage)
+        if resultImage is None:
+            raise MemoryError("输入图片尺寸过大")
+        else:
+            cv2.imwrite(r"../NBIOnline/static/Data/NBI/{name}".format(name=resultName), resultImage)
     except Exception as e:
         # 返回0表示图片处理过程中出现问题
         print(e)

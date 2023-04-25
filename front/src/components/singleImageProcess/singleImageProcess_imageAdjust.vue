@@ -85,39 +85,39 @@
     <div class="controlPanelPart" v-show="consoleMode===1">
       <div class="progress-bar-container">
         <article>
-          <input type="radio" name="switch-pos" id="pos-0">
+          <!-- <input type="radio" name="switch-pos" id="pos-0" checked>
           <input type="radio" name="switch-pos" id="pos-1">
-          <input type="radio" name="switch-pos" id="pos-2" checked>
-          <input type="radio" name="switch-pos" id="pos-3">
+          <input type="radio" name="switch-pos" id="pos-2">
+          <input type="radio" name="switch-pos" id="pos-3"> -->
           <div class="chart">
               <div class="bar bar-30 white">
                   <div class="face top">
-                      <div class="growing-bar"></div>
+                      <div class="growing-bar" ref="GB1"></div>
                   </div>
                   <div class="face side-0">
-                      <div class="growing-bar"></div>
+                      <div class="growing-bar" ref="GB2"></div>
                   </div>
                   <div class="face floor">
-                      <div class="growing-bar"></div>
+                      <div class="growing-bar" ref="GB3"></div>
                   </div>
                   <div class="face side-a"></div>
                   <div class="face side-b"></div>
                   <div class="face side-1">
-                      <div class="growing-bar"></div>
+                      <div class="growing-bar" ref="GB4"></div>
                   </div>
               </div>
           </div>
-          <nav class="actions">
+          <!-- <nav class="actions">
               <label for="pos-0">1/4</label>
               <label for="pos-1">2/4</label>
               <label for="pos-2">3/4</label>
               <label for="pos-3">Full</label>
-          </nav>
+          </nav> -->
         </article>
       </div> 
       <div class="progress-status-container">
         <div class="progress-status-inner">
-            <el-steps direction="vertical" :active="-1" process-status="finish" finish-status="success">
+            <el-steps direction="vertical" :active="active" process-status="finish" finish-status="success">
                 <el-step ref="el_step_channel" :title="this.showChannelOffset" icon="el-icon-setting"></el-step>
                 <el-step title="生成图片" icon="el-icon-picture-outline-round"></el-step>
                 <el-step title="自动调优" icon="el-icon-magic-stick"></el-step>
@@ -140,7 +140,11 @@ export default {
       saturationOffset: 100,
       consoleMode: 0,
       brightnessOffset: 0,
-      channelOffset: 0
+      channelOffset: 0,
+      active: -1,
+      progress: 0,
+      progressNormalTopWave: "repeating-linear-gradient(120deg,transparent,rgba(64, 158, 255, .4) 46px,rgba(64, 158, 255, .4) 46px,transparent 92px)",
+      progressSuccessTopWave: "repeating-linear-gradient(120deg,transparent,rgba(0, 190, 255, .5) 46px,rgba(0, 190, 255, .5) 46px,transparent 92px)",
     }
   },
   computed:{
@@ -174,12 +178,45 @@ export default {
       this.channelOffset = data;
     //   this.$refs.el_step_channel.title = this.showChannelOffset
     })
+    this.$bus.$on("showAutoProgress",(data)=>{
+        console.log(this.progress);
+        console.log(data);
+      if(data.status !== 4 && data.status !== 5 && data.status !== 6) {
+        this.active = data.status-1;
+        if (data.progress > 0) {
+            this.progress += Number(data.progress);
+            console.log(this.progress);
+        }
+        if (this.progress > 98) {
+            this.progress = 98
+        }
+        this.$refs.GB1.style.width=this.$refs.GB2.style.width=this.$refs.GB3.style.width=this.$refs.GB4.style.width=String(this.progress)+"%";
+      }
+      else if(data.status === 4){
+        this.active = 5;
+        this.progress = 100;
+        this.$refs.GB1.style.width=this.$refs.GB2.style.width=this.$refs.GB3.style.width=this.$refs.GB4.style.width="100%";
+        this.$refs.GB1.style.backgroundColor=this.$refs.GB2.style.backgroundColor=this.$refs.GB3.style.backgroundColor=this.$refs.GB4.style.backgroundColor="rgba(0, 190, 255, .6)";
+        this.$refs.GB1.style.backgroundImage=this.progressSuccessTopWave;
+      }
+      else if(data.status === 5){
+        this.active = -1;
+        this.progress = 0;
+        this.$refs.GB1.style.width=this.$refs.GB2.style.width=this.$refs.GB3.style.width=this.$refs.GB4.style.width="0%";
+        this.$refs.GB1.style.backgroundColor=this.$refs.GB2.style.backgroundColor=this.$refs.GB3.style.backgroundColor=this.$refs.GB4.style.backgroundColor="rgba(64, 158, 255, .6)";
+        this.$refs.GB1.style.backgroundImage=this.progressNormalTopWave;
+      }
+      else {
+        this.$refs.GB1.style.backgroundColor=this.$refs.GB2.style.backgroundColor=this.$refs.GB3.style.backgroundColor=this.$refs.GB4.style.backgroundColor="rgba(255, 49, 49, .6)";
+      }
+    })
   },
   beforeDestroy() {
     this.$bus.$off("sendAdjustImageInfo");
     this.$bus.$off("changeConsoleMode");
     this.$bus.$off("brightnessNumber");
     this.$bus.$off("channelNumber");
+    this.$bus.$off("showAutoProgress");
   },
   methods:{
     showInfo(){
@@ -299,13 +336,14 @@ input[type="checkbox"] {
 .progress-bar-container
 {
     width: 646px;
+    height: 100%;
     z-index: 1;
     display: flex;
     overflow: hidden;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     border-right: 1px solid #DCDFE6;
-    background: linear-gradient(180deg,rgba(255,255,255,0),#f5f5fc 15%);
+    background: linear-gradient(180deg,rgba(245,245,252,0.5),#f5f5fc 45%);
     /* background: linear-gradient(180deg,rgba(255,255,255,0),#3e3ed2 5%); */
 }
 .progress-bar-container .chart
@@ -321,7 +359,7 @@ input[type="checkbox"] {
     font-size: 1em;
     position: relative;
     height: 10em;
-    transition: all .3s ease-in-out;
+    transition: all .1s ease-in-out;
     transform: rotateX(60deg) rotateY(0deg);
     transform-style: preserve-3d;
 }
@@ -367,7 +405,7 @@ input[type="checkbox"] {
 
 .progress-bar-container .growing-bar
 {
-    transition: all .3s ease-in-out;
+    transition: all .1s ease-in-out;
     width: 100%;
     height: 2em;
 }
@@ -379,6 +417,8 @@ input[type="checkbox"] {
 .bar.white .growing-bar
 {
     background-color: rgba(64, 158, 255, .6);
+    /* rgba(0, 190, 255, .6) */
+    /* rgba(255, 49, 49, .6) */
 }
 .bar.white .top .growing-bar {
     background-image: repeating-linear-gradient(
@@ -444,7 +484,7 @@ input[type="checkbox"] {
 
 .bar-30 .growing-bar
 {
-    width: 30%;
+    width: 0%;
 }
 
 .progress-bar-container .chart.grid
@@ -485,7 +525,7 @@ input[type="checkbox"] {
     padding-bottom: 2em;
     border-bottom: 1px dotted rgba(68, 68, 68, .4);
 }
-.progress-bar-container label
+/* .progress-bar-container label
 {
     box-sizing: border-box;
     padding: 1em;
@@ -531,7 +571,7 @@ input[id='pos-2']:checked ~ .chart .growing-bar
 input[id='pos-3']:checked ~ .chart .growing-bar
 {
     width: 100%;
-}
+} */
 
 .progress-status-container {
     flex-grow: 1; 

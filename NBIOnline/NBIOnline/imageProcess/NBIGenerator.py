@@ -127,10 +127,13 @@ def getNBIImage_auto(image_blue, image_green, isAutoCutImage=True,
     mergeImage = cv2.merge([gray_blue, gray_blue, gray_green])
 
     # 输出前自动调整图片
-    print("#Ready Into AutoUpdater#")
-    mergeImage = autoImageUpdater(mergeImage)
-    print("#Already Out of AutoUpdater#")
-
+    try:
+        print("#Ready Into AutoUpdater#")
+        mergeImage = autoImageUpdater(mergeImage)
+        print("#Already Out of AutoUpdater#")
+    except Exception as e:
+        print(e)
+        return None, BrightnessOffset
     # 根据输入再次调整图片亮度
     mergeImage = updateBrightness(mergeImage, BrightnessOffset)
     brightnessAdjustValue = BrightnessOffset

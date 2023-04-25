@@ -177,7 +177,7 @@
       </div>
       <div class="progress-container" v-show="consoleMode===1">
         <div class="progress-status-inner">
-            <el-steps direction="vertical" :active="-1" process-status="finish" finish-status="success">
+            <el-steps direction="vertical" :active="active" process-status="finish" finish-status="success">
                 <el-step ref="el_step_channel" :title="this.showChannelOffset" icon="el-icon-setting"></el-step>
                 <el-step title="生成图片" icon="el-icon-picture-outline-round"></el-step>
                 <el-step title="自动调优" icon="el-icon-magic-stick"></el-step>
@@ -192,6 +192,7 @@
       <div id="generateBtn">
         <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
         <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">重新生成</button>
+        <button @click="startCheckAutoStatus" ref="startProgressBtn" style="visibility: hidden; height: 0; width: 0; position: absolute; "></button>
       </div>
     </div>
   </div>
@@ -216,14 +217,19 @@ export default {
       consoleMode: 0,
       selectedBtnLeft: 'selectedBtnLeft',
       selectedBtnRight: 'selectedBtnRight',
-      percentage: 70,
+      percentage: 0,
       colors: [
         {color: '#f56c6c', percentage: 20},
         {color: '#e6a23c', percentage: 40},
         {color: '#5cb87a', percentage: 60},
         {color: '#1989fa', percentage: 80},
         {color: '#6f7ad3', percentage: 100}
-      ]
+      ],
+      imageSize: 409600,
+      active: -1,
+      startCheckingInterval: false,
+      timeoutTimer: null,
+      intervalTimer: null,
     }
   },
   computed: {
@@ -288,14 +294,16 @@ export default {
     //   this.fromAdjust.saturationOffset = data.saturationOffset;
     // });
   },
-  //   beforeDestroy() {
+  beforeDestroy() {
   //     this.$bus.$off("sendAdjustImageInfo");
   //     this.$bus.$off("getlastArg");
 
   //     // this.$bus.$off("getUploadedInfo");
   //     this.$bus.$off("getAdjustImageInfo");
   //     this.$bus.$off("sendLastArg");
-  //   },
+    clearInterval(this.intervalTimer);
+    clearTimeout(this.timeoutTimer);
+  },
   methods: {
     changeMoreFunctionActive() {
       this.moreFunctionActive = !this.moreFunctionActive;
@@ -344,29 +352,45 @@ export default {
       }
       this.isGenerating = true;
       //   this.getAdjustImageInfo();
+      this.active = -1;
+      this.percentage = 0;
       let getResultForm = new FormData();
-      if (!this.moreFunctionActive) {
-        //简单生成
+      if (this.consoleMode === 0) {
+        if (!this.moreFunctionActive) {
+          //简单生成
+          getResultForm.append("gid", this.GID)
+          getResultForm.append("token", this.getToken());
+          getResultForm.append("user", this.getUID());
+          getResultForm.append("channelOffset", this.channelOffset);
+          getResultForm.append("brightnessAdjust", this.brightnessOffset);
+          getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
+          getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
+          getResultForm.append("mode", "easy")
+        } else {
+          getResultForm.append("gid", this.GID)
+          getResultForm.append("token", this.getToken());
+          getResultForm.append("user", this.getUID());
+          getResultForm.append("channelOffset", this.channelOffset);
+          getResultForm.append("brightnessAdjust", this.brightnessOffset);
+          getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
+          getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
+          getResultForm.append("contrastOffset", this.contrastOffset);
+          getResultForm.append("luminosityOffset", this.luminosityOffset);
+          getResultForm.append("saturationOffset", this.saturationOffset);
+          getResultForm.append("mode", "full");
+        }
+      }
+      else {
+        //智能调整生成
         getResultForm.append("gid", this.GID)
         getResultForm.append("token", this.getToken());
         getResultForm.append("user", this.getUID());
         getResultForm.append("channelOffset", this.channelOffset);
         getResultForm.append("brightnessAdjust", this.brightnessOffset);
-        getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
-        getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("mode", "easy")
-      } else {
-        getResultForm.append("gid", this.GID)
-        getResultForm.append("token", this.getToken());
-        getResultForm.append("user", this.getUID());
-        getResultForm.append("channelOffset", this.channelOffset);
-        getResultForm.append("brightnessAdjust", this.brightnessOffset);
-        getResultForm.append("isAutoChannel", this.$refs.isAutoChannel.checked);
-        getResultForm.append("isAutoBrightness", this.$refs.isAutoBrightness.checked);
-        getResultForm.append("contrastOffset", this.contrastOffset);
-        getResultForm.append("luminosityOffset", this.luminosityOffset);
-        getResultForm.append("saturationOffset", this.saturationOffset);
-        getResultForm.append("mode", "full");
+        getResultForm.append("isAutoChannel", false);
+        getResultForm.append("isAutoBrightness", false);
+        getResultForm.append("mode", "auto");
+        this.$refs.startProgressBtn.click();
       }
       let config = {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -391,9 +415,15 @@ export default {
             message: '图片处理错误！',
             type: 'error'
           });
+          this.startCheckingInterval = false;
         } else {
           this.updatePageNBIImage(response.data);
           this.brightnessOffset = parseInt(response.data.brightnessAdjustValue);
+          if (this.startCheckingInterval === true) {
+            this.startCheckingInterval = false;
+            this.active = 5;
+            this.percentage = 100;
+          }
         }
         this.isGenerating = false;
       });
@@ -433,7 +463,41 @@ export default {
     switchConsoleMode(newMod) {
       this.consoleMode = newMod;
       // console.log(newMod)
-    }
+    },
+    busAutoProgress(progress, status, delay) {
+      clearTimeout(this.timeoutTimer);
+      return new Promise((resolve) => {
+        this.timeoutTimer = setTimeout(()=>{
+          this.percentage += progress;
+          this.active = status;
+          resolve();
+        }, delay);
+      });
+    },
+    startCheckAutoStatus(){
+      var speed;//0.1s内增加的百分比
+      const progressUpdate = async() => {
+        speed = (1/this.imageSize)*(Math.random()+2.5)*100000;
+        clearInterval(this.intervalTimer);
+        // console.log(speed);
+        await this.busAutoProgress(10, 0, 50);
+        await this.busAutoProgress(15, 1, 200);
+        this.startCheckingInterval = true;
+        this.active = 2;
+        this.intervalTimer = setInterval(()=>{
+          if (this.startCheckingInterval){
+            let growth = Number((speed*Math.random()*2).toFixed(2));
+            if (growth+this.percentage > 98) {
+              this.percentage = 98;
+            }
+            else {
+              this.percentage += growth;
+            }
+          }
+        }, 100);
+      }
+      progressUpdate();
+    },
   }
 }
 </script>
