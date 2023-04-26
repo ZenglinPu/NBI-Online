@@ -304,6 +304,7 @@ input[type="checkbox"] {
   border-top: #bdbdbd 1px solid;
   border-bottom: #bdbdbd 1px solid;
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 .progress-bar-container h1
@@ -594,6 +595,8 @@ input[id='pos-3']:checked ~ .chart .growing-bar
 }
 .el-step >>> .el-step__head {
     margin-right: 6px;
+=======
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 }
