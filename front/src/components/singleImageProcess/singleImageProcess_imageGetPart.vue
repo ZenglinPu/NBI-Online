@@ -6,8 +6,12 @@
         <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()"><i class="el-icon-document-add"></i>&ensp;生成图片</button>
           <button @click="startCheckAutoStatus" ref="startProgressBtn" style="visibility: hidden; height: 0; width: 0; position: absolute; "></button>
+=======
+          <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">生成图片</button>
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">生成图片</button>
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
@@ -472,10 +476,15 @@ button {
     width: 70%;
     height: 95%;
 <<<<<<< HEAD
+<<<<<<< HEAD
     /* background-color: rgba(126, 126, 126, 0.25); */
     background: linear-gradient(180deg,#e6e6f0,#cfcfdd95 100%);
     border: 2px solid #DCDFE6;
     border-radius: 3px;
+=======
+    background-color: rgba(126, 126, 126, 0.25);
+    border: 2px solid black;
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
     background-color: rgba(126, 126, 126, 0.25);
     border: 2px solid black;
@@ -533,6 +542,7 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 .subTitle_header {
   font-weight: bold;
@@ -689,6 +699,8 @@ input[type="checkbox"] {
     bottom: -28px;
     right: -28px;
 } */
+=======
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 </style>

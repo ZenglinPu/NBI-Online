@@ -7,6 +7,7 @@
   "glyphs": [
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
       "icon_id": "666901",
       "name": "智能优化",
       "font_class": "zhinengyouhua",
@@ -21,6 +22,8 @@
       "unicode_decimal": 59910
     },
     {
+=======
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
       "icon_id": "1526270",
