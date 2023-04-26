@@ -526,7 +526,11 @@ export default {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     color: rgb(28 149 187);
+=======
+    color: rgb(37, 70, 255);
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
     color: rgb(37, 70, 255);
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
@@ -648,11 +652,17 @@ export default {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   background-color: #e6e6f0;
   border-radius: 3px 3px 0 0;
   border: 1px solid #e8e8fb;
   border-bottom: none;
   width: 99%;
+=======
+  background-color: rgba(154, 255, 171, 0);
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  width: 98%;
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
   background-color: rgba(154, 255, 171, 0);
   border: 2px solid rgba(0, 0, 0, 0.8);
@@ -679,7 +689,11 @@ export default {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   background-color: #c6c6ce95;
+=======
+    background-color: rgba(228, 228, 228, 0.15);
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
     background-color: rgba(228, 228, 228, 0.15);
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
@@ -738,6 +752,7 @@ export default {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #greenImageButton_Show {
   color: rgb(49,143,63);
   background: rgba(240, 255, 243, 0.95);
@@ -758,6 +773,8 @@ export default {
   background: #b7b7cd;
 }
 
+=======
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======

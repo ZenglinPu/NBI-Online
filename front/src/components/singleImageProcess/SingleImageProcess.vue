@@ -47,7 +47,11 @@ export default {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   border-left: 2px dodgerblue dashed;
+=======
+  border: 1px rgb(0, 149, 255) solid;
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 =======
   border: 1px rgb(0, 149, 255) solid;
 >>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
