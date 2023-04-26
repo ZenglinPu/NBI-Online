@@ -1,14 +1,16 @@
 <template>
   <div id="imgShowPart">
     <div class="subTitle">
-      <div class="subTitle_header">
-        <i class="el-icon-coordinate"></i>&ensp;生成结果(Get Result)
-      </div>
+      <p style="font-weight: bold;height: 50%;font-family: 幼圆,serif;color: #363636;display: flex;justify-content: center;align-items: center;margin: 0 0 0 2%;">生成结果(Get Result):</p>
       <div style="width: 100%;height: 50%;display: flex;flex-direction: row;">
         <div style="width: 60%;height: 100%;display: flex;flex-direction: row;">
           <el-button v-show="isGenerating" id="getResultImage" type="primary" :loading="true">生成中</el-button>
+<<<<<<< HEAD
           <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()"><i class="el-icon-document-add"></i>&ensp;生成图片</button>
           <button @click="startCheckAutoStatus" ref="startProgressBtn" style="visibility: hidden; height: 0; width: 0; position: absolute; "></button>
+=======
+          <button v-show="!isGenerating" id="getResultImage" @click="getResultImage()">生成图片</button>
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
           <el-popover
             placement="top-start"
             width="100"
@@ -18,11 +20,11 @@
           </el-popover>
         </div>
         <div style="height: 100%;width: 40%;display: flex;justify-content: end;">
-          <el-button id="downloadResult" type="warning" plain icon="el-icon-download" @click="downloadResult()">下载结果</el-button>
+          <el-button id="downloadResult" type="warning" icon="el-icon-download" @click="downloadResult()">下载结果</el-button>
         </div>
       </div>
     </div>
-    <div class="imgPart_inner">
+    <div class="imgPart_inner" style="height: 340px;margin-top: 10px;">
         <div style="width: 100%;height:100%;display:flex;justify-content: left;align-items: center;">
             <div id="imgBackPart">
                 <p id="outImageDefault" v-show="!isShowResult">/*生成图片后查看结果*/</p>
@@ -407,10 +409,10 @@ button {
     height: 100%;
     overflow: hidden;
     display: flex;
-    /* justify-content: center; */
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-bottom: 1px #DCDFE6 solid;
+    border-bottom: 1px grey solid;
 }
 .subTitle{
     display: flex;
@@ -419,7 +421,7 @@ button {
     justify-content: left;
     width: 100%;
     height: 100px;
-    border-bottom: 1px solid #DCDFE6;
+    border-bottom: 1px #cbcbcb solid;
     overflow: hidden;
 }
 #getResultImage{
@@ -427,22 +429,21 @@ button {
     width: 30%;
     margin-left: 3%;
     cursor: pointer;
-    border: none;
     border-radius: 3px;
     background-color: #409eff;
     color: white;
     transition: 0.3s ease;
     overflow: hidden;
-    font-size: 13px;
 }
 #getResultImage:hover{
-    background-color: #83c0ff;
+    background-color: rgba(56, 56, 56, 0.78);
+    color: #edecd6;
 }
 #downloadResult{
   width: 48%;
   height: 70%;
   font-size: small;
-  /* border: 1px grey solid; */
+  border: 1px grey solid;
   margin-right: 5%;
 }
 #saveImage{
@@ -458,10 +459,7 @@ button {
     overflow: hidden;
 }
 .imgPart_inner{
-    height: 340px;
-    width: 99%;
-    margin-top: 10px;
-    padding-left: 10px;
+    width: 98%;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -473,10 +471,15 @@ button {
 #imgBackPart{
     width: 70%;
     height: 95%;
+<<<<<<< HEAD
     /* background-color: rgba(126, 126, 126, 0.25); */
     background: linear-gradient(180deg,#e6e6f0,#cfcfdd95 100%);
     border: 2px solid #DCDFE6;
     border-radius: 3px;
+=======
+    background-color: rgba(126, 126, 126, 0.25);
+    border: 2px solid black;
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
     /* border-radius: 40px; */
     font-family: STHeiti,serif;
     color: #363636;
@@ -488,7 +491,7 @@ button {
 }
 
 #imgBackPart:hover{
-  background-color: #b7b7d245;
+    background-color: rgba(126, 126, 126, 0.15);
 }
 #mainControlPart{
     width: 30%;
@@ -511,7 +514,7 @@ input[type="checkbox"] {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid #DCDFE6;
+    border-bottom: 1px grey solid;
 }
 #mainControlRange{
     width: 100%;
@@ -530,6 +533,7 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+<<<<<<< HEAD
 .subTitle_header {
   font-weight: bold;
   width: 100%;
@@ -685,4 +689,6 @@ input[type="checkbox"] {
     bottom: -28px;
     right: -28px;
 } */
+=======
+>>>>>>> parent of aea515e2 (🐞 fix(Front): 统一全局CSS样式，与修复gitignore)
 </style>

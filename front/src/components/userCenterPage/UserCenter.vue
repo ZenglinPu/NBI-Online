@@ -1,5 +1,4 @@
 <template>
-<div class="userWholeContainer">
   <div id="userCenterPageContainer">
     <div v-show="isLogin" id="userCenterInner">
       <div id="userCenterHeader">
@@ -10,7 +9,7 @@
           <div style="width: 100%;height: 60%; display: flex;justify-content: start;align-items: center;">
             <p v-show="!isChangeUName" id="headerNameFont">{{uname}}</p>
             <el-tooltip v-show="isChangeUName" class="item" effect="dark" content="输入后按Enter键确认，最大长度为10个字符。" placement="top">
-              <input maxlength="10" id="newUName" type="text" :value="uname" @blur="isChangeUName = false" @keyup.enter="uploadNewUName()" style="height: 68%;width: 90%;border-radius: 4px;border: 1px #dcdfe6 solid;"/>
+              <input maxlength="10" id="newUName" type="text" :value="uname" @blur="isChangeUName = false" @keyup.enter="uploadNewUName()" style="height: 68%;width: 90%;border-radius: 4px;border: 1px #0b007e solid;"/>
             </el-tooltip>
             <div @click="isChangeUName = true" class="el-icon-edit changeBtn"></div>
           </div>
@@ -27,8 +26,8 @@
           </div>
         </div>
         <div style="width: 60%;height: 70%;display: flex;flex-direction: row;justify-content: end; align-items: center">
-          <div @click="isChangePWD = true" id="changePWDBtn" title="修改密码"><p><i class="el-icon-unlock"></i>&ensp;Change Password</p></div>
-          <div @click="userLogOut()" id="logOutBtn" title="注销"><p><i class="iconfont icon-quit-line" style="vertical-align: middle"></i>&ensp;Sign Out</p></div>
+          <div @click="isChangePWD = true" id="changePWDBtn" title="注销"><p>Change Password</p></div>
+          <div @click="userLogOut()" id="logOutBtn" title="注销"><p>Sign Out</p></div>
         </div>
         <el-drawer
           title="修改密码"
@@ -55,65 +54,65 @@
         </el-drawer>
       </div>
       <div id="userCenterInfo">
-        <div style="border-bottom: 1px #dcdfe6 solid;width: 100%;height: 29%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 29%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>注册信息</p>
           </div>
           <div class="infoContent">
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               &emsp;&emsp;注册邮箱:&emsp;{{uid}}
             </div>
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               &emsp;&emsp;注册时间:&emsp;{{registerTime}}
             </div>
           </div>
         </div>
-        <div style="border-bottom: 1px #dcdfe6 solid;width: 100%;height: 29%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 29%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>附加信息</p>
             <el-button @click="isChangeAdditionInfo = true" v-show="!isChangeAdditionInfo" icon="el-icon-edit" style="font-size: small;height: 20%;width: 20%;margin-left: 10px;display: flex;justify-content: center;align-items: center">修改</el-button>
             <el-button @click="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" icon="el-icon-folder-checked" style="font-size: small;height: 20%;width: 20%;margin-left: 10px;display: flex;justify-content: center;align-items: center">保存</el-button>
           </div>
           <div class="infoContent">
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               <div style="width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;工作单位:&emsp;
                 <p v-show="!isChangeAdditionInfo">
                   {{workPlace}}
                 </p>
-                <input type="text" @keyup.enter="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" ref="workPlaceInput" :value="workPlace" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #dcdfe6 solid;"/>
+                <input type="text" @keyup.enter="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" ref="workPlaceInput" :value="workPlace" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #0b007e solid;"/>
               </div>
-              <div style="border: 1px solid #dcdfe6;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;工作部门:&emsp;
                 <p v-show="!isChangeAdditionInfo">
                   {{department}}
                 </p>
-                <input type="text" @keyup.enter="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" ref="departmentInput" :value="department" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #dcdfe6 solid;"/>
+                <input type="text" @keyup.enter="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" ref="departmentInput" :value="department" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #0b007e solid;"/>
               </div>
             </div>
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-              <div style="border-right: 1px solid #dcdfe6;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="border-right: 1px solid gray;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;当前职称:&emsp;
                 <p v-show="!isChangeAdditionInfo">
                   {{competent}}
                 </p>
-                <input type="text" @keyup.enter="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" ref="competentInput" :value="competent" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #dcdfe6 solid;"/>
+                <input type="text" @keyup.enter="uploadNewAdditionalInfo()" v-show="isChangeAdditionInfo" ref="competentInput" :value="competent" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #0b007e solid;"/>
               </div>
             </div>
           </div>
         </div>
-        <div style="border-bottom: 1px #dcdfe6 solid;width: 100%;height: 30%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 30%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>NBI相关信息</p>
           </div>
           <div class="infoContent">
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               <div style="height: 100%;width: 30%;display: flex;flex-direction: column;justify-content: start;align-items: center">
                 <div style="height: 40%;width: 100%;margin: 0">
                   <p>&emsp;&emsp;用户等级:&emsp;{{rank===1?'普通':'超级'}}用户</p>
                 </div>
                 <div style="height: 20%;width: 100%;margin: 0">
-                  <p style="height: 20%;font-size: small;font-family: 幼圆,serif;color: rgb(159 159 159)" v-show="rank===2">&emsp;&emsp;过期时间:&emsp;{{expiresTime}}</p>
+                  <p style="height: 20%;font-size: small;font-family: 幼圆,serif;color: #0b007e" v-show="rank===2">&emsp;&emsp;过期时间:&emsp;{{expiresTime}}</p>
                 </div>
               </div>
               <div style="height: 100%;width: 20%;display: flex;justify-content: center;align-items: center">
@@ -127,19 +126,19 @@
                 </p>
               </div>
             </div>
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 50%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
               <div style="width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;剩余上传次数:&emsp;
                 {{leftTimes===-1?'不限':leftTimes}}
               </div>
-              <div style="border: 1px solid #dcdfe6;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;总共上传次数:&emsp;
                 {{totalTimes}}
               </div>
             </div>
           </div>
         </div>
-        <div style="border-bottom: 1px #dcdfe6 solid;width: 100%;height: 12%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+        <div style="border-bottom: 1px #0b007e solid;width: 100%;height: 12%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
           <div class="infoTitle">
             <p>邀请码</p>
             <el-popover
@@ -152,15 +151,15 @@
             </el-popover>
           </div>
           <div class="infoContent">
-            <div style="border: 1px solid #dcdfe6;border-right: none;width:100%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
-              <div style="background-color: black;border: 1px solid black;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+            <div style="border: 1px solid gray;border-right: none;width:100%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="background-color: black;border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;
                 <p style="font-family: 幼圆,serif; font-size: medium;color: white;">{{inviteCode}}</p>
               </div>
-              <div style="border: 1px solid #dcdfe6;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
+              <div style="border: 1px solid gray;border-right: none;width:50%;height: 100%;display: flex; flex-direction: row;justify-content: start; align-items: center;">
                 &emsp;&emsp;输入对方邀请码：
                 <el-tooltip class="item" effect="dark" content="输入后按Enter键确认" placement="top">
-                  <input type="text" ref="othersInviteCode" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #dcdfe6 solid;" @keyup.enter="inputInviteCode()"/>
+                  <input type="text" ref="othersInviteCode" style="height: 55%;width: 55%;border-radius: 4px;border: 1px #0b007e solid;" @keyup.enter="inputInviteCode()"/>
                 </el-tooltip>
               </div>
             </div>
@@ -172,7 +171,6 @@
       <img src="/static/img/userCenterBG.png" style="width: 28%">
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -473,37 +471,22 @@ export default {
 </script>
 
 <style scoped>
-.userWholeContainer {
-  box-sizing: border-box;
-  min-width: 0;
-  background: linear-gradient(180deg,#f5f5fc,hsla(0,0%,100%,0) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  box-shadow: 0 20px 50px rgb(65 62 101 / 15%);
-}
-
 #userCenterPageContainer{
-  width: 80%;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff;
-  box-shadow: 0 20px 50px rgb(65 62 101 / 15%);
 }
 #userCenterInner{
-  width: 93.75%;
+  width: 75%;
   height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 #noInfoShow{
-  width: 93.75%;
+  width: 75%;
   height: 90%;
   display: flex;
   flex-direction: column;
@@ -517,8 +500,7 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border-radius: 5px 5px 0 0;
-  border-bottom: 1px solid #dcdfe6;
+  border-bottom: 1px solid #07004f;
 }
 #userCenterInfo{
   height: 77%;
@@ -529,8 +511,8 @@ export default {
 }
 #userCenterHeader_icon{
   height: 80%;
-  border-radius: 15px;
-  border: 4px #dcdfe6 solid;
+  border-radius: 5px;
+  border: 1px #07004f solid;
 }
 .headerSuperFont{
   color: goldenrod;
@@ -555,46 +537,46 @@ export default {
   width: 25%;
   margin-left: 4%;
   height: 40%;
-  border: 2px solid #ccccd8;
-  color: #555666;
+  border: 2px solid #ff4b4b;
+  color: #0b007e;
   font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
   margin-right: 5%;
   transition: 0.3s ease;
-  border-radius: 20px;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: small;
 }
 #logOutBtn:hover{
   cursor: pointer;
-  color: #ff5d48;
-  border-color: #ff5d48;
+  background-color: red;
+  color: white;
 }
 #changePWDBtn{
   width: 25%;
   margin-left: 2%;
   height: 40%;
-  color: #555666;
-  border: 2px solid #ccccd8;
+  border: 2px solid #006c00;
+  color: #0b007e;
   font-family: "Droid Sans Mono", "DejaVu Sans Mono", monospace;
   transition: 0.3s ease;
-  border-radius: 20px;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 12px;
+  font-size: small;
 }
 #changePWDBtn:hover{
   cursor: pointer;
-  border-color: #313137;
+  background-color: #00ce02;
+  color: white;
 }
 .changeBtn{
   margin-left: 10px;
   cursor:pointer;
   width: 20px;
   height: 20px;
-  border-radius: 2px;
   transition: 0.3s ease;
   display: flex;
   justify-content: center;
@@ -625,10 +607,10 @@ export default {
   font-size: small;
   font-family: 幼圆, serif;
   transition: 0.3s ease;
-  color: #409EFF;
+  color: #1122AA;
   cursor: pointer;
 }
 .fontLink:hover{
-  color: #0071e2;
+  color: #2e46ff;
 }
 </style>
