@@ -3,6 +3,30 @@ An online NBI Image Generator designed for doctors who don't have much knowledge
 
 NBI-Online 一个在线合成和管理NBI医用图片的免费工具网站
 
+## 服务器重启后处理流程
+首先，启动服务器，尝试重启网卡
+ifconfig eno1 down
+ifconfig eno1 up
+sudo /sbin/dhclient
+sudo ifconfig
+然后使用networkmanager，这个之前已经安装过了，不过可能重启之后没有自启动
+输入
+sudo systemctl status NetworkManager
+看看是否是active的状态，如果不是，则
+sudo systemctl start NetworkManager
+然后启动网站
+先启动mongodb
+mongodb不是用apt安装的，所以直接在/usr/local/mongodb/bin目录下执行
+mongod --config /usr/local/mongodb/etc/mongodb.conf
+然后运行mybin目录下的startTestServer.sh查看是否能正常启动，能则Ctrl+C停止，并运行startAtBackend.sh
+
+## 排查服务器自动关机
+syslog没找到原因，现场没有保存
+怀疑是自动休眠的问题，长期无人访问而关机
+于是
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
+关闭自动休眠，先看看这个有没有效果
+
 ## 安装注意事项
 需要使用node.js及其npm工具进行必要工具包的安装
 前端采用vue.js实现，后端采用Django实现
@@ -15,6 +39,7 @@ npm i element-ui -S
 
 npm install axios
 
+npm run build
 ！注意：pymongo一定不要默认安装最新版本，安装pip install pymongo==3.11.3
 
 ## 系统搭建
