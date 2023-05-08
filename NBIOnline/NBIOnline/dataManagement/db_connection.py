@@ -7,12 +7,12 @@ from ..configLoader import nbi_conf
 # 用于管理mongodb的链接工具
 
 class NBITABLE(Enum):
-    # 为序列值指定value值
     PhotoInfo = 1
     UserInfo = 2
     TokenInfo = 3
     PhotoAdditionInfo = 4
     BatchProcess = 5
+    ValidateCode = 6
 
 
 def getTable(conn, table):
@@ -26,6 +26,8 @@ def getTable(conn, table):
         return conn.nbi.PhotoAdditionInfo
     elif table == NBITABLE.BatchProcess:
         return conn.nbi.BatchProcess
+    elif table == NBITABLE.ValidateCode:
+        return conn.nbi.ValidateCode
     else:
         print("No table:{t}".format(t=table))
         return None

@@ -1,73 +1,71 @@
 <template>
-  <div class="accountWholeContainer">
-    <div id="mainContainer">
-      <div id="mainContainerInner">
-        <div id="switchBtnContainer">
-          <button class="switchBtn" @click="switchPage(1);" title="登录您的账号" id="user_loginBtn">登&emsp;&emsp;录</button>
-          <button class="switchBtn" @click="switchPage(2);" title="注册新的账号" id="user_registerBtn">注&emsp;&emsp;册</button>
-        </div>
-        <div style="width: 94%;margin-left: 3%;margin-top: 6px;height: 3px;border-radius: 5%;background-color: #AAAAFF;"></div>
-        <div id="mainContainer_switch">
-          <div :class="sliderType">
-            <!--账号登录-->
-            <div id="user_subPage_login">
-              <el-form class="loginForm" :rules="loginFormRule" ref="loginForm" :model="loginForm" label-width="50px">
-                <el-form-item label="账户" prop="account">
-                  <el-input v-model="loginForm.account"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                  <el-input type="password" v-model="loginForm.password" autocomplete="off" @keyup.enter.native="loginCheck()"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <div style="width: 100%;display: flex;flex-direction: row;align-items: center;justify-content: center">
-                    <div style="width: 50%;height: 100%">
-                      <input ref="rememAC" type="checkbox" id="rememAC" name="rememAC"/>
-                      <label for="rememAC" style="cursor: pointer;margin-right:9rem;color: #606266;font-size: 14px;line-height: 14px;">记住我</label>
-                    </div>
-                    <div style="width: 45%;height: 100%;display: flex;justify-content: end;align-items: center;margin-right: 5%;">
-                      <a class="fontLink" style="margin-left: 10%" @click="switchPage(2)">没有账号？立即注册</a>
-                    </div>
+  <div id="mainContainer">
+    <div id="mainContainerInner">
+      <div id="switchBtnContainer">
+				<button class="switchBtn" @click="switchPage(1);" title="登录您的账号" id="user_loginBtn">登&emsp;&emsp;录</button>
+				<button class="switchBtn" @click="switchPage(2);" title="注册新的账号" id="user_registerBtn">注&emsp;&emsp;册</button>
+			</div>
+      <div style="width: 94%;margin-left: 3%;margin-top: 6px;height: 3px;border-radius: 5%;background-color: #AAAAFF;"></div>
+      <div id="mainContainer_switch">
+        <div :class="sliderType">
+          <!--账号登录-->
+          <div id="user_subPage_login">
+            <el-form class="loginForm" :rules="loginFormRule" ref="loginForm" :model="loginForm" label-width="50px">
+              <el-form-item label="账户" prop="account">
+                <el-input v-model="loginForm.account"></el-input>
+              </el-form-item>
+              <el-form-item label="密码" prop="password">
+                <el-input type="password" v-model="loginForm.password" autocomplete="off" @keyup.enter.native="loginCheck()"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <div style="width: 100%;display: flex;flex-direction: row;align-items: center;justify-content: center">
+                  <div style="width: 50%;height: 100%">
+                    <input ref="rememAC" type="checkbox" id="rememAC" name="rememAC"/>
+                    <label for="rememAC" style="cursor: pointer;margin-right:9rem;color: blue;font-size: 16px;line-height: 30px;">记住我</label>
                   </div>
-                </el-form-item>
-                <input type="button" id="loginBtn" @click="loginCheck()" value="登      录"/>
-              </el-form>
-            </div>
+                  <div style="width: 45%;height: 100%;display: flex;justify-content: end;align-items: center;margin-right: 5%;">
+                    <a class="fontLink" style="margin-left: 10%" @click="switchPage(2)">没有账号？立即注册</a>
+                  </div>
+                </div>
+              </el-form-item>
+              <input type="button" id="loginBtn" @click="loginCheck()" value="登      录"/>
+            </el-form>
+          </div>
 
-            <!--账号注册-->
-            <div id="user_subPage_register">
-              <el-form class="registerForm" :rules="registerFormRule" ref="registerForm" :model="registerForm" label-width="18%">
-                <el-form-item label="账户" prop="account">
-                  <el-input v-model="registerForm.account"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="pass">
-                  <el-input type="password" v-model="registerForm.password" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码" prop="checkPass">
-                  <el-input type="password" v-model="registerForm.checkPass" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="验证码" prop="vCode">
-                  <el-input style="width: 75%" v-model="registerForm.vCode" autocomplete="off"></el-input>
-                  <el-button style="margin-left: 5%;width: 20%;" type="primary" :loading="validateCodeSending">发送</el-button>
-                </el-form-item>
-                <input type="button" id="registerBtn" @click="registerCheck()" value="注      册"/>
-                <p style="color: gray;font-size: small;text-align: center;font-family: 幼圆,serif;">点击即代表同意 <a @click="toInfoPage_userAgreement()" class="fontLink">NBI-Online 用户协议</a></p>
-              </el-form>
-            </div>
+          <!--账号注册-->
+          <div id="user_subPage_register">
+            <el-form class="registerForm" :rules="registerFormRule" ref="registerForm" :model="registerForm" label-width="18%">
+              <el-form-item label="账户" prop="account">
+                <el-input v-model="registerForm.account"></el-input>
+              </el-form-item>
+              <el-form-item label="密码" prop="pass">
+                <el-input type="password" v-model="registerForm.password" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="确认密码" prop="checkPass">
+                <el-input type="password" v-model="registerForm.checkPass" autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="验证码" prop="vCode">
+                <el-input style="width: 75%" v-model="registerForm.vCode" autocomplete="off"></el-input>
+                <el-button style="margin-left: 5%;width: 20%;" type="primary" :loading="validateCodeSending" @click="sendValidateCode()" v-text="validateCodeText">/el-button>
+              </el-form-item>
+              <input type="button" id="registerBtn" @click="registerCheck()" value="注      册"/>
+              <p style="color: gray;font-size: small;text-align: center;font-family: 幼圆,serif;">点击即代表同意 <a @click="toInfoPage_userAgreement()" class="fontLink">NBI-Online 用户协议</a></p>
+            </el-form>
           </div>
         </div>
       </div>
-      <!-- slogan -->
-      <div id="slogan">
-          <p>-&emsp;登录NBI-Online解锁完整功能&emsp;-</p>
-      </div>
+    </div>
+    <!-- slogan -->
+    <div id="slogan">
+        <p>-&emsp;登录NBI-Online解锁完整功能&emsp;-</p>
     </div>
   </div>
+
 </template>
 
 <script>
 export default {
   name: "P_AccountPage",
-  props: ['w'],
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -91,6 +89,7 @@ export default {
     return {
       sliderType: "mainContainer_switch_slider_left",
       validateCodeSending: false,
+      validateCodeText: "发送",
       loginForm: {
         account: "",
         password: "",
@@ -123,6 +122,65 @@ export default {
     }
   },
   methods:{
+    countDown(interval){
+      this.validateCodeText = interval + "s";
+      interval -= 1;
+      if (interval <= 0) {
+        this.validateCodeSending = false;
+        this.validateCodeText = "发送";
+        return;
+      }
+      setTimeout(() => {
+        this.countDown(interval)
+      }, 1000)
+    },
+    // 发送验证码，按钮置灰，倒计时1分钟
+    sendValidateCode(){
+      if (this.registerForm.account === null || this.registerForm.password === null ||
+      this.registerForm.account === "" || this.registerForm.password === ""){
+        this.$message({
+          showClose: true,
+          message: '注册关键信息不能为空',
+          type: 'error'
+        });
+        return;
+      }
+      if (!this.checkEmail(this.registerForm.account)){
+        this.$message({
+          showClose: true,
+          message: '请输入符合规范的电子邮箱',
+          type: 'error'
+        });
+        return;
+      }
+
+      this.validateCodeSending = true;
+      // 发送验证邮件
+      this.validateCodeText = "发送中";
+      this.$axios.post('/NBI/User/register/sendEmail', {
+        "email": this.registerForm.account,
+        "pw": this.registerForm.password,
+      }).then((response) => {
+        if (response.data === 1) {
+          // 已经成功发送验证码邮件
+          this.$message({
+            showClose: true,
+            message: '邮件已发送',
+            type: 'success'
+          });
+          this.countDown(60);
+        }
+        else if (response.data === 2){
+          this.$message({
+            showClose: true,
+            message: '发送验证码邮件失败',
+            type: 'error'
+          });
+          this.validateCodeSending = false;
+          this.validateCodeText = "发送";
+        }
+      });
+    },
     toInfoPage_userAgreement(){
       this.$router.push({
         path: "/Info",
@@ -130,7 +188,6 @@ export default {
       })
     },
     switchPage(w){
-      // console.log(w)
       if (w===1){
         this.sliderType = "mainContainer_switch_slider_left";
       }
@@ -214,7 +271,8 @@ export default {
         });
         return;
       }
-      if (this.registerForm.account === null || this.registerForm.password === null){
+      if (this.registerForm.account === null || this.registerForm.password === null ||
+      this.registerForm.account === "" || this.registerForm.password === ""){
         this.$message({
           showClose: true,
           message: '注册关键信息不能为空',
@@ -230,14 +288,50 @@ export default {
         });
         return;
       }
+      if (this.registerForm.vCode === null || this.registerForm.vCode === ""){
+        this.$message({
+          showClose: true,
+          message: '请输入邮箱验证码',
+          type: 'error'
+        });
+        return;
+      }
       this.$axios.post('/NBI/User/register/', {
         "email": this.registerForm.account,
         "pw": this.registerForm.password,
+        "vcode": this.registerForm.vCode,
       }).then((response) => {
         if (response.data === 0){
           this.$message({
             showClose: true,
             message: '注册失败，该邮箱地址已被注册！',
+            type: 'error'
+          });
+          this.registerForm.account = "";
+          this.registerForm.password = "";
+        }
+        else if (response.data === -1){
+          this.$message({
+            showClose: true,
+            message: '注册失败，请先点击发送验证码！',
+            type: 'error'
+          });
+          this.registerForm.account = "";
+          this.registerForm.password = "";
+        }
+        else if (response.data === -2){
+          this.$message({
+            showClose: true,
+            message: '注册失败，该验证码已过期！',
+            type: 'error'
+          });
+          this.registerForm.account = "";
+          this.registerForm.password = "";
+        }
+        else if (response.data === -3){
+          this.$message({
+            showClose: true,
+            message: '注册失败，验证码不正确！',
             type: 'error'
           });
           this.registerForm.account = "";
@@ -256,9 +350,6 @@ export default {
       });
     },
   },
-  beforeDestroy() {
-    this.$bus.$off('accountPageSlide');
-  },
   mounted(){
     const pwd = this.getCookie("NBI_pwd");
     if (pwd != null){
@@ -266,32 +357,12 @@ export default {
       this.loginForm.account = this.getCookie("NBI_UID");
       this.$refs.rememAC.checked = true;
     }
-    this.$bus.$on('accountPageSlide', (w)=>{
-      this.switchPage(w);
-    })
-  },
-  activated() {
-    this.switchPage(this.w);
-    // console.log('这是accPage');
-    // console.log(this.w);
+    this.switchPage(this.$route.query.w);
   },
 }
 </script>
 
 <style scoped>
-.accountWholeContainer {
-  box-sizing: border-box;
-  min-width: 0;
-  background: linear-gradient(180deg,#f5f5fc,#07004f0b 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  box-shadow: 0 20px 50px rgb(65 62 101 / 15%);
-}
-
 #mainContainer{
     width: 34%;
     height: 80%;
@@ -306,8 +377,7 @@ export default {
     width: 100%;
     /* 48 - 58 */
     /* height: 48%; */
-    background-color: rgba(18, 124, 238, 0.25);
-    /* background-color: #fff; */
+    background-color: rgba(18, 124, 238, 0.19);
     transition: 0.2s ease;
     overflow: hidden;
 }
@@ -322,21 +392,13 @@ export default {
 	width: 46%;
 	height: 40px;
 	margin: 5px;
-	border: #f4f4f4 solid 1px;
-	background: #fff;
-  color: #666;
+	border: royalblue solid 1px;
+	background: #F8F8FF;
 	cursor: pointer;
 	transition: all 0.2s ease;
 }
 .switchBtn:hover{
 	background: #AAAAFF;
-  color: #fff;
-  font-weight: bold;
-}
-.switchBtn:focus{
-  background: #409EFF;
-  color: #fff;
-  font-weight: bold;
 }
 
 #mainContainer_switch{
@@ -394,63 +456,55 @@ export default {
 }
 
 input[type="checkbox"] {
-    height: 16px;
-    width: 16px;
-    /* margin-top: 18px;
-    margin-left: 10px; */
-    visibility: hidden;
-}
-input[type=checkbox]:after {
-  position: absolute;
-  width: 11px;
-  height: 16px;
-  top: 12px;
-  content: " ";
-  background-color: #fff;
-  color: #409EFF;
-  display: inline-block;
-  visibility: visible;
-  padding: 0px 3px;
-  border-radius: 3px;
-}
-input[type=checkbox]:checked:after {
-  content: "✓";
-  font-size: 12px;
-  font-weight: bold;
+    height: 18px;
+    width: 18px;
+    margin-top: 18px;
+    margin-left: 10px;
 }
 
 #rememAC{
 	margin-left: -30px;
   cursor: pointer;
-  margin-top: -3px;
 }
 #loginBtn{
 	width: 100%;
 	height: 45px;
-	border: #f4f4f4 solid 1px;
-	background: #fff;
+	border: #1122AA solid 1px;
+	background: transparent;
 	cursor: pointer;
 	transition: all 0.2s ease;
-  font-weight: bold;
 }
 #loginBtn:hover{
-  background-color: #409EFF;
-  color: #fff;
+    background-color: rgba(61, 255, 61, 0.378);
+}
+input[type="checkbox"] {
+    height: 18px;
+    width: 18px;
+    margin-top: 18px;
+    margin-left: 10px;
+}
+
+.fontLink{
+	color: #1122AA;
+	font-size: 16px;
+}
+.fontLink:hover{
+	color: rgb(52, 86, 255);
+	cursor: pointer;
 }
 
 #registerBtn{
 	width: 100%;
 	height: 45px;
-  margin-top: 2px;
-	border: #f4f4f4 solid 1px;
-	background: #fff;
+    margin-top: 2px;
+	border: #1122AA solid 1px;
+	background: transparent;
 	cursor: pointer;
 	transition: all 0.2s ease;
-  font-weight: bold;
 }
 #registerBtn:hover{
 	color: white;
-  background-color: #409EFF;
+    background-color: #2244CC;
 }
 #slogan{
 	width: 100%;
@@ -464,13 +518,12 @@ input[type=checkbox]:checked:after {
 .fontLink{
   margin-left: 4px;
   margin-right: 4px;
-  color: rgb(80, 80, 186);
+  color: #1122AA;
   cursor: pointer;
   font-size: small;
   font-family: 幼圆,serif;
 }
 .fontLink:hover{
-  color: #409EFF;
-  cursor: pointer;
+  color: #2a3ff5;
 }
 </style>

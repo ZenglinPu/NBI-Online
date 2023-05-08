@@ -8,15 +8,22 @@ from email.mime.text import MIMEText
 from .md5 import transToMD5
 from ..dataManagement.dbFunction import checkUIDRegistered
 from ..dataManagement.db_User import User
+from ..dataManagement.db_ValidateCode import ValidateCode, checkValidateCode
 
 
 # 发送带验证码邮件到指定邮箱，同时返回验证码到前端
-# TODO: 这个需要服务器端设置好才行，目前我本地测试是可以完成邮件发送的
 def sendValidCodeEmail(request):
-    email = request.POST.get("email")
+    body = json.loads(request.body.decode('utf-8'))
+    email = body["email"]
     code = getEmailcode()
-    # sendEmail(code=code, target=email)
-    return HttpResponse("邮件已发送！")
+    sendResult = sendEmail(code=code, target=email)
+    if sendResult:
+        # 记录该验证码置db
+        validateCode = ValidateCode(email, code)
+        validateCode.saveNewValidateCode()
+        return HttpResponse(1)
+    else:
+        return HttpResponse(2)
 
 
 # 邮箱验证码
@@ -35,7 +42,7 @@ def sendEmail(code, target):
     # 加载模板
     template = loader.get_template('part_email.html')
     # 渲染模板
-    mail_content = template.render({"link": code})
+    mail_content = template.render({"validateCode": code})
     mail_host = "smtp.163.com"
 
     msg = MIMEText(mail_content, "html", "utf-8")
@@ -59,12 +66,20 @@ def sendEmail(code, target):
 # 注册新用户
 def registerNewUser(request):
     body = json.loads(request.body.decode('utf-8'))
+    print(body)
     emailAddress = body["email"]
     upw = transToMD5(str(body["pw"]))
+    vcode = body['vcode']
     # 检查这个用户是否已经注册
     if checkUIDRegistered(emailAddress):
         # 0表示该账户已被注册
         return HttpResponse(0)
+
+    # 检查验证码
+    vCodeCheck = checkValidateCode(emailAddress, vcode)
+    if vCodeCheck != 0:
+        # 不等于0表示验证码检查失败
+        return HttpResponse(vCodeCheck)
 
     # 创建新用户
     newUser = User(uid=emailAddress, pwd=upw)
