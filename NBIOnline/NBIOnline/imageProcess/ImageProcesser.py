@@ -14,7 +14,7 @@ conf = nbi_conf
 
 # 输入cv2类图片，直接保存压缩后图片并且在数据库中记录
 def compressImage(image, name, rate):
-    cname = name.split("_")[0] + "_compress_" + name.split("_")[1]
+    cname = name.split("_")[0] + "_compress_" + name.split("_")[-1]
     # 本来就不大的图片就不压缩
     if image.size > conf.configs['image_temp_compress_threshold']:
         cv2.imwrite(r"../NBIOnline/static/Data/Temp/{name}".format(name=cname), image, [cv2.IMWRITE_JPEG_QUALITY, rate])
@@ -70,7 +70,7 @@ def storeInputImage(image_blue, image_green, image_white):
                             [cv2.IMWRITE_JPEG_QUALITY, 80])
         else:
             image_white_name = str(image_white).split(".")[0] + getRandom() + '.jpg'
-            raw2jpg(image_white, "Green", image_white_name)
+            raw2jpg(image_white, "White", image_white_name)
 
     return image_blue_name, image_green_name, image_white_name
 
@@ -221,6 +221,8 @@ def raw2jpg(image, imageType, name):
             savePath = "../NBIOnline/static/Data/Blue/" + name
         elif imageType == "Green":
             savePath = "../NBIOnline/static/Data/Green/" + name
+        elif imageType == "White":
+            savePath = "../NBIOnline/static/Data/White/" + name
         with open(savePath, 'wb') as f:
             f.write(thumb.data)
 
